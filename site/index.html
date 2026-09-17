@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Borrowed Brains — what AI actually took from neuroscience</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <h1>Borrowed Brains</h1>
+      <p class="subtitle">What AI actually took from neuroscience — and what it only pretends to</p>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-view="map" role="tab">The Map</button>
+      <button class="tab" data-view="scorecard" role="tab">The Scorecard</button>
+      <button class="tab" data-view="rationale" role="tab">How I Built This</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ======================================================= THESIS BAR ==== -->
+<div class="thesis" id="thesis">
+  <p>
+    <strong>The claim:</strong> every statement of the form <em>“X in AI is brain-inspired”</em> is really one of
+    five different claims, and they are not worth the same. This map types each one.
+    <button class="linkish" id="thesis-more">Why this matters &rsaquo;</button>
+  </p>
+  <div class="thesis-expand" id="thesis-expand" hidden>
+    <p>
+      “Brain-inspired” does an enormous amount of unearned work in AI writing. It covers Fukushima reading
+      Hubel &amp; Wiesel and building their hierarchy on purpose; it covers a 2017 architecture that happens
+      to reuse a word from 1980s cognitive psychology; and it covers cases where the influence ran the other
+      way entirely and an engineering algorithm became our best theory of a brain region. Collapsing those
+      into one phrase is how you end up believing that transformers tell you something about attention.
+    </p>
+    <p>
+      So the unit of this map is <strong>the edge, not the node</strong>. Each connection is classified,
+      argued for, and given its strongest counter-argument. Read the colours before you read the boxes.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================== MAP ==== -->
+<main class="view is-active" id="view-map">
+  <div class="controls">
+    <div class="legend" id="legend"></div>
+    <div class="control-actions">
+      <button class="btn" id="btn-zoom-out" title="Zoom out">−</button>
+      <button class="btn" id="btn-zoom-in" title="Zoom in">+</button>
+      <button class="btn" id="btn-reset">Reset view</button>
+      <button class="btn btn-ghost" id="btn-clear" hidden>Clear focus</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="column-headers">
+      <span class="col-head col-head-neuro">Neuroscience</span>
+      <span class="col-head col-head-ai">AI &amp; machine learning</span>
+    </div>
+    <svg id="mapsvg" role="img" aria-label="Interactive map of idea transfers between neuroscience and AI">
+      <defs id="mapdefs"></defs>
+      <g id="viewport">
+        <g id="layer-axis"></g>
+        <g id="layer-edges"></g>
+        <g id="layer-nodes"></g>
+      </g>
+    </svg>
+    <p class="stage-hint">
+      Scroll or drag to move down the timeline · ⌘/Ctrl + scroll to zoom · click any node or
+      connection for the argument · vertical position tracks year, spaced so nothing overlaps
+    </p>
+  </div>
+</main>
+
+<!-- ======================================================== SCORECARD ==== -->
+<section class="view" id="view-scorecard">
+  <div class="prose">
+    <h2>Does the brain do backprop?</h2>
+    <p class="standfirst">
+      One edge on the map — <em>backpropagation → the weight-transport objection</em> — generated an entire
+      research programme. This is that programme as a rubric. Seven candidate learning algorithms, scored
+      against the five constraints biology imposes on any credit-assignment mechanism.
+      <strong>Click any cell</strong> for the argument.
+    </p>
+  </div>
+  <div class="table-wrap">
+    <table class="scorecard" id="scorecard"></table>
+  </div>
+  <div class="prose verdict" id="score-verdict"></div>
+</section>
+
+<!-- ======================================================== RATIONALE ==== -->
+<section class="view" id="view-rationale">
+  <div class="prose long">
+    <h2>How I built this, and what I left out</h2>
+
+    <h3>The organising choice</h3>
+    <p>
+      I started from a much longer list of “brain-inspired AI” pairings and kept running into the same
+      problem: the interesting variable was never the pairing itself, it was <em>what kind of relationship
+      it was</em>. Convolution really does descend from Hubel &amp; Wiesel by a traceable paper trail.
+      Transformer attention does not descend from Treisman at all — the mechanism arrived under a different
+      name and was renamed afterwards. Both get described in the same three words.
+    </p>
+    <p>
+      So I made the classification the backbone of the map rather than a footnote on it. The five types —
+      import, reverse transfer, convergent discovery, loose inspiration, false cognate — are a taxonomy
+      I built for this project, not one I found in a paper. That is the part of the map I would most expect
+      someone to argue with, which is why every edge carries its own counter-argument: the classification
+      is a claim, and claims should be contestable.
+    </p>
+
+    <h3>The layout is an argument</h3>
+    <p>
+      Two columns with time running downward was chosen so that three things are visible simultaneously:
+      <em>which field</em> an idea belongs to, <em>when</em> it happened, and therefore <em>which way an
+      edge points</em>. An edge that runs upward from right to left is doing something conceptually
+      different from one running downward from left to right — you can see reverse transfers without
+      reading a single label. Faint same-column edges are within-field descent, drawn deliberately dimmer
+      so that cross-field traffic stays visually dominant.
+    </p>
+
+    <h3>What I cut, and why</h3>
+    <ul>
+      <li>
+        <strong>Everything about consciousness.</strong> Global workspace theory, integrated information —
+        the transfers there are almost all metaphor, and one map cannot argue two theses.
+      </li>
+      <li>
+        <strong>Most of comparative cognition.</strong> Genuinely interesting, but it connects to the
+        neuroscience column, not the transfer story.
+      </li>
+      <li>
+        <strong>Spiking network training methods</strong> (surrogate gradients, ANN-to-SNN conversion).
+        This is where the action is in neuromorphic learning, but it would have doubled the node count
+        to sharpen one edge.
+      </li>
+      <li>
+        <strong>Reinforcement learning after DQN.</strong> The reverse-transfer story is fully made by the
+        dopamine and distributional-dopamine edges; policy gradients and model-based RL add scale, not
+        argument.
+      </li>
+      <li>
+        <strong>Scaling laws and parameter counts.</strong> Deliberately excluded. Comparing parameters to
+        synapses presupposes exactly the false cognate that the <em>“two things called a neuron”</em> edge
+        exists to attack.
+      </li>
+    </ul>
+
+    <h3>Three things I changed my mind about while researching</h3>
+    <ol>
+      <li>
+        <strong>Neuromorphic engineering belonged on the map.</strong> I nearly cut it as a dead end. Then
+        I realised it is the map's most important counterexample: it is the most biologically faithful
+        import of all, and it lost. If “more brain-like is better” were true, that edge should have won.
+      </li>
+      <li>
+        <strong>The grid-cell result is contested, and the contest is the point.</strong> I had it filed as
+        a clean convergent-discovery success until I read Schaeffer, Khona &amp; Fiete's reply showing the
+        emergence depends heavily on architectural and regularisation choices. If you tune until grids
+        appear, you found them; the network did not. That caution generalises to every “the network learned
+        brain-like representations” headline, so it earned a permanent warning on the edge.
+      </li>
+      <li>
+        <strong>Backprop-as-a-question is itself a transfer.</strong> I originally drew the weight-transport
+        objection as pure neuroscience. It is not — it only exists because an engineering algorithm set the
+        agenda. Framing the biological question as “how does the brain approximate backprop” presupposes
+        that the brain should want to, and that presupposition is a reverse transfer worth marking.
+      </li>
+    </ol>
+
+    <h3>How generative AI was used</h3>
+    <p>
+      The thesis, the five-type taxonomy, the choice of which edges make the argument and which were cut,
+      the two-column-plus-time layout, and the scorecard's five constraints are mine. I used an AI assistant
+      to draft and refine the node and edge prose against sources I specified, to argue with me about
+      classifications (the <em>predictive coding → self-supervised learning</em> edge moved from
+      “import” to “loose inspiration” because of one of those arguments), and to implement the rendering,
+      pan/zoom and filtering. I worked in pieces — data model, then layout, then interaction, then the
+      scorecard — rather than asking for a finished site, so that each conceptual choice was made before
+      anything was built on top of it.
+    </p>
+
+    <h3>Sources</h3>
+    <p class="muted">
+      Every node and edge panel carries its primary citations. The load-bearing ones for the argument are
+      Hubel &amp; Wiesel (1962), Fukushima (1980), Crick (1989), McClelland, McNaughton &amp; O'Reilly (1995),
+      Olshausen &amp; Field (1996), Schultz, Dayan &amp; Montague (1997), Rao &amp; Ballard (1999),
+      Lillicrap et al. (2016), Dabney et al. (2020), Ramsauer et al. (2021), and — for the sharpest
+      methodological objection on the map — Schaeffer, Khona &amp; Fiete (2022).
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================ PANEL ==== -->
+<aside class="panel" id="panel" aria-live="polite">
+  <button class="panel-close" id="panel-close" aria-label="Close">×</button>
+  <div class="panel-body" id="panel-body"></div>
+</aside>
+<div class="panel-scrim" id="panel-scrim"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+/* =============================================================================
+   BORROWED BRAINS — data model
+   -----------------------------------------------------------------------------
+   The argument of this map is that every claim of the form "X in AI is
+   brain-inspired" is really one of five different claims, and that they carry
+   very different evidential weight. Each EDGE below is therefore typed, and the
+   typing is the editorial act. Nodes are only there to hold the edges up.
+
+   TRANSFER TYPES
+     import     A specific, identified neural mechanism was deliberately
+                implemented in a machine. The engineer can name the paper.
+     reverse    The traffic went the other way: a machine-learning construct
+                became the leading theory of a neural system.
+     convergent Both fields arrived independently; the correspondence was
+                noticed afterwards. No one borrowed anything.
+     metaphor   Vocabulary, framing and intuition crossed. Mechanism did not.
+     cognate    A shared word hiding unrelated mechanisms. Actively misleading.
+     lineage    Descent *within* one field. Not a transfer; drawn faintly so the
+                cross-field edges have something to attach to.
+   ========================================================================== */
+
+const TRANSFER_TYPES = {
+  import: {
+    label: "Mechanistic import",
+    short: "Import",
+    color: "#3fb8a0",
+    gloss:
+      "A named neural mechanism was deliberately built into a machine. The strongest kind of claim, and the rarest."
+  },
+  reverse: {
+    label: "Reverse transfer",
+    short: "Reverse",
+    color: "#e0913a",
+    gloss:
+      "AI → neuroscience. An engineering algorithm became the best available theory of a biological system."
+  },
+  convergent: {
+    label: "Convergent discovery",
+    short: "Convergent",
+    color: "#a07fd6",
+    gloss:
+      "Arrived at independently on both sides; the equivalence was noticed only afterwards. Suggestive, but nobody borrowed."
+  },
+  metaphor: {
+    label: "Loose inspiration",
+    short: "Metaphor",
+    color: "#6d8cb0",
+    gloss:
+      "The framing crossed over; the mechanism did not. Often cited as if it were an import."
+  },
+  cognate: {
+    label: "False cognate",
+    short: "False cognate",
+    color: "#d9594c",
+    gloss:
+      "Same word, different mechanism. These do real damage, because the shared vocabulary smuggles in a shared explanation."
+  },
+  lineage: {
+    label: "Within-field descent",
+    short: "Lineage",
+    color: "#5c6470",
+    gloss:
+      "Not a transfer at all — one idea building on another inside the same field. Shown so the chains are visible."
+  }
+};
+
+/* -----------------------------------------------------------------------------
+   NODES
+   side: "neuro" (left column) | "ai" (right column)
+   year drives vertical position; ties are broken by declaration order
+   -------------------------------------------------------------------------- */
+
+const NODES = [
+  /* ---------------------------- NEUROSCIENCE ------------------------------ */
+  {
+    id: "mcp",
+    side: "neuro",
+    year: 1943,
+    title: "The formal neuron",
+    who: "McCulloch & Pitts",
+    blurb: "A neuron abstracted to a thresholded sum of weighted inputs.",
+    detail:
+      "A neurophysiologist and a logician argue that a neuron, treated as an all-or-none threshold device, can compute logical propositions — and that networks of them can compute anything a Turing machine can. This is the founding abstraction of the whole field, and it is also the founding simplification: dendrites, spike timing, neuromodulation and the fact that real synapses are not signed scalars all get thrown away in the first move.",
+    cite: "McCulloch, W. S. & Pitts, W. (1943). A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics 5, 115–133."
+  },
+  {
+    id: "hebb",
+    side: "neuro",
+    year: 1949,
+    title: "Hebbian plasticity & cell assemblies",
+    who: "Hebb",
+    blurb: "Cells that fire together wire together; memories are attractor-like assemblies.",
+    detail:
+      "Hebb proposes that coincident pre- and post-synaptic activity strengthens a synapse, and that repeated co-activation binds neurons into reverberating 'cell assemblies' that can sustain a memory without the stimulus. Crucially the rule is *local*: a synapse changes using only signals available at that synapse. That locality constraint is the single biggest obstacle for every learning algorithm on the right-hand side of this map.",
+    cite: "Hebb, D. O. (1949). The Organization of Behavior. Wiley."
+  },
+  {
+    id: "hh",
+    side: "neuro",
+    year: 1952,
+    title: "The action potential, quantified",
+    who: "Hodgkin & Huxley",
+    blurb: "Voltage-gated conductances as a system of differential equations.",
+    detail:
+      "A biophysically explicit model of how a spike is generated by sodium and potassium conductances in the squid giant axon. It is the high-water mark of mechanistic detail in neuroscience — and almost none of it survives into mainstream AI. Its one durable descendant is neuromorphic hardware, which is exactly the branch of AI that never took off commercially.",
+    cite: "Hodgkin, A. L. & Huxley, A. F. (1952). A quantitative description of membrane current and its application to conduction and excitation in nerve. J. Physiol. 117, 500–544."
+  },
+  {
+    id: "hubelwiesel",
+    side: "neuro",
+    year: 1962,
+    title: "Simple & complex cells in V1",
+    who: "Hubel & Wiesel",
+    blurb: "Oriented edge detectors, then position-tolerant versions built from them.",
+    detail:
+      "Recording from cat visual cortex, Hubel and Wiesel find cells tuned to oriented bars at a specific retinal location ('simple'), and cells tuned to the same orientation but tolerant to its exact position ('complex'). They propose that complex cells are built by pooling over simple cells — a hierarchy that alternates selectivity and invariance. This is the single most successfully exported idea in the history of neuroscience.",
+    cite: "Hubel, D. H. & Wiesel, T. N. (1962). Receptive fields, binocular interaction and functional architecture in the cat's visual cortex. J. Physiol. 160, 106–154."
+  },
+  {
+    id: "treisman",
+    side: "neuro",
+    year: 1980,
+    title: "Feature-integration theory of attention",
+    who: "Treisman & Gelade",
+    blurb: "Attention as a serial, capacity-limited spotlight that binds features into objects.",
+    detail:
+      "Simple features (colour, orientation) are registered in parallel across the visual field; binding them into an object requires focal attention, which moves serially and has strictly limited capacity. The evidence is behavioural: conjunction search scales with set size, feature search does not, and without attention you get illusory conjunctions. Note what attention is *for* here — solving a binding problem under a hard capacity bottleneck.",
+    cite: "Treisman, A. & Gelade, G. (1980). A feature-integration theory of attention. Cognitive Psychology 12, 97–136."
+  },
+  {
+    id: "weighttransport",
+    side: "neuro",
+    year: 1989,
+    title: "The weight-transport objection",
+    who: "Grossberg; Crick",
+    blurb: "Backprop needs each synapse to know the weight of a synapse it cannot see.",
+    detail:
+      "To propagate error backwards, a layer must multiply by the transpose of the forward weight matrix. Biologically this means the feedback pathway would have to hold an exact, continuously updated copy of every forward synaptic weight — with no known mechanism for copying it there. Grossberg named it the weight transport problem; Crick's 1989 Nature commentary made it the standard objection. Almost the entire 'biologically plausible learning' literature is a response to this one paragraph.",
+    cite: "Grossberg, S. (1987). Competitive learning: from interactive activation to adaptive resonance. Cognitive Science 11, 23–63. • Crick, F. (1989). The recent excitement about neural networks. Nature 337, 129–132."
+  },
+  {
+    id: "cls",
+    side: "neuro",
+    year: 1995,
+    title: "Complementary learning systems",
+    who: "McClelland, McNaughton & O'Reilly",
+    blurb: "Why you need a fast hippocampus and a slow cortex: interference.",
+    detail:
+      "Train a connectionist network on new material and it overwrites the old — catastrophic interference. The proposal: the brain avoids this with two systems. The hippocampus encodes episodes rapidly with sparse, pattern-separated codes; the neocortex learns slowly and extracts structure. Offline reactivation ('replay') interleaves old memories with new ones so cortex never sees a non-stationary distribution. This paper diagnoses a failure in artificial networks and prescribes a biological fix — and the fix was later taken up literally.",
+    cite: "McClelland, J. L., McNaughton, B. L. & O'Reilly, R. C. (1995). Why there are complementary learning systems in the hippocampus and neocortex. Psychological Review 102, 419–457."
+  },
+  {
+    id: "sparsecoding",
+    side: "neuro",
+    year: 1996,
+    title: "Sparse coding of natural images",
+    who: "Olshausen & Field",
+    blurb: "Ask for a sparse, overcomplete code of natural images and V1 falls out.",
+    detail:
+      "Rather than modelling V1 receptive fields, Olshausen and Field derive them: optimise a dictionary to reconstruct natural image patches using as few active units as possible, and the learned dictionary elements come out localised, oriented and bandpass — i.e. Gabor-like, i.e. simple cells. The claim is a normative one: V1's tuning is not an arbitrary fact of wiring, it is the solution to a sparsity-constrained coding problem.",
+    cite: "Olshausen, B. A. & Field, D. J. (1996). Emergence of simple-cell receptive field properties by learning a sparse code for natural images. Nature 381, 607–609."
+  },
+  {
+    id: "dopamine",
+    side: "neuro",
+    year: 1997,
+    title: "Dopamine as reward prediction error",
+    who: "Schultz, Dayan & Montague",
+    blurb: "Midbrain dopamine neurons signal δ, not reward.",
+    detail:
+      "Dopamine neurons fire to unexpected reward, stop firing to fully predicted reward, and dip below baseline when a predicted reward is omitted. That is not a reward signal — it is a prediction error. The quantity it matches was already on the shelf in machine learning, and the authors say so explicitly. Arguably the most successful computational theory in systems neuroscience, and it was imported wholesale.",
+    cite: "Schultz, W., Dayan, P. & Montague, P. R. (1997). A neural substrate of prediction and reward. Science 275, 1593–1599."
+  },
+  {
+    id: "predcoding",
+    side: "neuro",
+    year: 1999,
+    title: "Predictive coding in visual cortex",
+    who: "Rao & Ballard",
+    blurb: "Feedback carries predictions; feedforward carries only the residual.",
+    detail:
+      "Higher cortical areas send predictions down; lower areas send up only what was *not* predicted. Rao and Ballard show this explains extra-classical receptive field effects such as end-stopping, where a cell's response is suppressed by a stimulus extending beyond its classical field — the extension makes the stimulus more predictable, so there is less error to report. Friston later generalises the idea into the free-energy principle, at which point its falsifiability becomes contested.",
+    cite: "Rao, R. P. N. & Ballard, D. H. (1999). Predictive coding in the visual cortex. Nature Neuroscience 2, 79–87. • Friston, K. (2010). The free-energy principle: a unified brain theory? Nat. Rev. Neurosci. 11, 127–138."
+  },
+  {
+    id: "dendrites",
+    side: "neuro",
+    year: 2003,
+    title: "The neuron is not a unit",
+    who: "Poirazi & Mel; Gidon et al.; Beniaguev et al.",
+    blurb: "A single pyramidal cell is itself a small deep network.",
+    detail:
+      "Dendritic branches sum inputs nonlinearly and semi-independently before the soma sees anything, so a single pyramidal neuron behaves like a two-layer network (Poirazi & Mel 2003). Human layer 2/3 dendrites can compute XOR, which a single threshold unit provably cannot (Gidon et al. 2020). Fitting a cortical pyramidal cell's input–output function needed a temporal convolutional network five to eight layers deep (Beniaguev et al. 2021). The 'neuron' in 'neural network' is off by orders of magnitude.",
+    cite: "Poirazi, P., Brannon, T. & Mel, B. W. (2003). Pyramidal neuron as two-layer neural network. Neuron 37, 989–999. • Gidon, A. et al. (2020). Dendritic action potentials and computation in human layer 2/3 cortical neurons. Science 367, 83–87. • Beniaguev, D., Segev, I. & London, M. (2021). Single cortical neurons as deep artificial neural networks. Neuron 109, 2727–2739."
+  },
+  {
+    id: "gridcells",
+    side: "neuro",
+    year: 2005,
+    title: "Grid cells in entorhinal cortex",
+    who: "Hafting, Fyhn, Moser & Moser",
+    blurb: "Neurons firing on a hexagonal lattice tiling the environment.",
+    detail:
+      "A single medial entorhinal neuron fires at multiple locations arranged in a regular hexagonal lattice across an environment, with different cells sharing orientation but differing in scale and phase. The natural computational reading is a periodic basis for path integration — a metric for space. It is the clearest case in neuroscience of a representation whose *form* is obvious enough to ask whether an artificial system would discover it too.",
+    cite: "Hafting, T., Fyhn, M., Molden, S., Moser, M.-B. & Moser, E. I. (2005). Microstructure of a spatial map in the entorhinal cortex. Nature 436, 801–806."
+  },
+  {
+    id: "distdopamine",
+    side: "neuro",
+    year: 2020,
+    title: "Distributional coding in dopamine",
+    who: "Dabney et al.",
+    blurb: "Dopamine neurons have heterogeneous optimism — as distributional RL predicted.",
+    detail:
+      "Distributional RL says an agent should learn the whole distribution over future return, not just its mean, by running many value predictors with asymmetric optimistic/pessimistic update rates. Recording from mouse VTA, Dabney et al. find exactly that heterogeneity: individual dopamine neurons have different reversal points and different asymmetries, and the population's implied value distribution can be decoded. This is the rare case of AI making a novel, risky, confirmed prediction about the brain.",
+    cite: "Dabney, W. et al. (2020). A distributional code for value in dopamine-based reinforcement learning. Nature 577, 671–675."
+  },
+
+  /* --------------------------------- AI ----------------------------------- */
+  {
+    id: "perceptron",
+    side: "ai",
+    year: 1958,
+    title: "The perceptron",
+    who: "Rosenblatt",
+    blurb: "A trainable linear threshold classifier, and the first learning rule.",
+    detail:
+      "Rosenblatt takes the McCulloch–Pitts unit and gives it a learning rule with a convergence guarantee for linearly separable data. The unit is inherited unchanged from 1943: a weighted sum, a threshold, no dendrites, no time. Every artificial neuron since, including the ones in a transformer, is this object. Whether that abstraction is a reasonable idealisation or a category error is still an open question — see 'The neuron is not a unit'.",
+    cite: "Rosenblatt, F. (1958). The perceptron: a probabilistic model for information storage and organization in the brain. Psychological Review 65, 386–408."
+  },
+  {
+    id: "neocognitron",
+    side: "ai",
+    year: 1980,
+    title: "Neocognitron",
+    who: "Fukushima",
+    blurb: "S-cells and C-cells: Hubel & Wiesel's hierarchy, implemented.",
+    detail:
+      "Fukushima builds an explicit machine analogue of the V1 hierarchy: 'S-cells' are trainable feature detectors, 'C-cells' pool over nearby S-cells of the same type to gain position tolerance, and the two alternate through the depth of the network. The naming is not decorative — the architecture is a direct implementation of the simple/complex proposal. It lacked only a way to train the whole stack end to end.",
+    cite: "Fukushima, K. (1980). Neocognitron: a self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position. Biological Cybernetics 36, 193–202."
+  },
+  {
+    id: "hopfield",
+    side: "ai",
+    year: 1982,
+    title: "Hopfield networks",
+    who: "Hopfield",
+    blurb: "Content-addressable memory as an energy landscape with Hebbian weights.",
+    detail:
+      "A fully connected recurrent network with symmetric weights has a Lyapunov energy function, so its dynamics must descend into fixed points. Set the weights by a Hebbian outer-product rule over the patterns you want to store and those patterns become the attractors: present a corrupted version and the network relaxes to the stored one. Hebb's psychological conjecture becomes a physics problem with a capacity bound (~0.14N).",
+    cite: "Hopfield, J. J. (1982). Neural networks and physical systems with emergent collective computational abilities. PNAS 79, 2554–2558."
+  },
+  {
+    id: "backprop",
+    side: "ai",
+    year: 1986,
+    title: "Backpropagation",
+    who: "Rumelhart, Hinton & Williams",
+    blurb: "Exact gradients by the chain rule — and the reason the field works.",
+    detail:
+      "Errors at the output are propagated backwards through the network by the chain rule, giving every weight the exact partial derivative of the loss. It is efficient, general, and it is the reason essentially everything on this side of the map functions. It is also the single least biologically plausible thing in AI: it requires a separate backward phase, non-local information at every synapse, and transported weights. Nearly forty years of neuroscience has been organised around the question of whether the brain has some approximation to it.",
+    cite: "Rumelhart, D. E., Hinton, G. E. & Williams, R. J. (1986). Learning representations by back-propagating errors. Nature 323, 533–536."
+  },
+  {
+    id: "td",
+    side: "ai",
+    year: 1988,
+    title: "Temporal-difference learning",
+    who: "Sutton",
+    blurb: "Learn from the change in your own prediction, δ = r + γV(s') − V(s).",
+    detail:
+      "Rather than waiting for the final outcome, update each prediction towards the next prediction. The resulting error signal δ is available at every step, requires no model of the environment, and solves temporal credit assignment cheaply. Sutton derives it from Samuel's checkers player and animal-conditioning theory — so there was always some traffic in both directions — but the mathematics is engineering, and it arrives in neuroscience fully formed nine years later.",
+    cite: "Sutton, R. S. (1988). Learning to predict by the methods of temporal differences. Machine Learning 3, 9–44."
+  },
+  {
+    id: "neuromorphic",
+    side: "ai",
+    year: 1989,
+    title: "Neuromorphic engineering",
+    who: "Mead",
+    blurb: "Build the physics of neurons into silicon, not the abstraction.",
+    detail:
+      "Mead observes that the subthreshold behaviour of a MOS transistor resembles the exponential conductance behaviour of an ion channel, and proposes building analog VLSI circuits that compute the way neural tissue does — continuously, in parallel, at microwatts. This is the most *faithful* import on the whole map: not a metaphor but the actual biophysics. It is also, three decades on, the least commercially successful. That pairing is the map's most uncomfortable data point.",
+    cite: "Mead, C. (1989). Analog VLSI and Neural Systems. Addison-Wesley. • Mead, C. (1990). Neuromorphic electronic systems. Proc. IEEE 78, 1629–1636."
+  },
+  {
+    id: "cnn",
+    side: "ai",
+    year: 1998,
+    title: "Convolutional networks",
+    who: "LeCun et al.",
+    blurb: "Fukushima's architecture, made trainable by backprop.",
+    detail:
+      "LeCun keeps the Neocognitron's alternating detect/pool structure, adds weight sharing across spatial positions, and trains the whole stack with backpropagation. The result reads handwritten digits well enough to process a substantial share of US cheques through the 1990s, and after 2012 the same design underlies computer vision generally. The architecture is inherited from V1; the learning algorithm is the one biology definitively does not use.",
+    cite: "LeCun, Y., Bottou, L., Bengio, Y. & Haffner, P. (1998). Gradient-based learning applied to document recognition. Proc. IEEE 86, 2278–2324. • LeCun, Y. et al. (1989). Backpropagation applied to handwritten zip code recognition. Neural Computation 1, 541–551."
+  },
+  {
+    id: "dqn",
+    side: "ai",
+    year: 2015,
+    title: "Deep Q-networks & experience replay",
+    who: "Mnih et al.",
+    blurb: "A replay buffer to break correlations — borrowed from the hippocampus.",
+    detail:
+      "DQN learns Atari from pixels, and it only works because of two stabilisers. One is a slowly updated target network. The other is experience replay: store transitions in a buffer and train on random samples of them rather than on the correlated online stream. The paper cites hippocampal replay and complementary learning systems as the motivation directly — the interference problem being solved is the one McClelland diagnosed in 1995.",
+    cite: "Mnih, V. et al. (2015). Human-level control through deep reinforcement learning. Nature 518, 529–533."
+  },
+  {
+    id: "feedbackalign",
+    side: "ai",
+    year: 2016,
+    title: "Feedback alignment",
+    who: "Lillicrap et al.",
+    blurb: "Random fixed backward weights learn anyway — weight transport isn't needed.",
+    detail:
+      "Replace the transposed weight matrix in the backward pass with a fixed random matrix. It should not work — the delivered signal is not the gradient. It works: the forward weights rotate until they align with the random feedback, so the delivered signal comes to lie within 90° of the true gradient and still descends the loss. A direct answer to Crick's objection, and the opening move of the modern biologically-plausible-learning literature.",
+    cite: "Lillicrap, T. P., Cownden, D., Tweed, D. B. & Akerman, C. J. (2016). Random synaptic feedback weights support error backpropagation for deep learning. Nature Communications 7, 13276."
+  },
+  {
+    id: "distrl",
+    side: "ai",
+    year: 2017,
+    title: "Distributional RL",
+    who: "Bellemare, Dabney & Munos",
+    blurb: "Learn the full return distribution, via asymmetric update rates.",
+    detail:
+      "Instead of learning the expected return, learn its distribution. In the quantile formulation this is implemented by a population of predictors with asymmetric learning rates for positive and negative prediction errors — an optimistic predictor upweights positive δ, a pessimistic one upweights negative δ. Purely an engineering move for better performance and stability. It happens to specify, precisely, what a biological population implementing it would have to look like.",
+    cite: "Bellemare, M. G., Dabney, W. & Munos, R. (2017). A distributional perspective on reinforcement learning. ICML. • Dabney, W. et al. (2018). Distributional RL with quantile regression. AAAI."
+  },
+  {
+    id: "transformer",
+    side: "ai",
+    year: 2017,
+    title: "Transformer 'attention'",
+    who: "Vaswani et al. (after Bahdanau et al.)",
+    blurb: "Softmax-weighted retrieval over all positions, computed in parallel.",
+    detail:
+      "Each position emits a query, every position emits a key and a value; the query is compared against all keys, the similarities are softmaxed, and the values are averaged with those weights. Bahdanau et al. introduced the mechanism in 2014 under the name 'alignment' — the word 'attention' was applied to it afterwards, and it stuck. The operation is a differentiable soft lookup over an unbounded context, executed for every position simultaneously.",
+    cite: "Bahdanau, D., Cho, K. & Bengio, Y. (2015). Neural machine translation by jointly learning to align and translate. ICLR. • Vaswani, A. et al. (2017). Attention is all you need. NeurIPS."
+  },
+  {
+    id: "gridrnn",
+    side: "ai",
+    year: 2018,
+    title: "Grid-like units in trained RNNs",
+    who: "Banino et al.; Cueva & Wei",
+    blurb: "Train a network to path-integrate and periodic units appear.",
+    detail:
+      "Two groups train recurrent networks to track their own position from velocity inputs, and report units with periodic, grid-like spatial tuning — not put there by hand. Banino et al. further show the agents then navigate better, including taking shortcuts. The natural reading is that the grid code is the optimal solution to path integration, and that both evolution and gradient descent find it.",
+    cite: "Banino, A. et al. (2018). Vector-based navigation using grid-like representations in artificial agents. Nature 557, 429–433. • Cueva, C. J. & Wei, X.-X. (2018). Emergence of grid-like representations by training RNNs to perform spatial localization. ICLR."
+  },
+  {
+    id: "modernhopfield",
+    side: "ai",
+    year: 2020,
+    title: "Modern Hopfield networks",
+    who: "Ramsauer et al.",
+    blurb: "A continuous Hopfield update with exponential energy *is* attention.",
+    detail:
+      "Generalise the Hopfield energy to continuous states with an exponential interaction and the capacity goes from ~0.14N to exponential in the dimension, while retrieval converges in a single update step. Write that update out and it is exactly the transformer's softmax(QKᵀ)V. Nobody derived attention from Hopfield networks in 2017; the identity was found three years later, running backwards.",
+    cite: "Ramsauer, H. et al. (2021). Hopfield networks is all you need. ICLR."
+  },
+  {
+    id: "jepa",
+    side: "ai",
+    year: 2022,
+    title: "Self-supervised predictive world models",
+    who: "LeCun (JEPA); masked prediction generally",
+    blurb: "Learn by predicting missing or future content in a latent space.",
+    detail:
+      "The dominant self-supervised recipe is: hide part of the input, predict it, use the error as the training signal — masked language modelling, masked autoencoders, joint-embedding predictive architectures. The slogan ('the brain is a prediction machine') is borrowed from predictive coding and is invoked constantly. The mechanism is not: there are no hierarchical error units, no precision weighting, and the whole thing is trained by backprop through a global objective.",
+    cite: "LeCun, Y. (2022). A path towards autonomous machine intelligence. OpenReview position paper. • Devlin, J. et al. (2019). BERT. NAACL."
+  },
+  {
+    id: "sae",
+    side: "ai",
+    year: 2023,
+    title: "Sparse autoencoders for interpretability",
+    who: "Bricken et al.; Cunningham et al.",
+    blurb: "Olshausen & Field's objective, applied to language-model activations.",
+    detail:
+      "A language model's neurons are polysemantic: a single unit responds to unrelated things because the model packs more features into a layer than it has dimensions. The fix borrowed from vision neuroscience is sparse overcomplete dictionary learning — train an autoencoder with far more hidden units than input dimensions and an L1 penalty, and recover directions that are individually interpretable. It is the same objective Olshausen & Field used on natural images in 1996, pointed at a different signal.",
+    cite: "Bricken, T. et al. (2023). Towards monosemanticity: decomposing language models with dictionary learning. Transformer Circuits Thread. • Cunningham, H. et al. (2023). Sparse autoencoders find highly interpretable features in language models. arXiv:2309.08600."
+  }
+];
+
+/* -----------------------------------------------------------------------------
+   EDGES — the actual argument
+   Each has: claim (what is asserted), evidence (why it holds), counter (the
+   strongest objection), and a verdict phrase.
+   -------------------------------------------------------------------------- */
+
+const EDGES = [
+  {
+    id: "e-mcp-perceptron",
+    from: "mcp",
+    to: "perceptron",
+    type: "import",
+    title: "The neuron abstraction",
+    claim:
+      "The artificial neuron — weighted sum, threshold, scalar output — was lifted directly from neurophysiology and has not changed since.",
+    evidence:
+      "McCulloch was a neurophysiologist; the 1943 paper is written as a theory of nervous activity, and Rosenblatt's title claims a model of 'storage and organization in the brain'. Every unit in every network on this map is still this object.",
+    counter:
+      "The abstraction is a real import but may be the wrong one. A biological neuron performs nonlinear dendritic integration before the soma is involved, spikes in time rather than emitting a rate scalar, and is modulated by chemicals the model has no slot for. Fitting one cortical pyramidal cell needs a network several layers deep — so 'one artificial neuron ≈ one neuron' is off by a factor of thousands.",
+    verdict: "Real import, possibly of the wrong object."
+  },
+  {
+    id: "e-hebb-hopfield",
+    from: "hebb",
+    to: "hopfield",
+    type: "import",
+    title: "Hebb's rule as a storage prescription",
+    claim:
+      "Hopfield's weight rule is Hebb's rule written as an equation, and it is what makes stored patterns into attractors.",
+    evidence:
+      "The prescription W = Σ ξᵘξᵘᵀ is literally the outer product of co-active units — Hebb's 'fire together, wire together'. The contribution is proving what such a network *does*: with symmetric weights there is an energy function, so the dynamics must converge, and the Hebbian-stored patterns are the minima. A psychological conjecture becomes a statistical-mechanics result with a capacity bound.",
+    counter:
+      "Symmetric weights (wᵢⱼ = wⱼᵢ) are essential to the energy argument and are not a property of cortical connectivity — the same symmetry assumption that makes the physics work makes the model biologically false. Hebbian learning is also unsupervised and unstable without normalisation, which real synapses appear to supply by mechanisms outside the rule.",
+    verdict: "Clean import of the rule; the surrounding assumptions are not biological."
+  },
+  {
+    id: "e-hw-neocog",
+    from: "hubelwiesel",
+    to: "neocognitron",
+    type: "import",
+    title: "Simple/complex → S-cells/C-cells",
+    claim:
+      "The convolutional architecture is a deliberate, traceable implementation of the V1 hierarchy. This is the strongest transfer in the field.",
+    evidence:
+      "Fukushima names his layers after the cells: S-cells are trainable oriented feature detectors, C-cells pool over nearby S-cells of one type to gain shift tolerance, and they alternate with depth. The paper cites Hubel and Wiesel as the design source. There is no ambiguity about direction or intent here.",
+    counter:
+      "What was imported is one motif — alternating selectivity and invariance — not the cortex. Real V1 has massive recurrence and feedback; a feedforward CNN has neither. Complex cells are not max-pooling operators, and the receptive-field sizes, normalisation and adaptation of real cortex are absent. The import is architectural, and it stops at the architecture.",
+    verdict: "The field's best case. Genuine, documented, and narrower than usually claimed."
+  },
+  {
+    id: "e-neocog-cnn",
+    from: "neocognitron",
+    to: "cnn",
+    type: "lineage",
+    title: "Neocognitron → LeNet",
+    claim:
+      "LeCun keeps Fukushima's architecture and supplies the missing ingredient: end-to-end gradient training.",
+    evidence:
+      "Detect-and-pool layers, weight sharing across positions, and backpropagation through the stack. What had been an unsupervised, hand-tuned architecture becomes a system trained on labelled data.",
+    counter:
+      "Precisely at this step the biological inheritance stops: the architecture stays brain-derived while the learning algorithm becomes the one the brain cannot run. Every later claim that 'CNNs are how the visual system works' has to carry that split.",
+    verdict: "Within-field descent. The point where architecture and learning part ways."
+  },
+  {
+    id: "e-hh-neuromorphic",
+    from: "hh",
+    to: "neuromorphic",
+    type: "import",
+    title: "Biophysics into silicon",
+    claim:
+      "Neuromorphic engineering is the most literal import on this map: not the abstraction of a neuron but its physics.",
+    evidence:
+      "Mead's observation is that a MOS transistor in subthreshold has exponential current–voltage behaviour of the same form as an ion channel's, so a circuit can emulate membrane dynamics natively rather than simulating them. Spiking, event-driven, analog, microwatt — the Hodgkin–Huxley picture in hardware.",
+    counter:
+      "Fidelity did not pay. Thirty-five years on, essentially all deployed AI runs on dense matrix multiplication over synchronous digital arithmetic, an architecture that resembles nothing in the nervous system. Neuromorphic chips remain research instruments. If closeness to biology were the route to capability, this edge should have won.",
+    verdict: "Maximum fidelity, minimum impact. The map's best evidence against 'more brain-like is better'."
+  },
+  {
+    id: "e-backprop-weighttransport",
+    from: "backprop",
+    to: "weighttransport",
+    type: "reverse",
+    title: "Backprop as a neuroscience research programme",
+    claim:
+      "An engineering algorithm set the agenda for decades of neuroscience: not 'how does the brain learn' but 'does the brain approximate backprop'.",
+    evidence:
+      "Crick's 1989 commentary makes the objection canonical, and the literature since is organised around it: feedback alignment, target propagation, equilibrium propagation, predictive-coding approximations, dendritic error coding, burst-dependent plasticity. All are attempts to recover backprop's power under biological constraints.",
+    counter:
+      "This is arguably a distortion, not a discovery. Backprop is a fact about efficiently optimising differentiable function compositions; there is no prior reason evolution solved that problem, and framing the question as 'how does the brain do backprop' presupposes the answer. The constraint-satisfaction framing may be importing an engineering solution as a biological hypothesis.",
+    verdict: "Reverse transfer of a *question*, not a mechanism — and the question may be leading."
+  },
+  {
+    id: "e-weighttransport-fa",
+    from: "weighttransport",
+    to: "feedbackalign",
+    type: "import",
+    title: "A biological constraint generates an algorithm",
+    claim:
+      "A neuroscience objection produced a working machine-learning algorithm — the constraint was the contribution.",
+    evidence:
+      "Feedback alignment exists only because weight transport was named as a problem. Lillicrap et al. show fixed random feedback still learns, because the forward weights rotate to align with it: the network learns to make the wrong signal useful. That is a genuinely surprising result about optimisation that nobody would have looked for without the biological question.",
+    counter:
+      "It does not scale. Bartunov et al. (2018) tested feedback alignment and its relatives on ImageNet-scale problems and found they fall well short of backprop, especially in convolutional networks where weight sharing interacts badly with random feedback. The constraint produced an interesting algorithm, not a competitive one.",
+    verdict: "Biology set the problem; the answer is illuminating and does not scale. See the scorecard."
+  },
+  {
+    id: "e-bp-fa",
+    from: "backprop",
+    to: "feedbackalign",
+    type: "lineage",
+    title: "Backprop → its plausible relaxations",
+    claim: "Feedback alignment is backprop with one requirement deliberately broken.",
+    evidence:
+      "Identical architecture, identical forward pass, identical loss. The only change is that the backward matrix is a fixed random B instead of Wᵀ.",
+    counter:
+      "Relaxing one constraint leaves the others: feedback alignment still needs a separate backward phase and still delivers a signal computed outside the synapse. It answers Crick without satisfying locality.",
+    verdict: "Within-field descent."
+  },
+  {
+    id: "e-td-dopamine",
+    from: "td",
+    to: "dopamine",
+    type: "reverse",
+    title: "TD error → the dopamine signal",
+    claim:
+      "The canonical reverse transfer. A machine-learning quantity became the standard theory of a neuromodulatory system.",
+    evidence:
+      "Phasic dopamine has the three signatures of δ: it fires to unexpected reward, falls silent to fully predicted reward, and dips below baseline when a predicted reward is omitted. The signal also transfers backwards in time to the earliest reliable predictor, exactly as TD bootstrapping requires. The theory was not fitted after the fact — it was on the shelf, and the data walked into it.",
+    counter:
+      "Dopamine is not only δ. It also carries movement vigour, novelty and salience signals; it is spatially heterogeneous across striatal targets; and tonic and phasic modes appear to do different jobs. The RPE account is the best theory of one component of one signal, and its success has made competing accounts hard to hear.",
+    verdict: "The strongest reverse transfer we have — and a partial theory presented as a total one."
+  },
+  {
+    id: "e-td-distrl",
+    from: "td",
+    to: "distrl",
+    type: "lineage",
+    title: "Scalar TD → distributional TD",
+    claim: "Learn the distribution of return rather than its expectation.",
+    evidence:
+      "A population of predictors with asymmetric learning rates for positive and negative δ converges to the quantiles of the return distribution. Motivated purely by performance and stability on Atari benchmarks.",
+    counter: "No biological motivation at all at this stage — which is what makes the next edge interesting.",
+    verdict: "Within-field descent."
+  },
+  {
+    id: "e-distrl-dopamine",
+    from: "distrl",
+    to: "distdopamine",
+    type: "reverse",
+    title: "A risky prediction that came true",
+    claim:
+      "Distributional RL predicted a specific, non-obvious property of dopamine neurons before anyone looked, and the property was there.",
+    evidence:
+      "The theory requires a population of predictors with *different* asymmetries between positive and negative prediction errors, hence different reversal points. Dabney et al. recorded mouse VTA and found exactly that spread — and could decode the implied distribution over reward magnitudes from the population. Heterogeneity that had looked like measurement noise turned out to be the mechanism.",
+    counter:
+      "One study, one system, and the decoding rests on assumptions about how reversal points map onto quantiles. The broader worry: with a sufficiently rich algorithmic zoo, some algorithm will match any dataset — the epistemics of 'AI predicted a brain fact' depend on how many candidate algorithms were in play.",
+    verdict: "The cleanest case of AI generating novel neuroscience. Single study; treat as promising, not settled."
+  },
+  {
+    id: "e-cls-dqn",
+    from: "cls",
+    to: "dqn",
+    type: "import",
+    title: "Hippocampal replay → the replay buffer",
+    claim:
+      "Experience replay is a neuroscience mechanism imported to fix the exact failure neuroscience had diagnosed.",
+    evidence:
+      "McClelland et al. identified catastrophic interference in connectionist networks and proposed interleaved offline reactivation as biology's answer. DQN stores transitions and samples them randomly, which decorrelates the training distribution and stabilises learning — and the paper cites the hippocampal literature as the motivation. Remove the buffer and DQN collapses.",
+    counter:
+      "The implementations share little beyond the name. A replay buffer is uniform sampling from a FIFO queue of raw transitions; hippocampal replay is sparse, temporally compressed (~20×), often reverse-ordered, prioritised by reward and novelty, and appears to replay *sequences* rather than independent samples. Later prioritised-replay work moved closer, but the original import was of the idea, not the algorithm.",
+    verdict: "Genuine import at the level of strategy; the mechanisms remain far apart."
+  },
+  {
+    id: "e-sparse-sae",
+    from: "sparsecoding",
+    to: "sae",
+    type: "import",
+    title: "Sparse coding → sparse autoencoders",
+    claim:
+      "A 1996 vision-neuroscience objective is, unmodified, the leading tool for interpreting large language models.",
+    evidence:
+      "Same objective: reconstruct the signal from an overcomplete dictionary under a sparsity penalty. Olshausen & Field applied it to natural image patches and recovered V1-like Gabors; interpretability researchers apply it to transformer residual-stream activations and recover directions that fire for single, nameable concepts. The underlying assumption transfers too — that the signal is a sparse superposition of more features than there are dimensions.",
+    counter:
+      "The transfer is of a statistical technique, not a claim about the brain, and it can be over-read. Sparse dictionary learning recovers *a* sparse basis, not necessarily the model's own computational primitives; whether the recovered features are the units the network actually uses is contested, and reconstruction quality trades off against interpretability. The neuroscience provenance lends it borrowed authority.",
+    verdict: "Real import of a method, twenty-seven years later. Its explanatory status is still open."
+  },
+  {
+    id: "e-treisman-transformer",
+    from: "treisman",
+    to: "transformer",
+    type: "cognate",
+    title: "Two things called 'attention'",
+    claim:
+      "Psychological attention and transformer attention share a word and almost nothing else. The shared word does real damage.",
+    evidence:
+      "Treisman's attention is serial, capacity-limited, and exists *because* the system cannot process everything at once — its job is binding under scarcity. Transformer attention is parallel, computed for every position simultaneously, and has no capacity limit beyond context length; it is content-addressed soft retrieval, closer to a differentiable dictionary lookup. The genealogy confirms this: Bahdanau et al. introduced the mechanism as 'alignment' in machine translation, an idea from statistical MT, not psychology. 'Attention' was applied afterwards.",
+    counter:
+      "Not literally zero overlap. Both compute a normalised weighting over inputs, and both can be described as selection. Some work finds that trained attention heads on visual tasks show human-like fixation patterns. But the shared description is at the level of 'both weight their inputs' — which is true of most of machine learning.",
+    verdict: "False cognate. The most consequential naming accident in the field."
+  },
+  {
+    id: "e-dendrites-perceptron",
+    from: "dendrites",
+    to: "perceptron",
+    type: "cognate",
+    title: "Two things called a 'neuron'",
+    claim:
+      "The unit in a neural network is not a scale model of a neuron, and treating parameter counts as comparable to synapse counts is a category error.",
+    evidence:
+      "Dendritic branches integrate nonlinearly and semi-independently, so a pyramidal cell already behaves like a two-layer network (Poirazi & Mel). Human layer 2/3 dendrites compute XOR, which no single threshold unit can (Gidon et al.). Reproducing one cortical pyramidal cell's input–output map required a temporal convolutional network five to eight layers deep (Beniaguev et al.).",
+    counter:
+      "Abstractions are allowed to be lossy — the question is whether the discarded detail matters for the computation being explained, and for many system-level questions it may not. There is also a live counter-argument that dendritic nonlinearity is precisely the substrate that would let a single neuron implement local credit assignment, which would make it load-bearing after all.",
+    verdict: "False cognate at the level of the unit. Whether it matters depends on the question being asked."
+  },
+  {
+    id: "e-hopfield-modern",
+    from: "hopfield",
+    to: "modernhopfield",
+    type: "lineage",
+    title: "Classical → modern Hopfield",
+    claim: "Continuous states and an exponential interaction raise capacity from ~0.14N to exponential.",
+    evidence:
+      "Generalising the energy function gives exponential storage capacity and single-step retrieval, while keeping the attractor-dynamics interpretation.",
+    counter: "Symmetric weights are still assumed, so the biological objection to the 1982 model carries over intact.",
+    verdict: "Within-field descent."
+  },
+  {
+    id: "e-transformer-modern",
+    from: "transformer",
+    to: "modernhopfield",
+    type: "convergent",
+    title: "Attention was already an associative memory",
+    claim:
+      "Transformer attention turns out to be the update rule of a modern Hopfield network — and nobody knew that when they built it.",
+    evidence:
+      "Ramsauer et al. show the update of a continuous Hopfield network with exponential interaction is exactly softmax(βQKᵀ)V. Attention is therefore a single step of retrieval from an associative memory: keys are stored patterns, the query is a probe, the output is the retrieved pattern. Read backwards, this connects the transformer to a lineage that starts with Hebb.",
+    counter:
+      "Direction of discovery matters and is easy to lose. Attention was not derived from Hopfield networks; Bahdanau's motivation was alignment in translation and the 2017 paper cites no such theory. The equivalence was found three years later. A post-hoc mathematical identity is evidence about structure, not evidence that anyone borrowed — and it is regularly cited as though it were the latter.",
+    verdict: "Convergent. Beautiful, genuinely informative, and routinely miscited as inspiration."
+  },
+  {
+    id: "e-grid-gridrnn",
+    from: "gridcells",
+    to: "gridrnn",
+    type: "convergent",
+    title: "Grid cells in silicon — contested",
+    claim:
+      "Networks trained to path-integrate develop grid-like periodic codes, suggesting the grid code is the optimal solution rather than a biological accident.",
+    evidence:
+      "Banino et al. and Cueva & Wei independently report periodic spatial tuning in recurrent networks trained on self-localisation, with no such structure built in. Banino et al. additionally show the grid-like layer supports vector-based navigation and shortcut-taking, which is the behavioural claim made for the biological system.",
+    counter:
+      "Schaeffer, Khona & Fiete (2022) argue the emergence is not robust: hexagonal grids appear only under particular choices of place-cell readout, regularisation and network architecture, and fail to appear under many reasonable alternatives. If you must tune the setup until grids appear, the network is not discovering that grids are optimal — you are. This is the most important methodological caution on the map, and it generalises to every 'the network developed brain-like representations' result.",
+    verdict: "Convergent if it replicates robustly. As of now, contested — and the contest is the lesson."
+  },
+  {
+    id: "e-predcoding-jepa",
+    from: "predcoding",
+    to: "jepa",
+    type: "metaphor",
+    title: "'The brain is a prediction machine'",
+    claim:
+      "Self-supervised prediction is routinely presented as predictive coding realised in machines. It shares the slogan and not the mechanism.",
+    evidence:
+      "The framing genuinely crossed over: predict-and-correct as the organising principle of learning, the idea that the error is the signal, and the vocabulary of prediction, surprise and world models. LeCun's JEPA proposal explicitly invokes biological predictive processing.",
+    counter:
+      "Rao & Ballard's proposal is specific: dedicated error units at each cortical level, top-down predictions that suppress them, precision weighting, and inference by iterative relaxation. Masked prediction has none of these — one global objective, one backward pass, no error units, no precision. There *is* a tighter version of this link (Whittington & Bogacz showed a predictive-coding network with local Hebbian updates can approximate backprop), but that is a specific algorithm and not what mainstream self-supervised learning does. Meanwhile Friston's generalisation is broad enough that the correspondence is hard to falsify in either direction.",
+    verdict: "Loose inspiration presented as an implementation. The slogan travelled; the circuit did not."
+  }
+];
+
+/* -----------------------------------------------------------------------------
+   SCORECARD — "does the brain do backprop?" as a rubric
+   -------------------------------------------------------------------------- */
+
+const SCORE_CONSTRAINTS = [
+  {
+    id: "transport",
+    label: "No weight transport",
+    tip:
+      "Can the learning signal be delivered without the feedback pathway holding an exact copy of the forward weights? This is Crick's objection."
+  },
+  {
+    id: "local",
+    label: "Local updates",
+    tip:
+      "Does each synapse change using only signals physically available at that synapse (pre-activity, post-activity, a broadcast neuromodulator)?"
+  },
+  {
+    id: "phase",
+    label: "No separate phases",
+    tip:
+      "Can it learn without globally coordinated forward/backward or free/clamped phases that something would have to orchestrate?"
+  },
+  {
+    id: "online",
+    label: "Online / temporal credit",
+    tip:
+      "Can it assign credit across time as experience arrives, without storing an unrolled history to replay backwards?"
+  },
+  {
+    id: "scales",
+    label: "Scales to hard tasks",
+    tip:
+      "Does it actually train deep networks on difficult problems — ImageNet-scale and beyond — not just MNIST?"
+  }
+];
+
+const SCORE_ROWS = [
+  {
+    id: "backprop",
+    label: "Backpropagation",
+    who: "Rumelhart et al. 1986",
+    nodeId: "backprop",
+    cells: {
+      transport: ["fail", "The backward pass multiplies by Wᵀ. Every feedback synapse would need the live value of a forward synapse it has no access to."],
+      local: ["fail", "A weight's update depends on error terms computed from every downstream layer — information that is nowhere near that synapse."],
+      phase: ["fail", "Strict two-phase operation: the full forward pass must complete and its activations be held before the backward pass can run."],
+      online: ["partial", "Fine for feedforward nets. For sequences, BPTT requires unrolling and storing the whole history, which is worse, not better."],
+      scales: ["pass", "It is the reason modern AI exists. Nothing else on this list is close."]
+    }
+  },
+  {
+    id: "fa",
+    label: "Feedback alignment",
+    who: "Lillicrap et al. 2016",
+    nodeId: "feedbackalign",
+    cells: {
+      transport: ["pass", "This is the whole point: a fixed random matrix B replaces Wᵀ, and the forward weights rotate into alignment with it."],
+      local: ["partial", "The delivered error is still computed at the output and routed back; only the routing weights are freed."],
+      phase: ["fail", "Still a distinct backward pass, just with different numbers in it."],
+      online: ["partial", "Inherits backprop's temporal limitations unchanged."],
+      scales: ["fail", "Bartunov et al. (2018) found it falls well short of backprop at ImageNet scale, and interacts particularly badly with convolutional weight sharing."]
+    }
+  },
+  {
+    id: "targetprop",
+    label: "Target propagation",
+    who: "Lee et al. 2015",
+    nodeId: null,
+    cells: {
+      transport: ["pass", "Propagates *targets* backwards through learned inverse mappings rather than gradients through transposed weights."],
+      local: ["pass", "Each layer trains itself to hit a locally supplied target — the update is a local supervised problem."],
+      phase: ["fail", "Requires targets to be computed and passed down before the forward weights update, and the inverses themselves must be trained."],
+      online: ["partial", "No natural story for credit across time; inherits the feedforward framing."],
+      scales: ["partial", "Difference target propagation works on moderate problems but has not matched backprop on large vision benchmarks."]
+    }
+  },
+  {
+    id: "eqprop",
+    label: "Equilibrium propagation",
+    who: "Scellier & Bengio 2017",
+    nodeId: null,
+    cells: {
+      transport: ["fail", "Uses one set of weights for both directions — which sounds better, but it achieves this by *assuming* symmetric connections, which cortex does not have. The problem is relocated, not solved."],
+      local: ["pass", "Updates are a contrastive Hebbian difference between two equilibrium states, computable at the synapse."],
+      phase: ["fail", "Needs a free phase and a weakly clamped phase, each relaxed to equilibrium, plus something to sequence them and hold the first state in memory."],
+      online: ["partial", "Defined for settling to equilibrium; extensions to continuous-time sequences exist but are not standard."],
+      scales: ["partial", "Demonstrated on MNIST and small CIFAR-scale problems; the relaxation cost grows badly with depth."]
+    }
+  },
+  {
+    id: "predcoding",
+    label: "Predictive-coding approximation",
+    who: "Whittington & Bogacz 2017",
+    nodeId: "predcoding",
+    cells: {
+      transport: ["partial", "Avoids explicit transposition, but the standard formulation still requires forward and backward connections to be tied one-to-one — an approximate symmetry assumption."],
+      local: ["pass", "Weight updates are Hebbian products of a local error unit's activity and a local prediction — genuinely computable at the synapse."],
+      phase: ["fail", "Inference proceeds by iterative relaxation of error units to convergence before weights update; the relaxation is a phase."],
+      online: ["partial", "Naturally continuous-time, but credit over long temporal gaps is not addressed."],
+      scales: ["partial", "Provably approximates backprop, and scales further than most alternatives, but the relaxation makes it far more expensive per update."]
+    }
+  },
+  {
+    id: "threefactor",
+    label: "Three-factor Hebbian / node perturbation",
+    who: "Frémaux & Gerstner 2016",
+    nodeId: "hebb",
+    cells: {
+      transport: ["pass", "There is no backward pass at all. A global scalar (dopamine-like) gates a local Hebbian eligibility trace."],
+      local: ["pass", "Pre-activity × post-activity × one broadcast neuromodulator. This is what neuroscience actually observes."],
+      phase: ["pass", "Fully online: eligibility traces decay in continuous time and are converted to weight changes when the modulator arrives."],
+      online: ["pass", "Eligibility traces are specifically a solution to temporal credit assignment, and they have a measured synaptic substrate."],
+      scales: ["fail", "Gradient estimates from a single scalar have variance that grows with the number of parameters. Fine for thousands of weights; hopeless at 10⁹."]
+    }
+  },
+  {
+    id: "es",
+    label: "Evolution strategies",
+    who: "Salimans et al. 2017",
+    nodeId: null,
+    cells: {
+      transport: ["pass", "Never computes a gradient; perturbs parameters and keeps what scores well."],
+      local: ["pass", "Trivially — each parameter needs only its own perturbation and a global fitness score."],
+      phase: ["pass", "No backward pass of any kind."],
+      online: ["fail", "Requires complete episodes to evaluate a perturbation; no within-episode credit assignment at all."],
+      scales: ["fail", "Wildly sample-inefficient. Competitive only where gradients are unavailable and simulation is cheap."]
+    }
+  }
+];
+
+const SCORE_VERDICT = {
+  headline: "The column nothing plausible wins is the last one.",
+  body:
+    "Read the table by column rather than by row. Every algorithm that satisfies biology's constraints — local updates, no transported weights, no orchestrated phases — fails to scale. The one algorithm that scales fails four of the five constraints, and fails the locality constraint worst of all. This is not a gap waiting on better engineering; it is the central empirical fact of NeuroAI. Either the brain runs something in the bottom rows and gets its capability from architecture, objectives, developmental priors and sheer parallelism rather than from gradient quality — or it runs an approximation to the top row by a mechanism we have not yet identified, with dendritic error coding and burst-dependent plasticity the current leading candidates. The table does not settle it. It does show that 'the brain is a neural network trained by something like backprop' is a promissory note, not a finding."
+};
