@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What the Number Does — the ethics of measuring intelligence</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="view-pipeline">
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <h1>What the Number Does</h1>
+      <p class="subtitle">The ethics of measuring intelligence, as a pipeline — and why machines are running it again</p>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-view="pipeline" role="tab">The Pipeline</button>
+      <button class="tab" data-view="stakes" role="tab">Stakes &amp; Validity</button>
+      <button class="tab" data-view="rationale" role="tab">How I Built This</button>
+    </nav>
+  </div>
+</header>
+
+<div class="thesis">
+  <p>
+    <strong>The claim:</strong> ethical failure in intelligence measurement is not a property of bad tests.
+    It is what happens when a measure reaches <em>allocation</em> before its <em>construct validity</em> is
+    settled. Human psychometrics made that journey between 1905 and 1927.
+    <button class="linkish" id="thesis-more">Read the rest &rsaquo;</button>
+  </p>
+  <div class="thesis-expand" id="thesis-expand" hidden>
+    <p>
+      Every intelligence measurement — a child's, a recruit's, a defendant's, a model's — runs the same seven
+      stages. Something is posited as the thing being measured; a task is chosen to stand in for it; a
+      reference population is picked; many things become one number; the number acquires a meaning; the
+      meaning decides something about someone; and then the decision changes the thing being measured.
+    </p>
+    <p>
+      Harms do not attach to the test. They attach to <em>stages</em>, and they attach in a consistent
+      pattern: the trouble starts when stage six arrives before stages one to three are finished. So this
+      map is organised by stage rather than by harm, which means you can check the claim rather than
+      take my word for it — and it means the machine column can be read against the human one directly.
+      <strong>The machine column has just reached stage six.</strong>
+    </p>
+    <p class="caution">
+      One thing this map is not: an argument against measurement. The Flynn effect was the instrument
+      refuting the strongest claims made for it. <em>Gender Shades</em> exposed a harm that was invisible
+      until someone built a better benchmark. The APA task force was a field publishing its own
+      uncertainty. Measurement is both the mechanism of the damage and the only instrument that finds it,
+      and a map that showed you only the first half would be doing the thing it criticises.
+    </p>
+  </div>
+</div>
+
+<!-- ========================================================== PIPELINE ==== -->
+<main class="view is-active" id="view-pipeline">
+  <div class="controls">
+    <div class="filtersets">
+      <div class="filterset">
+        <span class="filter-label">Marker</span>
+        <div class="legend" id="legend-kinds"></div>
+      </div>
+      <div class="filterset">
+        <span class="filter-label">Column</span>
+        <div class="legend" id="legend-domains"></div>
+      </div>
+    </div>
+    <button class="btn btn-ghost" id="btn-clear" hidden>Clear selection</button>
+  </div>
+
+  <div class="stage-wrap">
+    <svg id="pipesvg" role="img"
+         aria-label="Seven-stage measurement pipeline with sixteen historical and contemporary cases plotted against it">
+      <g id="p-columns"></g>
+      <g id="p-rows"></g>
+      <g id="p-header"></g>
+      <g id="p-labels"></g>
+      <g id="p-markers"></g>
+    </svg>
+    <p class="stage-hint">
+      Click a stage heading, a case name, or any marker. Rows are cases; columns are stages;
+      a marker means something entered the process at that point.
+    </p>
+  </div>
+</main>
+
+<!-- ============================================================ STAKES ==== -->
+<section class="view" id="view-stakes">
+  <div class="prose">
+    <h2>Stakes against construct validity</h2>
+    <p class="standfirst">
+      The same twelve measurement regimes, plotted by what the score <em>decides</em> against how
+      well-established the thing it claims to measure is. The top-left quadrant is where irreversible
+      decisions rest on unsettled constructs. <strong>Click any point.</strong>
+    </p>
+  </div>
+  <div class="scatter-wrap">
+    <svg id="scatsvg" role="img"
+         aria-label="Scatter plot of measurement regimes by decision stakes against construct validity">
+      <g id="s-grid"></g>
+      <g id="s-quadrant"></g>
+      <g id="s-axes"></g>
+      <g id="s-points"></g>
+    </svg>
+    <div class="scatter-side">
+      <div class="legend" id="legend-scatter"></div>
+      <h4>How the horizontal axis was scored</h4>
+      <ol class="rubric" id="rubric"></ol>
+      <p class="caveat" id="scatter-caveat"></p>
+      <button class="btn" id="btn-table">Show as a table</button>
+    </div>
+  </div>
+  <div class="table-wrap" id="scatter-table-wrap" hidden>
+    <table class="datatable" id="scatter-table"></table>
+  </div>
+  <div class="prose verdict" id="scatter-verdict"></div>
+</section>
+
+<!-- ========================================================= RATIONALE ==== -->
+<section class="view" id="view-rationale">
+  <div class="prose long">
+    <h2>How I built this, and what I left out</h2>
+
+    <h3>The problem with the topic</h3>
+    <p>
+      “The ethics of measuring intelligence” has an obvious failure mode: it becomes an opinion essay with
+      a navigation bar. The organising principle ends up being “here are some bad things,” which is a list,
+      not a map — and a reader cannot tell my curation apart from my politics.
+    </p>
+    <p>
+      So I looked for a structure that would make the ethics <em>mechanical</em> rather than editorial. The
+      seven-stage pipeline is that structure. Every measurement of intelligence passes through all seven
+      stages whether or not anyone names them, and harms enter at identifiable points. Organising by stage
+      means the map makes a checkable claim about how measurement works, and the ethics falls out of the
+      structure instead of being asserted on top of it.
+    </p>
+
+    <h3>Why the layout is two bands</h3>
+    <p>
+      Human psychometrics on top, machine benchmarks below, sharing one horizontal axis of stages. That
+      shared axis is the entire argument: it lets you read the two columns against each other and see that
+      the human band has markers all the way through stage six, while the machine band clusters at stages
+      one to four and has only just begun to populate stage six. You can see the thesis before you read a
+      single label. If the machine band's stage-six column fills in over the next few years, this map
+      predicts what follows, and it will be checkable against what actually happens.
+    </p>
+
+    <h3>The load-bearing element</h3>
+    <p>
+      The Kleinberg–Mullainathan–Raghavan impossibility result is the one thing on the map that is a proof
+      rather than an event, and it is why the project is a structural finding rather than a moral position.
+      Calibration within groups and equal error rates across groups cannot both hold when base rates
+      differ. That means <em>“just make the test fair”</em> is not an available instruction. Fairness at
+      stage four is a choice between incompatible criteria, made by someone, and it cannot be engineered
+      away — which is exactly why the ethical work has to happen at stage six, where you decide what the
+      score is permitted to decide. It is drawn differently from every other marker because it applies to
+      every row.
+    </p>
+
+    <h3>What I cut, and why</h3>
+    <ul>
+      <li>
+        <strong>The heritability literature as a topic in itself.</strong> It appears once, as a specific
+        interpretation failure with Lewontin's seedlings argument attached. Going further would have turned
+        a map about measurement processes into an argument about behaviour genetics, which is a different
+        project and a much longer one.
+      </li>
+      <li>
+        <strong>Cyril Burt.</strong> The twin-study fraud allegations are genuinely contested and the
+        evidence is tangled enough that including it responsibly would have cost more space than the point
+        was worth. <em>Larry P. / PASE</em> makes the “careful people reach opposite conclusions” point
+        more cleanly.
+      </li>
+      <li>
+        <strong>Multiple-intelligences and EQ frameworks.</strong> Popular, and mostly a stage-one dispute
+        about the construct that never reaches allocation. Low stakes, so by the map's own argument, not
+        where the danger is.
+      </li>
+      <li>
+        <strong>Nearly all of the fairness-metrics literature after 2017.</strong> One theorem does the
+        work; a survey of the subsequent metric zoo would have buried it.
+      </li>
+      <li>
+        <strong>School and workplace testing outside the UK and US.</strong> A real gap, and the reason the
+        map claims less generality than it might appear to. The pipeline should apply anywhere; I have only
+        checked it in two countries.
+      </li>
+    </ul>
+
+    <h3>Where I had to be careful with the evidence</h3>
+    <p>
+      A project about the ethics of evidence does not get to be careless with evidence, so several things
+      are marked <em>contested</em> rather than resolved, including some where the tidier version would
+      have suited my argument better:
+    </p>
+    <ul>
+      <li>
+        Whether intelligence testing actually drove the <strong>1924 Immigration Act</strong>. Gould said
+        yes; Snyderman &amp; Herrnstein went through the congressional record and found it barely came up.
+        Unresolved, and the strong version would have made my case look better.
+      </li>
+      <li>
+        <strong>Gould on Morton.</strong> The most-cited critic of biased measurement was accused, on
+        re-measurement, of biased measurement — and that accusation was then disputed in turn. Including it
+        was uncomfortable and clearly correct; exempting the map's favourite critic would have been the
+        exact failure the map is about.
+      </li>
+      <li>
+        The <strong>Flynn effect reversal</strong>, and the causes of the original rise. The effect is
+        solid; the explanation is not, and the map does not borrow certainty it does not have.
+      </li>
+    </ul>
+
+    <h3>Three things I changed my mind about</h3>
+    <ol>
+      <li>
+        <strong>The map needed the corrections, or it was propaganda.</strong> My first outline was failures
+        only. That version argues that measurement is bad, which is both false and useless — and it cannot
+        explain <em>Gender Shades</em>, where a benchmark was the instrument that made a harm visible, or
+        the Flynn effect, where the tests undercut the claims made for them. The correction markers are
+        what make it an argument rather than a complaint.
+      </li>
+      <li>
+        <strong>COMPAS is not an intelligence test, and belongs anyway.</strong> I cut it twice on scope
+        grounds. It earns its place because it is the purest modern case of the pipeline reaching
+        allocation, and because the impossibility result attached to it constrains every other row on the
+        map. The panel says plainly that it is an adjacent case rather than pretending otherwise.
+      </li>
+      <li>
+        <strong>Binet is the control condition, not the origin story.</strong> I had him as “where it all
+        started.” He is more useful as the counterfactual: the caveats were published, in the instrument's
+        own documentation, by its author — and they were gone within a decade anyway. The same thing
+        happened to Turing's explicit statement that he was substituting a different question. Stating your
+        limits demonstrably does not protect them, which is a much more uncomfortable finding than
+        “they should have known better,” and it is the finding that makes the machine column worrying
+        rather than reassuring.
+      </li>
+    </ol>
+
+    <h3>On the two axes of the second view</h3>
+    <p>
+      The vertical axis asks what the score decides and is fairly objective. The horizontal axis is my
+      assessment against a stated five-question rubric, and reasonable people would move several points.
+      I have put the rubric next to the chart rather than in a footnote, because a project arguing that
+      construct validity matters should show its own. The argument survives large disagreements about
+      individual placements — it is about the shape of the occupied region, not about any one point.
+    </p>
+
+    <h3>How generative AI was used</h3>
+    <p>
+      The thesis, the seven stages, the decision to organise by stage rather than by harm, the two-band
+      layout, the choice of which cases make the argument and which were cut, and the stakes and rubric
+      axes are mine. I used an AI assistant to draft and refine the case and marker prose against sources I
+      specified, to push back on classifications and on where I was overstating, and to implement the
+      rendering, filtering and interaction. I worked in pieces — stages first, then cases, then markers,
+      then the second view — so each conceptual choice was settled before anything was built on top of it.
+    </p>
+
+    <h3>Sources</h3>
+    <p class="muted">
+      Full citations are on every case panel. The load-bearing ones are Binet &amp; Simon (1905),
+      Goddard (1917), Yerkes (1921), Brigham (1923 and the 1930 retraction), <em>Buck v. Bell</em> (1927),
+      <em>Larry P. v. Riles</em> (1979) and <em>PASE v. Hannon</em> (1980), Flynn (1984, 1987),
+      Gould (1981/1996) with Lewis et al. (2011) and Kaplan et al. (2015), Neisser et al. (1996),
+      Deng et al. (2009) with Crawford &amp; Paglen (2019) and Yang et al. (2020),
+      Buolamwini &amp; Gebru (2018), Angwin et al. (2016) with Kleinberg et al. (2017) and
+      Chouldechova (2017), Chollet (2019), Sainz et al. (2023), and Shevlane et al. (2023).
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================ PANEL ==== -->
+<aside class="panel" id="panel" aria-live="polite">
+  <button class="panel-close" id="panel-close" aria-label="Close">×</button>
+  <div class="panel-body" id="panel-body"></div>
+</aside>
+<div class="panel-scrim" id="panel-scrim"></div>
+
+<div class="tooltip" id="tooltip" hidden></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
