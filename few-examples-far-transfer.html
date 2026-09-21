@@ -101,7 +101,7 @@
   }
 
   .wrap {
-    max-width: 1180px;
+    max-width: 1360px;
     margin: 0 auto;
     padding-inline: 20px;
     padding-block: 34px 72px;
@@ -113,6 +113,21 @@
   /* ---------- masthead ---------- */
 
   .masthead { display: flex; flex-direction: column; gap: 12px; max-width: 74ch; }
+
+  /* side by side once there is room, so the setup and the claim fill the width
+     instead of leaving half the page empty */
+  @media (min-width: 940px) {
+    .masthead {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      column-gap: 38px;
+      row-gap: 10px;
+      align-items: start;
+      max-width: none;
+    }
+    .masthead .eyebrow, .masthead h1 { grid-column: 1 / -1; }
+    .thesis, .claim { margin: 0; max-width: none; }
+  }
 
   .eyebrow {
     font-family: var(--f-mono);
@@ -258,7 +273,7 @@
 
   .stage {
     display: grid;
-    grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr);
     gap: 22px;
     align-items: start;
   }
@@ -272,7 +287,7 @@
   }
   /* the aspect ratio is declared rather than inferred: inference came up ~20 viewBox
      units short and clipped the x-axis row */
-  .plot-card svg { display: block; width: 100%; height: auto; aspect-ratio: 740 / 672; overflow: visible; }
+  .plot-card svg { display: block; width: 100%; height: auto; aspect-ratio: 740 / 656; overflow: visible; }
 
   .plot-foot {
     display: flex;
@@ -426,7 +441,7 @@
     letter-spacing: -0.005em;
     margin: 0;
   }
-  .section > p { margin: 0; max-width: 68ch; color: var(--ink-2); font-size: 14.5px; }
+  .section > p { margin: 0; max-width: 76ch; color: var(--ink-2); font-size: 14.5px; }
   .section > p strong { color: var(--ink); font-weight: 600; }
 
   .zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
@@ -447,13 +462,13 @@
   .zone h3 { font-family: var(--f-ui); font-size: 14px; font-weight: 600; margin: 0; }
   .zone p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
 
-  .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+  .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 
   /* individually bordered cards rather than a bled-through grid, so an
      incomplete last row does not leave empty cells behind */
   .glossary {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
     gap: 10px;
     margin: 0;
   }
@@ -494,7 +509,7 @@
     gap: 9px;
   }
   .flag h3 { font-family: var(--f-ui); font-size: 14.5px; font-weight: 600; margin: 0; }
-  .flag p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.55; max-width: 72ch; }
+  .flag p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.55; max-width: 80ch; }
   .flag ul { margin: 0; padding-left: 19px; display: flex; flex-direction: column; gap: 5px; }
   .flag li { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
   .flag .num { font-family: var(--f-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -531,7 +546,7 @@
     font-size: 12.5px;
     color: var(--ink-muted);
     line-height: 1.6;
-    max-width: 78ch;
+    max-width: 88ch;
   }
   footer a { color: var(--ink-2); }
 
@@ -598,7 +613,7 @@
       <div class="legend" id="prior-legend" role="group" aria-labelledby="prior-lbl"></div>
     </div>
 
-    <div class="ctl-group" style="margin-left:auto">
+    <div class="ctl-group">
       <span class="ctl-label" id="view-lbl">View</span>
       <div class="segmented" role="group" aria-labelledby="view-lbl">
         <button type="button" id="view-map" data-view="map" aria-pressed="true">Map</button>
@@ -609,7 +624,7 @@
 
   <div class="stage" id="stage-map">
     <div class="plot-card">
-      <svg id="plot" viewBox="0 0 740 672" role="group" aria-labelledby="plot-title plot-desc">
+      <svg id="plot" viewBox="0 0 740 656" role="group" aria-labelledby="plot-title plot-desc">
         <title id="plot-title">Sample efficiency against transfer breadth, thirty-six learners</title>
         <desc id="plot-desc">
           A scatter of thirty-six learning systems from humans, animals, classical AI and current AI,
@@ -1196,7 +1211,7 @@ const ZONES = [
    ========================================================================= */
 
 const SVGNS = "http://www.w3.org/2000/svg";
-const W = 740, H = 672, M = { l: 66, r: 34, t: 34, b: 58 };
+const W = 740, H = 656, M = { l: 58, r: 26, t: 26, b: 66 };
 const PW = W - M.l - M.r, PH = H - M.t - M.b;
 const PL = M.l, PR = M.l + PW, PT = M.t, PB = M.t + PH;
 
@@ -1298,8 +1313,8 @@ for (let v = 0; v <= 10; v++) {
    label router below so no point label ever lands on one */
 const ZONE_PLACEMENT = {
   "fast-and-broad": { x: X(10),   y: Y(10) + 14, anchor: "end"   },
-  "specialist-edge":{ x: X(10),   y: Y(0) + 16,  anchor: "end"   },
-  "brute-force":    { x: X(0) - 6, y: Y(0) + 16, anchor: "start" }
+  "specialist-edge":{ x: X(10),   y: Y(0) + 21,  anchor: "end"   },
+  "brute-force":    { x: X(0) - 6, y: Y(0) + 21, anchor: "start" }
 };
 ZONES.forEach(z => {
   const pl = ZONE_PLACEMENT[z.id];
