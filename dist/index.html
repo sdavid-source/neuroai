@@ -187,7 +187,8 @@
     <p>
       <strong>Three things keep the number honest.</strong> ARC-AGI is excluded from the +0.56: its
       coordinates are an aspiration rather than a measurement, and including it inflates the figure to
-      +0.70. The result also leans on a few points — drop in-context learning and it falls to +0.24.
+      +0.70. The result also leans on two points, in opposite directions — drop in-context learning and
+      it falls to +0.24; drop pretraining instead and it rises to +0.89.
       Several biological points ignore the pattern outright: infant segmentation at 9 and 6, the
       toddler at 8 and 7, the honeybee at 5 and 7 are high on both axes with priors nobody designed.
     </p>
@@ -206,6 +207,15 @@
       Under total accounting the built group flips to +0.53, the wrong way. That is not a discovery.
       Total accounting crushes almost everything into the left margin, where the axis stops telling a
       wasp apart from a trillion-token training run.
+    </p>
+    <p>
+      <strong>Does the split survive the objection this map makes against itself?</strong> The footer
+      concedes that the transfer axis rewards the kind of generality rather than how far it reaches,
+      which under-scores AlphaFold and over-scores the honeybee. So test it. Rescoring AlphaFold's
+      transfer from 2 all the way up to 8 takes the learned group from +0.56 only to +0.44 — still
+      clearly positive, still clearly apart from the built group. Dropping the honeybee from 7 to 2
+      moves the built group from −0.12 to −0.11. The asymmetry is not an artefact of the axis's
+      weakest judgements, which is worth more than the concession on its own.
     </p>
   </div>
 

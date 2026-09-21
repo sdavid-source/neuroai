@@ -780,7 +780,9 @@ function render() {
   });
 
   /* the thesis says nothing sits in this corner under total accounting, so nothing may */
-  gTarget.setAttribute("opacity", lifetime && !state.hidden.has("current_ai") ? 1 : 0);
+  /* derive this from the point rather than restating filter logic: the Prior filter
+     used to leave the ring up, in the very corner the thesis says must go empty */
+  gTarget.setAttribute("opacity", lifetime && positions.has(arc.id) ? 1 : 0);
 
   document.getElementById("foot-mode").textContent = lifetime
     ? "Lifetime accounting · evolution and pretraining counted as free"

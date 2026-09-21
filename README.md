@@ -159,6 +159,14 @@ Splitting the points by where the prior came from is what found the real
 structure: **−0.12** for built and evolved priors against **+0.56** for priors
 learned from data. The map reports the null result before the finding.
 
+I also tested the split against my own strongest objection to it. If the
+transfer axis really does under-score AlphaFold, rescoring it from 2 up to 8
+still leaves the learned group at +0.44 — positive, and clearly apart from the
+built group. The asymmetry is not an artefact of the axis's weakest judgements.
+And the leave-one-out goes both ways: dropping in-context learning takes +0.56
+down to +0.24, while dropping pretraining takes it up to +0.89. Both are on the
+page, not just the one that flatters the result.
+
 Fact-checking the citations moved several points materially:
 
 - **Deep Blue** was described as needing no training data. Its own cited paper
