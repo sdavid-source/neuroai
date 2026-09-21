@@ -404,6 +404,17 @@ img { max-width: 100%; }
 
   .dos-task { font-size: 14px; color: var(--ink-2); margin: 0; }
 
+  .dos-what {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    padding: 12px 14px;
+    background: var(--surface-sunk);
+    border-radius: 8px;
+  }
+  .dos-rest { display: flex; flex-direction: column; gap: 14px; }
+
   .coords { border: 1px solid var(--hairline); border-radius: 7px; overflow: hidden; }
   .coords table { width: 100%; border-collapse: collapse; }
   .coords th, .coords td { padding: 8px 12px; text-align: right; }
@@ -458,6 +469,22 @@ img { max-width: 100%; }
   /* ---------- prose sections ---------- */
 
   .section { display: flex; flex-direction: column; gap: 14px; }
+
+  /* Wide screens put the heading in a left rail and the content beside it, so the
+     lower half of the page is not one narrow column against a field of white. */
+  @media (min-width: 1040px) {
+    .section {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      column-gap: 40px;
+      row-gap: 14px;
+      align-items: start;
+    }
+    .section > h2 { grid-column: 1; grid-row: 1; margin-top: 2px; }
+    .section > :not(h2) { grid-column: 2; }
+    .section > p { max-width: 88ch; font-size: 15px; }
+  }
+
 
   h2 {
     font-family: var(--f-display);
@@ -574,6 +601,19 @@ img { max-width: 100%; }
     max-width: 88ch;
   }
   footer a { color: var(--ink-2); }
+
+  /* Wide screens: the footer and the flag panels are pure prose and were each
+     filling about half their container. Two columns each, so they read at a
+     sensible measure and the page stops trailing off into white. */
+  @media (min-width: 1040px) {
+    footer { max-width: none; columns: 2; column-gap: 46px; }
+    footer p { break-inside: avoid; }
+
+    .flag { columns: 2; column-gap: 40px; }
+    .flag h3 { column-span: all; }
+    .flag p { max-width: none; break-inside: avoid; }
+    .flag ul { break-inside: avoid; }
+  }
 
   @media (max-width: 880px) {
     .stage { grid-template-columns: 1fr; }
@@ -880,6 +920,7 @@ const POINTS = [
   { id:"newborn-face-bias", short:"Newborn face bias", label:"Newborn face preference", family:"human", prior:"built",
     age:"Hours after birth", ageShort:"birth",
     task:"Preferentially tracking a face-like pattern",
+    what:"Babies less than an hour old were shown a face-like pattern and scrambled versions of the same features, moved slowly across their field of view. They turned their head and eyes to follow the face-like one further than the others.",
     unit:"there is no learning episode — the bias is present before any faces have been seen", needed:"0",
     to:"Nothing. It is a bias, not a skill",
     notTo:"Anything; and it fades within months as the cortical face system takes over",
@@ -890,6 +931,7 @@ const POINTS = [
   { id:"infant-segmentation", short:"Infant segmentation", label:"Infant statistical learning", family:"human", prior:"built",
     age:"8 months", ageShort:"8mo",
     task:"Finding word boundaries in a continuous speech stream that contains no pauses",
+    what:"Eight-month-olds heard two minutes of an invented language: a continuous stream of syllables with no pauses, no stress and nothing marking where one word ended. Afterwards they reliably told the stream's 'words' apart from syllable strings that straddled a boundary. The only clue available was how often one syllable followed another.",
     unit:"one minute of exposure", needed:"2 minutes",
     to:"Tone sequences, visual sequences, non-linguistic streams — the mechanism is unusually general",
     notTo:"Open question; how far statistical learning reaches is actively researched",
@@ -900,6 +942,7 @@ const POINTS = [
   { id:"perceptual-narrowing", short:"Perceptual narrowing", label:"Phonetic perceptual narrowing", family:"human", prior:"built",
     age:"6 to 12 months", ageShort:"6–12mo",
     task:"Losing the ability to hear contrasts the native language does not use",
+    what:"The same infants were tested twice on a sound contrast their own language does not use — Hindi retroflex versus dental consonants, for babies growing up around English. At six to eight months they could hear the difference. By ten to twelve months they no longer could.",
     unit:"one month of ordinary native-language exposure", needed:"about six months",
     to:"Native-language processing, which gets faster and more robust",
     notTo:"The discarded contrast itself. Japanese-learning infants stop distinguishing English /r/ from /l/ between 8 and 10 months while English-learning infants improve, and adults find it very hard to recover",
@@ -910,6 +953,7 @@ const POINTS = [
   { id:"toddler-fast-mapping", short:"Fast mapping", label:"Toddler fast mapping", family:"human", prior:"built",
     age:"3 to 4 years", ageShort:"3–4y",
     task:"Learning a new colour word ('chromium') from a handful of incidental exposures",
+    what:"Preschoolers were shown two trays and told to fetch 'the chromium one, not the red one'. Nobody explained what chromium meant. Weeks later, about half still reached for the olive-coloured tray when asked for chromium.",
     unit:"one incidental introducing event", needed:"a few events across about five weeks",
     to:"Any new word; the mechanism is general across vocabulary",
     notTo:"Non-linguistic categories; depends on word-learning constraints already in place",
@@ -920,6 +964,7 @@ const POINTS = [
   { id:"child-second-language", short:"Child L2", label:"Child second-language learning", family:"human", prior:"built",
     age:"First exposure before about 7", ageShort:"<7y",
     task:"Reaching native-like fluency in a second language as a child",
+    what:"Immigrants to the US who had all lived there a similar number of years were tested on English grammar. What predicted their scores was not how long they had spoken English but how old they were when they arrived. Those who arrived before about seven scored like native speakers.",
     unit:"one hour of immersion", needed:"a few years of ordinary immersion, with no instruction",
     to:"Full native competence, grammar and accent included",
     notTo:"Still one language — the child's advantage is in attainment, not in breadth",
@@ -930,6 +975,7 @@ const POINTS = [
   { id:"absolute-pitch", short:"Absolute pitch", label:"Absolute pitch", family:"human", prior:"built",
     age:"Acquired before about 6, or not at all", ageShort:"<6y",
     task:"Naming a pitch with no reference tone",
+    what:"A musician with absolute pitch can name a note played on its own, with no reference tone, the way most people name a colour. Surveys of when they started training find nearly all began before about six. Adults who train for it deliberately rarely get there.",
     unit:"one hour of early musical training", needed:"early training, inside a developmental window",
     to:"Nothing beyond naming pitches",
     notTo:"General musical ability. Adults who train deliberately rarely acquire it, though 'never' is too strong — some adult learners do",
@@ -940,6 +986,7 @@ const POINTS = [
   { id:"omniglot-human", short:"Human one-shot", label:"Adult one-shot character learning", family:"human", prior:"built",
     age:"Adult", ageShort:"adult",
     task:"Reproducing and generalising a handwritten character after seeing one example",
+    what:"People were shown one handwritten character from an alphabet they had never seen, then asked to pick out other examples of it from a set, and to write new ones themselves. They got it wrong on about 4.5% of trials.",
     unit:"one character exemplar", needed:"1",
     to:"Unfamiliar alphabets never seen before",
     notTo:"Outside visual-symbolic structure",
@@ -950,6 +997,7 @@ const POINTS = [
   { id:"riding-a-bike", short:"Riding a bike", label:"Riding a bike", family:"human", prior:"built",
     age:"Typically learned around 5 to 7", ageShort:"~5y",
     task:"Balancing and steering a two-wheeled bicycle",
+    what:"Two findings sit behind this point. People who learned as children can still ride after decades off a bike. And competent cyclists put on a bicycle whose handlebars steer backwards cannot ride it at all — it takes days of practice to relearn, after which riding a normal bike becomes hard again.",
     unit:"one practice session", needed:"a few hours, once",
     to:"Almost nothing — other bicycles, and that is close to the whole list",
     notTo:"A bicycle with reversed steering, which competent adult cyclists cannot ride until they relearn it — and relearning then interferes with riding a normal bicycle",
@@ -960,6 +1008,7 @@ const POINTS = [
   { id:"learning-to-drive", short:"Learning to drive", label:"Learning to drive", family:"human", prior:"built",
     age:"Typically 16 to 18", ageShort:"~17y",
     task:"Operating a car safely on public roads",
+    what:"When Sweden lowered the minimum age for learner drivers, those who took advantage of it averaged around 118 hours of supervised practice before licensing, against 40 to 50 hours before. The extra practice cut their crash risk by roughly 40%.",
     unit:"one hour of supervised practice", needed:"roughly 40 to 120 hours of supervised practice",
     to:"Unfamiliar cars, unfamiliar cities, roads never seen before — genuine within-domain generalisation",
     notTo:"Anything outside vehicle control; driving skill does not make you a better pilot or cyclist",
@@ -970,6 +1019,7 @@ const POINTS = [
   { id:"adult-second-language", short:"Adult L2", label:"Adult second-language learning", family:"human", prior:"built",
     age:"Adult", ageShort:"adult",
     task:"Reaching fluency in a second language as an adult",
+    what:"The other end of the same study as the child point. Immigrants who arrived after puberty, with the same years of exposure as those who arrived young, scored well below native speakers on English grammar — and did not catch up with more time.",
     unit:"one hour of study or immersion", needed:"thousands of hours, and usually without native attainment",
     to:"Reading, travel, related languages in the same family",
     notTo:"Native-like grammar and accent, which stay out of reach for most adult learners",
@@ -980,6 +1030,7 @@ const POINTS = [
   { id:"late-first-language", short:"Late first language", label:"Late first-language acquisition", family:"human", prior:"built",
     age:"First language encountered after childhood", ageShort:"late",
     task:"Acquiring a first language after the usual window has closed",
+    what:"Deaf adults who first encountered sign language at different ages were tested after decades of fluent daily use. Those exposed from birth outperformed those first exposed in late childhood on grammar, even though both groups had been signing for forty years or more.",
     unit:"one year of daily use", needed:"decades, and native competence is still not reached",
     to:"Substantial everyday communicative ability",
     notTo:"Native-like grammar, which stays out of reach however many years follow",
@@ -990,6 +1041,7 @@ const POINTS = [
   { id:"one-shot-faces", short:"One-shot faces", label:"Recognising a face after one meeting", family:"human", prior:"built",
     age:"Adult", ageShort:"adult",
     task:"Recognising a person met once, against recognising a familiar face",
+    what:"Two findings in tension. People recognise faces they know across lighting, angle, age and haircut, almost perfectly. But asked whether two photographs show the same stranger, they are close to guessing — and viewers handed a pile of photos of one unfamiliar person routinely sort them into two different people.",
     unit:"one encounter", needed:"1 for the familiar-face intuition; far more for it to actually be true",
     to:"Familiar faces, which are recognised near-perfectly across lighting, angle, age and hairstyle",
     notTo:"Unfamiliar faces from a single encounter — people routinely judge two photographs of the same unfamiliar person to be two different people. Plus a reliable, moderate other-race decrement",
@@ -1000,6 +1052,7 @@ const POINTS = [
   { id:"chess-expertise", short:"Chess expertise", label:"Human chess expertise", family:"human", prior:"built",
     age:"Adult, after a decade of practice", ageShort:"adult",
     task:"Reaching master-level play",
+    what:"Studies of chess masters find roughly a decade of serious study behind the title. Tested outside chess, masters show no general advantage: the skill does not carry into reasoning, into memory for anything but chess positions, or into other games.",
     unit:"hours of deliberate practice; positions studied", needed:"roughly a decade of sustained practice",
     to:"Very little beyond chess",
     notTo:"General reasoning, other games, academic performance",
@@ -1009,6 +1062,7 @@ const POINTS = [
 
   { id:"digger-wasp", short:"Digger wasp", label:"Digger wasp landmark learning", family:"animal", prior:"built",
     task:"Memorising nest location from a single orientation flight",
+    what:"A female wasp leaves her burrow and circles it once before flying off to hunt. Move the ring of landmarks around the burrow while she is away, and on return she searches where the landmarks are rather than where the hole is.",
     unit:"one orientation flight", needed:"1",
     to:"Nothing — the mechanism is dedicated to nest relocation",
     notTo:"Any other spatial or associative problem",
@@ -1018,6 +1072,7 @@ const POINTS = [
 
   { id:"nutcracker-caching", short:"Nutcracker caching", label:"Clark's nutcracker cache recovery", family:"animal", prior:"built",
     task:"Recovering thousands of seed caches months later",
+    what:"Clark's nutcrackers bury thousands of pine seeds across a wide area in autumn and dig them up through the winter. In the lab, birds tested 285 days after caching found them about as accurately as birds tested after ten days.",
     unit:"one caching event per location", needed:"1 per cache; thousands of caches in the field, tens in the lab studies",
     to:"Spatial memory tasks in the lab, to a limited degree",
     notTo:"Non-spatial problems",
@@ -1028,6 +1083,7 @@ const POINTS = [
 
   { id:"honeybee-sameness", short:"Honeybee same/diff", label:"Honeybee same/different concept", family:"animal", prior:"built",
     task:"Learning an abstract sameness rule in a Y-maze",
+    what:"Bees were trained in a Y-maze to fly toward whichever arm was marked like the sample at the entrance. Once trained, they applied 'same' to patterns they had never seen — and then to smells, a sense they had never been trained in.",
     unit:"one training trial", needed:"tens of trials",
     to:"Novel stimuli and across sensory modalities — visual rule transferred to odour",
     notTo:"Open question; the tested range is narrow",
@@ -1038,6 +1094,7 @@ const POINTS = [
 
   { id:"taste-aversion", short:"Taste aversion", label:"Conditioned taste aversion", family:"animal", prior:"built",
     task:"Avoiding a food after a single pairing with nausea",
+    what:"Rats drank flavoured water and were made ill hours later. One pairing was enough for them to avoid the flavour afterwards. The control condition is the important half: pair the same illness with a flashing light instead of a taste and the rats barely learn it, while a taste paired with electric shock is just as hard.",
     unit:"one taste-illness pairing", needed:"1, even with hours between the meal and the sickness",
     to:"Nothing — and it barely forms between the wrong pair of cues",
     notTo:"Light or sound paired with nausea, which rats learn only poorly, while taste paired with electric shock is equally hard. The pairing has to be one evolution expected",
@@ -1048,6 +1105,7 @@ const POINTS = [
 
   { id:"pavlov-dogs", short:"Pavlov's dogs", label:"Pavlovian conditioning", family:"animal", prior:"built",
     task:"Salivating to a tone that predicts food",
+    what:"A tone sounds, food follows. After enough pairings the dog salivates at the tone alone. It will also salivate to tones near that pitch, and less so the further away they get.",
     unit:"one tone-food pairing", needed:"tens of pairings",
     to:"Tones close to the trained one, and nothing further",
     notTo:"Anything requiring the relationship to be understood rather than registered",
@@ -1058,6 +1116,7 @@ const POINTS = [
 
   { id:"dog-learns-sit", short:"Dog learns sit", label:"Dog learning a command", family:"animal", prior:"built",
     task:"Learning to sit on cue",
+    what:"Tens of repetitions with a treat produce a reliable 'sit' — in the room where it was trained. Owners routinely find the same command falls apart outdoors, where the smells, sights and distractions are all different.",
     unit:"one training trial", needed:"tens of trials",
     to:"New handlers and new rooms, partially",
     notTo:"Often fails outdoors after being trained indoors — owners rediscover this constantly",
@@ -1068,6 +1127,7 @@ const POINTS = [
 
   { id:"birdsong-learning", short:"Birdsong learning", label:"Songbird tutor learning", family:"animal", prior:"built",
     task:"Acquiring the species song from a tutor during a critical period",
+    what:"A young songbird hears adult males of its species singing during a fixed window in its first months, then practises for weeks until its own song matches what it heard. Outside the window it does not learn. Played another species' song inside the window, it largely ignores it.",
     unit:"one exposure to tutor song", needed:"tens of exposures, inside a fixed developmental window",
     to:"Nothing — and the window closes permanently",
     notTo:"Songs of other species, which a bird will not learn even when that is the only song it hears",
@@ -1077,6 +1137,7 @@ const POINTS = [
 
   { id:"crow-trap-tube", short:"Crow trap-tube", label:"New Caledonian crow, trap-tube", family:"animal", prior:"built",
     task:"Extracting food without losing it to a trap",
+    what:"Food sits in a horizontal tube with a hole partway along. Push it the wrong way and the food drops into the trap. Some New Caledonian crows learned to pull it out the safe side and kept succeeding when the tube was modified — though whether they grasped the physics or learned a visual rule about which end to use is disputed.",
     unit:"one trial", needed:"tens of trials, with individual variation",
     to:"Structurally similar physical problems after transfer testing",
     notTo:"Contested — whether crows grasp causal structure or learn perceptual cues is actively disputed",
@@ -1086,6 +1147,7 @@ const POINTS = [
 
   { id:"rats-beat-humans", short:"Rats beat humans", label:"Rats outperforming humans at generalisation", family:"animal", prior:"built",
     task:"Sorting things into a category that no simple rule describes",
+    what:"Rats and humans were given the same sorting task, built so that no verbal rule describes the boundary — you have to combine several features at once. Both learned it, then both were tested on examples they had not seen. The rats generalised better. The humans kept hunting for a rule that was not there.",
     unit:"one training trial", needed:"many trials",
     to:"Novel exemplars of the category — and better than the humans tested on the same task",
     notTo:"Rule-based categories, where humans win easily",
@@ -1095,6 +1157,7 @@ const POINTS = [
 
   { id:"rat-latent-learning", short:"Rat latent learning", label:"Rat latent learning", family:"animal", prior:"built",
     task:"Navigating a maze after unrewarded exploration",
+    what:"Rats were allowed to wander a maze for ten days with no food in it, and appeared to learn nothing. When food was then placed at the end, they went almost straight to it — faster than rats that had been rewarded from the start. They had been building a map while apparently doing nothing.",
     unit:"one maze run", needed:"ten days of unrewarded exploration",
     to:"Novel routes and shortcuts within the environment",
     notTo:"Other environments or problem types",
@@ -1105,6 +1168,7 @@ const POINTS = [
 
   { id:"alphazero", short:"AlphaZero", label:"AlphaZero (chess)", family:"classic_ai", prior:"learned",
     task:"Superhuman chess from self-play",
+    what:"Given only the rules of chess, the system played 44 million games against itself and then beat the strongest existing engine. It had no opening book, no human games, and no hand-written sense of what a good position looks like.",
     unit:"one self-play game", needed:"tens of millions",
     to:"Nothing — a separately trained instance is needed per game",
     notTo:"Any task outside its game",
@@ -1114,6 +1178,7 @@ const POINTS = [
 
   { id:"deep-blue", short:"Deep Blue", label:"Deep Blue", family:"classic_ai", prior:"built",
     task:"Beating the world chess champion with search and a hand-structured evaluation",
+    what:"The machine that beat Kasparov in 1997 searched around 200 million positions a second, scoring them with an evaluation function whose terms were written by chess experts, whose weights were tuned against a database of master games, and whose opening book was drawn from over 700,000 grandmaster games.",
     unit:"one grandmaster game in the tuning corpus and opening book", needed:"over 700,000 grandmaster games, plus hand-written evaluation structure",
     to:"Nothing",
     notTo:"Any task outside chess; the evaluation function is chess, written out longhand",
@@ -1123,6 +1188,7 @@ const POINTS = [
 
   { id:"mnist", short:"MNIST", label:"MNIST digit classifier", family:"classic_ai", prior:"learned",
     task:"Recognising handwritten digits 0 to 9",
+    what:"Sixty thousand labelled images of handwritten digits, used to train a classifier to tell 0 through 9 apart. Modern networks get over 99% of the held-out test set right.",
     unit:"one labelled digit image", needed:"tens of thousands",
     to:"Almost nothing — accuracy falls off on digits written in a different style or collected by a different process",
     notTo:"Any other visual category; a model at 99% on MNIST knows nothing about letters",
@@ -1132,6 +1198,7 @@ const POINTS = [
 
   { id:"alexnet", short:"AlexNet", label:"AlexNet / ImageNet", family:"classic_ai", prior:"learned",
     task:"Large-scale image classification",
+    what:"A network trained on 1.2 million labelled photographs across a thousand categories, which halved the error rate on the ImageNet benchmark in 2012. Its features turned out to be reusable: the early layers transfer to other vision tasks, the late ones do not.",
     unit:"one labelled image", needed:"over a million",
     to:"Other vision tasks via feature reuse — the origin of transfer learning as standard practice",
     notTo:"Non-visual domains",
@@ -1141,6 +1208,7 @@ const POINTS = [
 
   { id:"bayesian-program-learning", short:"Bayesian programs", label:"Bayesian Program Learning", family:"classic_ai", prior:"built",
     task:"One-shot handwritten character learning",
+    what:"The model treats a character as a set of pen strokes and rules for joining them. Shown one example of a character it has never seen, it works out the strokes that would have drawn it, then produces new versions. On one-shot classification it erred on 3.3% of trials, against a human 4.5%.",
     unit:"one character exemplar", needed:"1",
     to:"New alphabets within the same stroke-based generative framework",
     notTo:"Anything outside handwritten characters — the generative structure is domain-specific by construction",
@@ -1150,6 +1218,7 @@ const POINTS = [
 
   { id:"act-r", short:"ACT-R", label:"ACT-R cognitive model", family:"classic_ai", prior:"built",
     task:"Modelling human performance in a specified domain",
+    what:"A cognitive architecture in which a researcher hand-specifies the knowledge and rules for a task, after which the model predicts human reaction times and error patterns on it. Every new domain has to be modelled by hand first.",
     unit:"one training instance", needed:"few, given hand-built task knowledge",
     to:"Nothing automatically — each domain is modelled by hand",
     notTo:"Any unmodelled domain",
@@ -1159,6 +1228,7 @@ const POINTS = [
 
   { id:"llm-pretraining", short:"LLM pretraining", label:"LLM pretraining", family:"current_ai", prior:"learned",
     task:"Acquiring general language and world knowledge",
+    what:"A model is trained to predict the next piece of text, across trillions of words. Nothing in the process targets any particular task, and yet what comes out can translate, summarise, write code and answer questions.",
     unit:"one token", needed:"trillions",
     to:"An unusually wide range of downstream tasks",
     notTo:"Tasks requiring genuinely novel abstraction — see ARC",
@@ -1168,6 +1238,7 @@ const POINTS = [
 
   { id:"llm-in-context", short:"LLM in-context", label:"LLM in-context learning", family:"current_ai", prior:"learned",
     task:"Performing a new task from a few examples in the prompt",
+    what:"The same pretrained model is shown a few examples of a task inside the prompt and does it immediately — no training, no change to the model itself, no gradient step. The task can be one nobody designed it for.",
     unit:"one example in the prompt", needed:"a handful",
     to:"Many task types, immediately",
     notTo:"Tasks unlike anything in pretraining",
@@ -1177,6 +1248,7 @@ const POINTS = [
 
   { id:"fine-tuning", short:"Fine-tuning", label:"Fine-tuning a pretrained model", family:"current_ai", prior:"learned",
     task:"Adapting a pretrained model to a specific task with a small labelled set",
+    what:"A pretrained model is adjusted with a few hundred to a few thousand labelled examples for one specific job. It is how most applied machine learning is actually built.",
     unit:"one labelled example", needed:"hundreds to a few thousand",
     to:"Whatever the pretrained base already covered — the breadth is inherited, not learned here",
     notTo:"Domains the base model never saw; and fine-tuning can erase capabilities the base had",
@@ -1186,6 +1258,7 @@ const POINTS = [
 
   { id:"self-driving", short:"Self-driving", label:"Self-driving cars", family:"current_ai", prior:"learned",
     task:"Driving autonomously on public roads",
+    what:"Waymo's vehicles have driven several hundred million miles on public roads with nobody in the driver's seat, on top of tens of billions more in simulation. Each new city still takes substantial mapping and engineering before the cars run there.",
     unit:"one mile of driving", needed:"hundreds of millions of driverless miles, on top of tens of billions simulated",
     to:"New cities, with substantial per-city engineering",
     notTo:"Genuinely novel road situations — the long tail is the engineering problem, though whether humans handle it better is now contested",
@@ -1195,6 +1268,7 @@ const POINTS = [
 
   { id:"alphafold", short:"AlphaFold", label:"AlphaFold", family:"current_ai", prior:"learned",
     task:"Predicting protein structure from sequence",
+    what:"Trained on roughly 170,000 experimentally determined protein structures, the model predicts the three-dimensional shape a protein sequence folds into — at accuracy close to experiment, including for proteins unlike anything it was trained on.",
     unit:"one structure in the training set", needed:"roughly 170,000 experimental structures, plus about 350,000 self-distilled predictions",
     to:"Proteins unlike anything in its training set — real generalisation across a vast space",
     notTo:"Anything that is not protein folding",
@@ -1204,6 +1278,7 @@ const POINTS = [
 
   { id:"recommenders", short:"Recommenders", label:"Recommender systems", family:"current_ai", prior:"learned",
     task:"Predicting what someone will watch, buy or listen to next",
+    what:"Systems trained on millions of ratings or clicks to predict what someone will want next. They work well for people and items they have seen plenty of, and badly for new ones — the cold-start problem.",
     unit:"one interaction event", needed:"millions",
     to:"Nothing — a model built for one catalogue does not move to another",
     notTo:"New users and new items, the cold-start problem, which is the sample-efficiency problem under a different name",
@@ -1213,6 +1288,7 @@ const POINTS = [
 
   { id:"arc-agi", short:"ARC-AGI", label:"ARC-AGI", family:"current_ai", prior:"learned",
     task:"Abstract reasoning puzzles designed to resist memorisation",
+    what:"A benchmark of puzzles in which each task shows two or three worked examples of some transformation on a grid of coloured squares, and the solver has to apply it to a new grid. Every task is different, and they are built so that having seen similar puzzles does not help.",
     unit:"two or three demonstration pairs per task", needed:"2–3",
     to:"By design, each task is novel — the benchmark tests acquisition itself",
     notTo:"Not applicable",
@@ -1673,6 +1749,11 @@ function renderDossier(empty) {
       <p class="dos-task">${esc(p.task)}</p>
     </div>
 
+    <p class="dos-what">${esc(p.what)}</p>
+
+    <div class="dos-rest">
+    </div>
+
     <div>
       <div class="coords">
         <table>
@@ -1717,6 +1798,7 @@ function renderDossier(empty) {
       <p class="src"><cite>${esc(p.source)}</cite></p>
     </div>
     ${confTicks(p.confidence)}
+    </div>
   `;
 
   document.getElementById("dossier-live").textContent =
