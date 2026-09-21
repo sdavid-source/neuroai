@@ -180,6 +180,13 @@ Fact-checking the citations moved several points materially:
 - A reviewer reported a correlation of **r = 0.62** for Chang et al. That figure
   does not appear in the paper, so it is not quoted anywhere on the site.
 
+One bug belongs in the same list, because of what it broke rather than its size.
+The ARC-AGI target ring was drawn from the family filter's logic rather than
+from whether the point was on the map, so hiding **Learned from data** left the
+ring sitting in the top-right corner — the one the caption says nothing reaches.
+The Prior filter is exactly the control a sceptical reader would use to check
+that claim, so the bug disabled the check that would have confirmed it.
+
 ### What I would do next
 
 The clearest weakness is that the transfer axis conflates how many domains a
@@ -192,10 +199,10 @@ The falsification test the site names is the other thread worth pulling: two
 systems with the same total experience, one with a stronger built-in bias, and
 see whether the stronger one really transfers less far.
 
-Of the two, the transfer axis is what I would fix first. It is the axis my whole
-argument depends on, and right now it rewards the *kind* of generality rather
-than how far it actually reaches — which is why a bee crossing two senses
-outscores a model that generalises to proteins nobody has seen.
+Of the two, the transfer axis is what I would fix first. Not because the finding
+depends on it — the rescoring test above says it does not — but because the axis
+measures the wrong thing, and a map should not need a robustness check to
+survive its own definitions.
 
 ---
 
