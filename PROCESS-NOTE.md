@@ -1,59 +1,105 @@
-# Process note — FILL THIS IN BEFORE SUBMITTING
+# Process note
 
-> This is a template, not a finished document. The assignment asks you to
-> "break the project into smaller pieces and iterate so that you understand and
-> can explain the choices in the final product." Only you can write that
-> honestly. Delete this blockquote and every prompt in brackets when done.
+> **DRAFT — read every line and make it true before you submit.**
+> This was assembled from your own planning conversation and the build log, so
+> the factual spine is real. But some sentences describe reasoning only you can
+> confirm. Anything in `[brackets]` is a question for you. Delete this
+> blockquote and every bracket when you are done.
 
-## What I started from
+## Where the topic came from
 
-[Your initial idea, in a sentence or two. What facet of intelligence, and why
-that one.]
+I started from a list of things I was curious about rather than a single
+question: how intelligence relates to an ecological niche; the psychological
+mechanisms behind correlated abilities (general cognitive capacity, process
+overlap, mutualism); fluid versus crystallised intelligence; whether AGI will
+look human-like; ethics; creativity in AI against humans; and learning rate.
 
-[If you made a sketch, a list, or a first data spec before any AI was involved,
-say so and describe it. Attach or paste it if you have it — this is the single
-strongest evidence of authorship.]
+I asked Claude to help me sort that list. It grouped them into three clusters —
+the positive-manifold debate, intelligence as niche-fit, and the AI questions —
+and **recommended the positive-manifold cluster**, on the grounds that the four
+competing theories each have a different structural shape and the map's form
+could be the content.
 
-## What I decided, and what I rejected
+**I did not take that recommendation.** I built the learning-rate map instead,
+which combines two items from my original list: learning rate and ecological
+niche. [Say why in a sentence or two. Was it that the positive-manifold option
+felt too abstract? That you were more interested in the comparison across
+humans, animals and machines? That you wanted an argument you could test rather
+than four structures to display? Whatever the real reason was.]
 
-[The conceptual calls are the marked part. Some that were made on this project,
-for you to confirm, revise, or replace with your own account:]
+## What I brought before any building started
 
-- The two axes, and that they are ordinal rankings rather than measurements.
-- The lifetime / total accounting split, and making the toggle the central
-  interaction rather than decoration.
-- Which learners belong on the map, and which were cut.
-- The coordinate for every point — 36 hand-assigned pairs, each anchored to a
-  named study.
-- Narrowing the thesis from a universal tradeoff to the built-versus-learned
-  asymmetry, after the correlation came out flat.
-- Reporting the null result (+0.06) before the finding (+0.56).
+Before asking for any code I wrote the content spec myself: the two axes and
+what each end means, the lifetime-versus-total accounting distinction, the
+thesis, an initial set of points with coordinates, the region annotations, and
+a list of things I knew I had to verify before publishing.
 
-[Also list things you were offered and turned down. Rejections are better
-evidence of judgement than acceptances.]
+That ordering mattered. The site was built around my content rather than my
+content being fitted into a template. [If you sketched the two-axis layout on
+paper first, say so — that is worth a sentence.]
 
-## How I used AI
+## Decisions I made during the build
 
-[Be specific and honest. What you asked for, what you took, what you threw away,
-what you had to correct. If a model got something wrong and you caught it, say
-so — that is the strongest thing you can write here.]
+- **The two axes are ordinal rankings, not measurements.** The map says so
+  outright, because the units genuinely do not compare across families.
+- **The accounting toggle is the central interaction**, not decoration.
+  Switching it moves the points and changes the conclusion.
+- **Every coordinate is hand-assigned** and anchored to a named study — 36
+  pairs. This is the part of the project that could not be generated.
+- **Scope calls:** I asked for more everyday examples when the first version
+  read too much like a literature review, added a human age series so that
+  species and task are held constant and only age varies, cut the prose under
+  the chart roughly in half when it had grown into an essay, and cut the
+  older-adult learning point as the weakest item on the board.
+- **The map opens on chess expertise**, a point any reader already understands,
+  rather than on the keystone.
 
-[Corrections that were made during the build, if useful to you:]
+## What I rejected
 
-- Deep Blue was described as needing no training data. Its own cited paper says
-  the evaluation weights were tuned on master games and the opening book came
-  from over 700,000 grandmaster games. The point moved from (8,0) to (2,0).
-- "One-shot face recognition" had the finding backwards — unfamiliar-face
-  matching is near chance; it is familiarity that buys accuracy.
-- Toddler fast mapping is 3- and 4-year-olds over about five weeks, not a single
-  exposure at 2-3.
-- The /r/-/l/ narrowing result is Kuhl et al. 2006, not Werker & Tees.
-- A reviewer reported a correlation of r = 0.62 for Chang et al. That figure is
-  not in the paper, so it is not quoted anywhere on the site.
+- The positive-manifold topic, as above.
+- A per-point visual flag for ecological validity. Two reviewers pushed for it.
+  I put the argument on six animal cards and in the footer instead, because a
+  fourth visual channel on an already dense scatter costs more than it returns.
+- Trimming more human points for family balance. The recommendation rested on a
+  reading of the thesis the map does not have, and the numbers showed that
+  dropping four humans could swing the subgroup correlation by as much as 1.5.
+- Swapping the four data colours for more vivid ones. Only three of seventy
+  candidate palettes cleared colour-blindness separation in both themes, and the
+  best scored worse than what was already there.
+
+## What changed because I checked
+
+The strongest thing I did was test the thesis on my own data instead of
+assuming it. Across all 36 points the correlation between the two axes is
+**+0.06** — no tradeoff at all. The universal claim I started with is simply not
+in the data. Splitting the points by where the prior came from is what found the
+real structure: **−0.12** for built and evolved priors against **+0.56** for
+priors learned from data. The map now reports the null result before the
+finding.
+
+Fact-checking the citations changed several points materially:
+
+- **Deep Blue** was described as needing no training data. Its own cited paper
+  says the evaluation weights were tuned on master games and the opening book
+  came from over 700,000 grandmaster games. The point moved from (8,0) to (2,0).
+- **One-shot face recognition** had the finding backwards. Unfamiliar-face
+  matching is close to chance; it is familiarity that buys accuracy.
+- **Toddler fast mapping** is 3- and 4-year-olds across about five weeks, not a
+  single exposure at 2–3.
+- The **/r/–/l/ narrowing** result is Kuhl et al. 2006, not Werker & Tees.
+- A reviewer reported a correlation of **r = 0.62** for Chang et al. That figure
+  does not appear in the paper, so it is not quoted anywhere on the site.
 
 ## What I would do next
 
-[The site names three open problems: the transfer axis conflating breadth of
-domain with reach within one; whether test-time compute belongs as a third
-axis; and the matched-budget experiment that would falsify the claim. Say which
-you would chase and why.]
+The map's clearest weakness is that the transfer axis conflates how many domains
+a skill covers with how far it reaches inside one — AlphaFold scores 2 for
+generalising to proteins unlike anything it trained on, while the honeybee
+scores 7 for carrying one rule between two senses. Defining transfer by how far
+an input can drift before performance drops would reshuffle the rankings.
+
+The falsification test the site names is the other thread worth pulling: two
+systems with the same total experience, one with a stronger built-in bias, and
+see whether the stronger one really transfers less far.
+
+[Pick one and say why it interests you, or replace both with your own.]
