@@ -3,12 +3,6 @@
 An interactive map of 36 learners — human, animal, classical AI and current AI —
 plotted on **sample efficiency** against **transfer breadth**.
 
-> **DRAFT — read every line and make it true before submitting.**
-> The factual spine here is real: it comes from my planning notes and the build
-> history. But some sentences describe reasoning only I can confirm. Everything
-> in `[brackets]` is a question to answer. Delete this blockquote and every
-> bracket before handing in.
-
 ## To view it
 
 Open `index.html` in any browser — double-click it, or drag it onto a browser
@@ -43,12 +37,15 @@ competing theories each have a different structural shape, so the map's form
 could be the content.
 
 **I did not take that recommendation.** I built this instead, combining two
-items from my own list: learning rate and ecological niche. [Say why, in a
-sentence or two. Was the positive-manifold option too abstract? Were you more
-interested in comparing humans, animals and machines directly? Did you want an
-argument you could test rather than four structures to display? This is the most
-important sentence in the document — it is the clearest evidence that the
-organising idea is yours.]
+items from my own list: learning rate and ecological niche.
+
+What I actually wanted was to compare humans, animals and machines side by side,
+because those are the three categories that have actually been tested. The
+positive-manifold debate is a real argument, but it lives entirely inside human
+psychometrics — the four theories disagree about what causes correlations
+between human test scores. It had no way to put a digger wasp and a language
+model on the same page. Learning rate did, because every one of the three
+categories has been measured on how much experience it needs.
 
 ### What belongs in it
 
@@ -59,8 +56,12 @@ Program Learning and AlphaZero.
 
 I left things out deliberately. Older-adult learning came out late as the
 weakest item on the board — thin citation, and its job was closing the lifespan
-rather than carrying the argument. [Name one or two others you considered and
-cut, if you remember them.]
+rather than carrying the argument.
+
+I also cut a lot of the writing that had accumulated underneath the map. It had
+grown into an essay that competed with the map instead of supporting it, and
+sections that only restated what the chart already showed were filler. What is
+left is there because the map cannot say it on its own.
 
 ### What distinctions matter
 
@@ -106,9 +107,14 @@ lifetime-versus-total distinction, the thesis, an initial set of points with
 coordinates, the region annotations, and a list of things I knew I had to verify
 before publishing.
 
+I also sketched the two axes on paper before any of this, just for myself, to
+see whether the space would hold anything interesting. The layout survived; the
+plotted points did not. Almost everything moved once I had to attach a real
+study to each one and defend the number, and the whole right-hand side of the
+map shifted again when I added total accounting.
+
 That ordering mattered. The site was built around my content rather than my
-content being fitted into a template. [If you sketched the two-axis layout on
-paper first, say so here.]
+content being fitted into a template.
 
 ### Working in pieces
 
@@ -178,7 +184,10 @@ The falsification test the site names is the other thread worth pulling: two
 systems with the same total experience, one with a stronger built-in bias, and
 see whether the stronger one really transfers less far.
 
-[Pick one and say why it interests you, or replace both with your own.]
+Of the two, the transfer axis is what I would fix first. It is the axis my whole
+argument depends on, and right now it rewards the *kind* of generality rather
+than how far it actually reaches — which is why a bee crossing two senses
+outscores a model that generalises to proteins nobody has seen.
 
 ---
 
