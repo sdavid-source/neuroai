@@ -5,7 +5,7 @@ Coursework for a Neuro AI class.
 ## Few Examples, Far Transfer
 
 `few-examples-far-transfer.html` — an interactive argument map plotting
-thirty-seven learners (human, animal, classical AI, current AI) on **sample
+thirty-six learners (human, animal, classical AI, current AI) on **sample
 efficiency** against **transfer breadth**, with a toggle between two ways of
 counting experience:
 
@@ -24,7 +24,7 @@ corner under lifetime accounting and collapses onto pretraining under total —
 but the accounting rule guarantees that collision, so it illustrates rather
 than evidences. The evidence is the correlation split below.
 
-The human family is an age series from birth to 65+. Filter to **Human** and
+The human family is an age series from birth to adulthood. Filter to **Human** and
 switch **Ages** on to read it: the prior arrives pre-installed at birth,
 efficiency peaks in infancy, perceptual narrowing spends general capacity to
 buy efficiency in one language between 6 and 12 months, and late first-language
@@ -78,7 +78,7 @@ the errors found were corrected. What remains open:
 
 ### Does the map show its own thesis?
 
-Across all 37 points the correlation between the axes is **+0.06** (lifetime)
+Across all 36 points the correlation between the axes is **+0.06** (lifetime)
 and **+0.23** (total). A tradeoff would be negative, so on that reading the
 universal thesis is simply not in the data — which is why it was narrowed.
 
@@ -86,17 +86,17 @@ Split by where the prior came from, under lifetime accounting:
 
 | group | n | r(efficiency, transfer) |
 |---|---|---|
-| hand-built or evolved priors | 27 | **−0.13** |
+| hand-built or evolved priors | 26 | **−0.12** |
 | priors learned from data | 10 | **+0.70** |
 
-The gap between those is the finding. Caveats, all stated on the page: −0.13
+The gap between those is the finding. Caveats, all stated on the page: −0.12
 is weak; the coordinates are one author's ordinal judgements, so this describes
 the placements rather than measuring the world; and several biological points
 resist it outright (infant segmentation 9/6, toddler 8/7, honeybee 5/7).
 
 Note also that the toggle changes the transfer coordinate for **zero** of the
-37 points, so it can only ever test half the claim, and that under total
-accounting the hand-built group flips to +0.52 — compression, not a discovery.
+36 points, so it can only ever test half the claim, and that under total
+accounting the hand-built group flips to +0.53 — compression, not a discovery.
 
 ## Submitting it
 
@@ -113,5 +113,5 @@ The source file is a page *fragment* — it has no `<!doctype>`, `<html>` or
 script supplies a real document: a UTF-8 charset (the citations use accented
 names), a viewport, the same baseline reset, and the three typefaces inlined
 as base64 so nothing is fetched over the network. Verified with all network
-requests blocked: standards mode, 8 faces loaded, 37 points drawn, zero
+requests blocked: standards mode, 8 faces loaded, 36 points drawn, zero
 requests, zero errors.

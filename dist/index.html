@@ -664,7 +664,7 @@ img { max-width: 100%; }
       </div>
     </div>
     <p>
-      Switch between them and 24 of the 37 points slide left. The ones that move furthest are the ones
+      Switch between them and 23 of the 36 points slide left. The ones that move furthest are the ones
       that looked most impressive before — the newborn face bias, taste aversion, the digger wasp,
       in-context learning. Things that looked unrelated end up in the same place: taste aversion, the
       wasp and birdsong all land on one square, and Deep Blue lands on AlphaZero.
@@ -679,15 +679,15 @@ img { max-width: 100%; }
   <div class="section">
     <h2>Does the map show what it claims?</h2>
     <p>
-      Worth checking rather than assuming. Correlate the two axes across all 37 points and the answer
+      Worth checking rather than assuming. Correlate the two axes across all 36 points and the answer
       is <strong>no</strong>: r = +0.06 under lifetime accounting, +0.23 under total. A tradeoff would be
       negative. On that reading there is no tradeoff here at all.
     </p>
     <p>Split the points by where the prior came from, though, and they separate. Under lifetime accounting:</p>
     <div class="modes">
       <div class="mode">
-        <h3>Priors built or evolved · 27 points</h3>
-        <p><strong>r = −0.13.</strong> Slightly negative, the predicted direction. The wasp, taste aversion, birdsong and Bayesian Program Learning are all fast and go nowhere.</p>
+        <h3>Priors built or evolved · 26 points</h3>
+        <p><strong>r = −0.12.</strong> Slightly negative, the predicted direction. The wasp, taste aversion, birdsong and Bayesian Program Learning are all fast and go nowhere.</p>
       </div>
       <div class="mode">
         <h3>Priors learned from data · 10 points</h3>
@@ -697,15 +697,15 @@ img { max-width: 100%; }
     <p>
       <strong>The gap between those two numbers is the finding.</strong> It is a better claim than a universal
       tradeoff because it could have failed, and for one of the two groups it did. Three things keep it
-      honest. A correlation of −0.13 over 27 points is weak. The positions are one person's judgements,
+      honest. A correlation of −0.12 over 26 points is weak. The positions are one person's judgements,
       so this describes the map rather than the world. And several biological points ignore the pattern
       outright: infant segmentation at 9 and 6, the toddler at 8 and 7, the honeybee at 5 and 7 are all
       high on both axes with priors nobody designed.
     </p>
     <p>
       Split the humans out of that first group and it separates again. Humans on their own give
-      <strong>r = +0.08</strong> — no tradeoff at all. Animals and hand-built systems give
-      <strong>r = −0.39</strong> — a clear one. The −0.13 above is those two mixed together, and the
+      <strong>r = +0.09</strong> — no tradeoff at all. Animals and hand-built systems give
+      <strong>r = −0.39</strong> — a clear one. The −0.12 above is those two mixed together, and the
       humans are watering the effect down.
     </p>
     <p>
@@ -716,7 +716,7 @@ img { max-width: 100%; }
     </p>
     <p>
       One thing the split also exposes: under total accounting the built-and-evolved group flips to
-      +0.52, the wrong way. That is not a discovery. Total accounting crushes almost everything into the
+      +0.53, the wrong way. That is not a discovery. Total accounting crushes almost everything into the
       left margin, where the axis stops telling a wasp apart from a trillion-token training run.
     </p>
   </div>
@@ -938,16 +938,6 @@ const POINTS = [
     lifetime:{e:0,t:3}, total:{e:0,t:3},
     source:"Newport 1990; Mayberry & Eichen 1991 on late first-language acquisition in deaf signers", confidence:"high",
     note:"The far end of the age series, and the hardest point for any account that only counts examples. Deaf signers who meet their first language in late childhood do not reach native competence after decades of daily use. They have the experience. The window is what they lack." },
-
-  { id:"older-adult-learning", short:"Older-adult learning", label:"Skill learning in later life", family:"human",
-    age:"65 and older", ageShort:"65+",
-    task:"Acquiring a new procedural skill in later life",
-    unit:"one practice session", needed:"more sessions than a younger adult needs for the same gain",
-    to:"Existing expertise, which older learners integrate new material into more readily",
-    notTo:"The raw acquisition rate, which declines",
-    lifetime:{e:1,t:3}, total:{e:1,t:3},
-    source:"Slower acquisition: Salthouse 1996, processing-speed theory; Verhaeghen & Salthouse 1997 meta-analysis; Touron & Hertzog 2004 on strategy shift. Existing knowledge doing the work: Castel 2005 on schematic support. Fluid/crystallised: Horn & Cattell 1967", confidence:"medium",
-    note:"Closes the lifespan, and complicates it. Learning slows, but existing knowledge does more of the work — an older learner has far more structure to attach new material to. The age effect runs in opposite directions on the two axes, which is a reminder that learning fast and transferring far were never the same thing." },
 
   { id:"one-shot-faces", short:"One-shot faces", label:"Recognising a face after one meeting", family:"human",
     age:"Adult", ageShort:"adult",
