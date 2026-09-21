@@ -26,7 +26,7 @@
 
   <div class="howto">
     <p><span>Each dot is one learner.</span> Colour and shape say which family it belongs to.</p>
-    <p><span>Right</span> means it needs fewer examples. <span>Up</span> means what it learned is useful in more places.</p>
+    <p><span>Right</span> (sample efficiency) means it needs fewer examples. <span>Up</span> (transfer breadth) means what it learned is useful in more places.</p>
     <p><span>Click any dot</span> for the full record — what it learned, from how much, and the study behind the placement.</p>
   </div>
 
@@ -74,7 +74,8 @@
         <title id="plot-title">Sample efficiency against transfer breadth, thirty-six learners</title>
         <desc id="plot-desc">
           A scatter of thirty-six learning systems from humans, animals, classical AI and current AI,
-          positioned on ordinal zero-to-ten axes for sample efficiency and transfer breadth.
+          positioned on zero-to-ten ranking scales: sample efficiency, meaning how few examples it needed,
+          and transfer breadth, meaning how widely what it learned applies.
           A toggle switches between lifetime and total experience accounting. The full figures
           are also available in the table view.
         </desc>
@@ -116,6 +117,8 @@
   <div class="section band-a">
     <h2>What the words mean</h2>
     <dl class="glossary">
+      <div><dt>Sample efficiency</dt><dd>How few examples a learner needs before it has the skill. High means it learns from very little. This is the left-to-right axis.</dd></div>
+      <div><dt>Transfer breadth</dt><dd>How widely what it learned can be used afterwards. High means the skill works on many different problems. This is the bottom-to-top axis.</dd></div>
       <div><dt>Prior</dt><dd>Anything a learner already has before it starts: a designer's rules, an instinct, or structure carried over from earlier training.</dd></div>
       <div><dt>Near and far transfer</dt><dd>Near means new problems of the same shape. Far means a different kind of problem altogether. Far is much rarer.</dd></div>
       <div><dt>Critical period</dt><dd>A window early in life when something can be learned easily, which closes and does not reopen.</dd></div>
@@ -135,14 +138,15 @@
       </div>
       <div class="mode">
         <h3>Total</h3>
-        <p>Counts the whole budget: evolution for animals, pretraining for models, hand-built knowledge for symbolic systems.</p>
+        <p>Counts the whole budget: evolution for animals, pretraining for models, hand-built knowledge for systems programmed by hand.</p>
       </div>
     </div>
     <p>
       Switch between them and 25 of the 36 points slide left. The ones that move furthest are the ones
       that looked most impressive before — the newborn face bias, taste aversion, the digger wasp,
       in-context learning. Things that looked unrelated end up in the same place: taste aversion, the
-      wasp and birdsong all land on one square, and Deep Blue lands on AlphaZero.
+      wasp and birdsong all land on one square, and Deep Blue, the chess machine that beat Kasparov in 1997, lands on AlphaZero, the modern one
+      that taught itself.
     </p>
     <p>
       That collision is worth seeing, but the accounting rule forces it, so it illustrates the idea
@@ -153,8 +157,8 @@
   <div class="section band-a">
     <h2>Does the map show what it claims?</h2>
     <p>
-      Worth checking rather than assuming. Correlate the two axes across all 36 points and the answer
-      is <strong>no</strong>: r = +0.06 under lifetime accounting, +0.23 under total. A tradeoff would
+      Worth checking rather than assuming. Measure the correlation between the two axes across all 36
+      points and the answer is <strong>no</strong>: r = +0.06 under lifetime accounting, +0.23 under total. A tradeoff would
       be negative. On that reading there is no tradeoff here at all.
     </p>
     <p>
@@ -164,7 +168,7 @@
     <div class="modes">
       <div class="mode">
         <h3>Built or evolved · 26 points</h3>
-        <p><strong>r = −0.12.</strong> Slightly negative, the predicted direction. The wasp, taste aversion, birdsong and Bayesian Program Learning are all fast and go nowhere.</p>
+        <p><strong>r = −0.12.</strong> Slightly negative, the predicted direction. The wasp, taste aversion, birdsong and Bayesian Program Learning — a hand-designed system that learns a new handwritten character from one example — are all fast and go nowhere.</p>
       </div>
       <div class="mode">
         <h3>Learned from data · 9 real systems</h3>
@@ -173,24 +177,27 @@
     </div>
     <p>
       <strong>The gap between those is the finding.</strong> It is a better claim than a universal
-      tradeoff because it could have failed, and for one of the two groups it did.
+      tradeoff because it could have failed, and for one of the two groups it did fail: the learned-from-data group ran the opposite way.
     </p>
     <p>
       <strong>How the split is drawn, since everything rests on it.</strong> The question is where a
-      system's domain knowledge came from. Deep Blue counts as built, because grandmasters wrote its
-      evaluation terms even though the weights were tuned on games. AlphaZero counts as learned,
+      system's knowledge of its subject came from. Deep Blue counts as built, because chess experts
+      wrote the rules it uses to judge a position, even though how much each rule mattered was
+      tuned on real games. AlphaZero counts as learned,
       because nothing about chess beyond the rules was supplied. The image models are the arguable
-      ones — a convolutional network carries a designed prior about images, and it is classed as
-      learned only because the content it recognises came from the data. Reasonable people would
+      ones — a convolutional network is wired from the start on the assumption that nearby pixels belong
+      together, which is a designed prior, and it is classed as learned only because everything it
+      recognises came from the data. Reasonable people would
       move those. The filter lets you check what happens if you do.
     </p>
     <p>
       <strong>Three things keep the number honest.</strong> ARC-AGI is excluded from the +0.56: its
-      coordinates are an aspiration rather than a measurement, and including it inflates the figure to
+      coordinates are a target rather than a measurement, and including it inflates the figure to
       +0.70. The result also leans on two points, in opposite directions — drop in-context learning and
       it falls to +0.24; drop pretraining instead and it rises to +0.89.
-      Several biological points ignore the pattern outright: infant segmentation at 9 and 6, the
-      toddler at 8 and 7, the honeybee at 5 and 7 are high on both axes with priors nobody designed.
+      Several biological points ignore the pattern outright: infant word segmentation (9 for
+      efficiency, 6 for breadth), the toddler at 8 and 7 and the honeybee at 5 and 7 all sit high on
+      both axes, with priors nobody designed.
     </p>
     <p>
       Split the humans out of the built group and it separates again. Humans on their own give
@@ -201,21 +208,21 @@
       held the priors fixed; this map changes the priors. Among people sharing the same equipment,
       learning fast does not make you narrow. Across systems built on different priors, it does. One
       caveat travels with it — Chang measured transfer to problems of the same shape, and this map
-      mostly asks about transfer across domains.
+      mostly asks about transfer to a different kind of problem altogether.
     </p>
     <p>
       Under total accounting the built group flips to +0.53, the wrong way. That is not a discovery.
       Total accounting crushes almost everything into the left margin, where the axis stops telling a
-      wasp apart from a trillion-token training run.
+      wasp apart from a training run on trillions of words.
     </p>
     <p>
       <strong>Does the split survive the objection this map makes against itself?</strong> The footer
-      concedes that the transfer axis rewards the kind of generality rather than how far it reaches,
-      which under-scores AlphaFold and over-scores the honeybee. So test it. Rescoring AlphaFold's
+      concedes that the transfer axis rewards how many areas a skill covers rather than how far it
+      reaches inside one, which scores AlphaFold, the protein-shape predictor, too low and the honeybee too high. So test it. Rescoring AlphaFold's
       transfer from 2 all the way up to 8 takes the learned group from +0.56 only to +0.44 — still
       clearly positive, still clearly apart from the built group. Dropping the honeybee from 7 to 2
-      moves the built group from −0.12 to −0.11. The asymmetry is not an artefact of the axis's
-      weakest judgements, which is worth more than the concession on its own.
+      moves the built group from −0.12 to −0.11. So the difference between the two groups does not
+      depend on the axis's weakest judgements, which is worth more than the concession on its own.
     </p>
   </div>
 
@@ -244,13 +251,14 @@
     <p>
       ARC-AGI-2 tests whether a system can pick up a genuinely new task from two or three examples. It
       is a dashed ring rather than a dot because it marks where the corner would be if something
-      reached it, and it disappears under total accounting, since an aspiration has no experience
-      budget.
+      reached it, and it disappears under total accounting, since a target nobody has reached
+      has no experience to count.
     </p>
     <p>
-      The scores are contested and move fast, so treat any figure as something to re-check. As of September 2026 frontier
-      models report roughly 90% and above on the ARC-AGI-2 public leaderboard, well above that benchmark's
-      human panel average of 60% — while the best compute-capped score in the 2025 ARC Prize competition was 24%. That
+      The scores are contested and move fast, so treat any figure as something to re-check. As of September 2026 the leading
+      AI models report roughly 90% and above on the ARC-AGI-2 public leaderboard, well above the 60%
+      averaged by the panel of people tested on the same puzzles — while the best score in the 2025 ARC
+      Prize competition, which limits how much computing each entry may use, was 24%. That
       gap is the interesting part. If a system beats the human average only by spending enormous
       computation per puzzle, the cost did not vanish; it moved from training examples to thinking
       time. Whether that belongs here as a third axis is the strongest open question on this map.
@@ -267,19 +275,19 @@
     <p style="margin:0 0 9px">
       <strong>Why a space and not a ranking.</strong> Poirier and colleagues reanalysed 555
       correlations between cognitive abilities in animals and found an average of r = 0.185. If
-      abilities do not collapse onto one line, a league table is the wrong object. Chollet makes the
-      same move for machines, and keeps priors and experience as separate terms — which is exactly
+      abilities do not collapse onto one line, a league table is the wrong object. Chollet, who built the ARC-AGI test, makes
+      the same move for machines, and keeps priors and experience as separate terms — which is exactly
       what the toggle here merges. That merge works as a way of making a point, not as a measurement.
     </p>
     <p style="margin:0 0 9px">
       <strong>Three objections, and the answers.</strong> First, the transfer axis mixes up how many
-      domains a skill covers with how far it reaches inside one. AlphaFold scores 2 for generalising
+      different areas a skill covers with how far it reaches inside one. AlphaFold scores 2 for generalising
       to proteins unlike anything it trained on; the honeybee scores 7 for carrying one rule between
       two senses. The fix is to define transfer by how far an input can drift before performance
       drops, which would raise AlphaFold sharply and drop riding a bike to zero.
     </p>
     <p style="margin:0 0 9px">
-      Second, what would prove this wrong? The universal version could not be — any fast learner
+      Second, what would prove this wrong? The universal version could not be proved wrong — any fast learner
       could be rescued by moving its cost to evolution or pretraining. The narrower version predicts
       a difference between two kinds of prior, and that difference can fail to appear. The clean
       test: two systems with the same total experience, one with a stronger built-in bias. If the

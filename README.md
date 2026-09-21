@@ -127,15 +127,15 @@ distinction no viewer could see; then cuts; then styling last.
 
 ### Decisions I made
 
-- The axes are ordinal rankings, and the map says so rather than implying
-  precision it does not have.
+- The axes are rankings, not measurements, and the map says so rather than
+  implying precision it does not have.
 - The accounting toggle is the central interaction, not decoration.
 - Every coordinate is hand-assigned and anchored to a named study — 36 pairs.
   This is the part of the project that could not be generated.
 - The prose under the chart was cut roughly in half once it had grown into an
   essay competing with the map.
 - The map opens on chess expertise, a point any reader already understands,
-  rather than on the keystone.
+  rather than on the point the whole argument rests on.
 
 ### What I turned down
 
@@ -162,7 +162,7 @@ learned from data. The map reports the null result before the finding.
 I also tested the split against my own strongest objection to it. If the
 transfer axis really does under-score AlphaFold, rescoring it from 2 up to 8
 still leaves the learned group at +0.44 — positive, and clearly apart from the
-built group. The asymmetry is not an artefact of the axis's weakest judgements.
+built group. So the split does not depend on the axis's weakest judgements.
 And the leave-one-out goes both ways: dropping in-context learning takes +0.56
 down to +0.24, while dropping pretraining takes it up to +0.89. Both are on the
 page, not just the one that flatters the result.
