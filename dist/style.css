@@ -599,6 +599,14 @@ img { max-width: 100%; }
   #data-table td.name { color: var(--ink); font-weight: 500; white-space: nowrap; }
   #data-table td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
   #data-table td .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
+  /* give the wordy columns room. Without this the citations are squeezed into
+     117px off the right edge, wrap to fifteen lines, and leave every other row
+     looking mostly blank for no visible reason. 59-379px tall becomes 58-115. */
+  #data-table { min-width: 1280px; }
+  #data-table td.name { white-space: normal; min-width: 170px; }
+  #data-table th:nth-child(4), #data-table td:nth-child(4) { min-width: 140px; }
+  #data-table th:nth-child(5), #data-table td:nth-child(5) { min-width: 185px; }
+  #data-table th:last-child, #data-table td:last-child { min-width: 320px; }
 
   footer {
     border-top: 1px solid var(--hairline);

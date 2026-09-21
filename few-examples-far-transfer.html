@@ -589,6 +589,14 @@
   #data-table td.name { color: var(--ink); font-weight: 500; white-space: nowrap; }
   #data-table td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
   #data-table td .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
+  /* give the wordy columns room. Without this the citations are squeezed into
+     117px off the right edge, wrap to fifteen lines, and leave every other row
+     looking mostly blank for no visible reason. 59-379px tall becomes 58-115. */
+  #data-table { min-width: 1280px; }
+  #data-table td.name { white-space: normal; min-width: 170px; }
+  #data-table th:nth-child(4), #data-table td:nth-child(4) { min-width: 140px; }
+  #data-table th:nth-child(5), #data-table td:nth-child(5) { min-width: 185px; }
+  #data-table th:last-child, #data-table td:last-child { min-width: 320px; }
 
   footer {
     border-top: 1px solid var(--hairline);
@@ -808,10 +816,12 @@
       move those. The filter lets you check what happens if you do.
     </p>
     <p>
-      <strong>Three things keep the number honest.</strong> ARC-AGI is excluded from the +0.56: its
+      <strong>Four things keep the number honest.</strong> ARC-AGI is excluded from the +0.56: its
       coordinates are a target rather than a measurement, and including it inflates the figure to
       +0.70. The result also leans on two points, in opposite directions — drop in-context learning and
-      it falls to +0.24; drop pretraining instead and it rises to +0.89.
+      it falls to +0.24; drop pretraining instead and it rises to +0.89. It does not depend on the
+      choice of statistic, though: ranking the points instead of treating the scores as distances —
+      the fairer test for a 0–10 ranking — gives −0.25 and +0.43, the same gap in the same direction.
       Several biological points ignore the pattern outright: infant word segmentation (9 for
       efficiency, 6 for breadth), the toddler at 8 and 7 and the honeybee at 5 and 7 all sit high on
       both axes, with priors nobody designed.
@@ -878,7 +888,12 @@
       Prize competition, which limits how much computing each entry may use, was 24%. That
       gap is the interesting part. If a system beats the human average only by spending enormous
       computation per puzzle, the cost did not vanish; it moved from training examples to thinking
-      time. Whether that belongs here as a third axis is the strongest open question on this map.
+      time. Whether that belongs here as a third axis is the strongest open question on this map — and it is
+      no longer a hypothetical one. In March 2026 the same team released ARC-AGI-3, which drops a
+      system into an unfamiliar interactive game with no instructions and scores it on how many
+      actions it takes against a human who has played the same level. That counts actions rather
+      than computation, so it is not quite the axis proposed here, but it is the same worry made
+      measurable, by the people who built the original test.
     </p>
   </div>
 

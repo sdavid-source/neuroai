@@ -165,7 +165,10 @@ still leaves the learned group at +0.44 — positive, and clearly apart from the
 built group. So the split does not depend on the axis's weakest judgements.
 And the leave-one-out goes both ways: dropping in-context learning takes +0.56
 down to +0.24, while dropping pretraining takes it up to +0.89. Both are on the
-page, not just the one that flatters the result.
+page, not just the one that flatters the result. The split also survives the
+choice of statistic: on Spearman rank correlation, which is the fairer test for
+0-10 rankings, the two groups are **-0.25** and **+0.43** — a wider gap than
+Pearson gives, in the same direction.
 
 Fact-checking the citations moved several points materially:
 
