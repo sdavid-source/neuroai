@@ -5,7 +5,7 @@ Coursework for a Neuro AI class.
 ## Few Examples, Far Transfer
 
 `few-examples-far-transfer.html` — an interactive argument map plotting
-twenty-nine learners (human, animal, classical AI, current AI) on **sample
+thirty-six learners (human, animal, classical AI, current AI) on **sample
 efficiency** against **transfer breadth**, with a toggle between two ways of
 counting experience:
 
@@ -19,6 +19,12 @@ what limit transfer — so the upper-right corner is empty once you count
 honestly. The toggle is the argument: LLM in-context learning sits alone in
 that corner under lifetime accounting and collapses onto pretraining under
 total accounting.
+
+The human family is an age series from birth to 65+. Filter to **Human** and
+switch **Ages** on to read it: the prior arrives pre-installed at birth,
+efficiency peaks in infancy, perceptual narrowing spends general capacity to
+buy efficiency in one language between 6 and 12 months, and late first-language
+acquisition shows that the window matters more than the experience budget.
 
 Watch what collides in the lower left when you switch. Taste aversion, the
 digger wasp and birdsong land on the same square. Deep Blue lands on AlphaZero,

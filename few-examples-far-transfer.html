@@ -501,6 +501,11 @@
       Show the shift
     </label>
 
+    <label class="switch" for="age-toggle">
+      <input type="checkbox" id="age-toggle">
+      Ages
+    </label>
+
     <div class="ctl-group">
       <span class="ctl-label" id="fam-lbl">Families</span>
       <div class="legend" id="legend" role="group" aria-labelledby="fam-lbl"></div>
@@ -543,6 +548,7 @@
           <tr>
             <th scope="col">Learner</th>
             <th scope="col">Family</th>
+            <th scope="col">Age</th>
             <th scope="col">Examples needed</th>
             <th scope="col">Lifetime eff.</th>
             <th scope="col">Lifetime trans.</th>
@@ -586,15 +592,67 @@
   </div>
 
   <div class="section">
-    <h2>Six pairs worth putting on a slide</h2>
+    <h2>The developmental arc</h2>
+    <p>
+      Filter the map to <strong>Human</strong> and switch <strong>Ages</strong> on, and the family reads as one
+      series from birth to old age. It is the cleanest control on the map: species held constant, and in the
+      two language cases the task held constant too, with only the age of first exposure varying.
+    </p>
+    <div class="zones">
+      <div class="zone">
+        <span class="coord-tag">birth</span>
+        <h3>The prior arrives pre-installed</h3>
+        <p>A newborn tracks a face-like pattern having seen no faces. Zero examples is not impressive learning — it is no learning at all. Every point after this one pays for something this one got free.</p>
+      </div>
+      <div class="zone">
+        <span class="coord-tag">8 months</span>
+        <h3>Peak efficiency, and unusually broad</h3>
+        <p>Two minutes of unbroken synthetic speech and an infant has the word boundaries. The same statistical machinery works on tones and on visual sequences, which makes this one of the few genuinely high-efficiency, wide-transfer points anywhere on the map.</p>
+      </div>
+      <div class="zone">
+        <span class="coord-tag">6 to 12 months</span>
+        <h3>The transaction, visible</h3>
+        <p>At six months an infant hears every language's contrasts. By twelve it has lost the ones its own language ignores. Nothing was added — general capacity was spent to buy efficiency in one language. This is the thesis happening inside one individual in six months.</p>
+      </div>
+      <div class="zone">
+        <span class="coord-tag">under 7</span>
+        <h3>Attainment without effort</h3>
+        <p>A child immersed in a second language reaches native-like grammar and accent with no instruction. The window is still open and the priors are still soft.</p>
+      </div>
+      <div class="zone">
+        <span class="coord-tag">adult</span>
+        <h3>More intelligence, less learning</h3>
+        <p>The adult learner has strategies, motivation and metacognition the child lacks, and still does not get there. Whatever bought the child's efficiency was never general intelligence.</p>
+      </div>
+      <div class="zone">
+        <span class="coord-tag">late, and 65+</span>
+        <h3>The window matters more than the budget</h3>
+        <p>Late first-language learners do not reach native competence after decades of daily use. Meanwhile older learners acquire more slowly but integrate into existing expertise more readily — so the age effect runs in opposite directions on the two axes.</p>
+      </div>
+    </div>
+    <p>
+      The series makes a stronger claim than any single point could. <strong>Sample efficiency in humans is not a
+      stable trait that declines with age — it is a window that opens, narrows onto whatever input arrives, and
+      shuts.</strong> Perceptual narrowing and late first-language acquisition are the two ends of that: one shows
+      the prior being installed, the other shows what it costs to arrive after installation is over. If you want
+      the developmental version of your thesis in one line, that is it.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Seven pairs worth putting on a slide</h2>
     <p>
       Single points make weak arguments. Pairs make strong ones, because the second point controls for
       what the first one leaves ambiguous. These are the comparisons this map exists to support.
     </p>
     <div class="zones">
       <div class="zone">
-        <h3>Toddler fast mapping ↔ Adult second language</h3>
-        <p>Same species, same domain, and the adult — with more intelligence, more strategies, more motivation — is thousands of times less efficient. Whatever buys the toddler's efficiency is not general intelligence, and it expires.</p>
+        <h3>Child L2 ↔ Adult L2</h3>
+        <p>The tightest control on the map. Identical task, identical species, only the age of first exposure differs — and the child reaches native-like competence while the adult, with every cognitive advantage, does not.</p>
+      </div>
+      <div class="zone">
+        <h3>Perceptual narrowing at 6 months ↔ at 12 months</h3>
+        <p>The same infant, six months apart, now unable to hear a contrast it could hear before. The only case here where you can watch breadth being spent to buy efficiency rather than infer it.</p>
       </div>
       <div class="zone">
         <h3>Taste aversion ↔ Light-and-nausea</h3>
@@ -663,7 +721,8 @@
     <p style="margin:0 0 9px">
       Before publishing, verify: trial counts and sample sizes in each cited study (these were drafted from
       memory), the cross-modal claim in the honeybee point, the practice-hour figure for learning to drive,
-      current self-driving fleet mileage, and the ARC-AGI figures above. On the total axis, the low end is
+      the older-adult point (which has no specific study behind it yet), current self-driving fleet mileage,
+      and the ARC-AGI figures above. On the total axis, the low end is
       heavily compressed — a wasp's evolutionary budget and a trillion-token pretraining run both land near
       zero, which the ordinal scale cannot separate.
     </p>
@@ -691,7 +750,38 @@ const FAMILIES = [
 ];
 
 const POINTS = [
+  { id:"newborn-face-bias", short:"Newborn face bias", label:"Newborn face preference", family:"human",
+    age:"Hours after birth", ageShort:"birth",
+    task:"Preferentially tracking a face-like pattern",
+    unit:"there is no learning episode — the bias is present before any faces have been seen", needed:"0",
+    to:"Nothing. It is a bias, not a skill",
+    notTo:"Anything; and it fades within months as the cortical face system takes over",
+    lifetime:{e:10,t:0}, total:{e:0,t:0},
+    source:"Goren, Sarty & Wu 1975; Johnson, Dziurawiec, Ellis & Morton 1991", confidence:"high",
+    note:"The degenerate limit of the efficiency axis, and worth putting on the map for exactly that reason. Zero examples is not impressive learning, it is no learning at all — the prior arrived pre-installed. Every point to the left of here is paying for something this one got free, which is the whole argument in one dot. It is also the starting condition for the adult one-shot face point further down the series." },
+
+  { id:"infant-segmentation", short:"Infant segmentation", label:"Infant statistical learning", family:"human",
+    age:"8 months", ageShort:"8mo",
+    task:"Finding word boundaries in a continuous speech stream that contains no pauses",
+    unit:"one minute of exposure", needed:"2 minutes",
+    to:"Tone sequences, visual sequences, non-linguistic streams — the mechanism is unusually general",
+    notTo:"Open question; how far statistical learning reaches is actively researched",
+    lifetime:{e:9,t:6}, total:{e:6,t:6},
+    source:"Saffran, Aslin & Newport 1996, Science", confidence:"high",
+    note:"Two minutes of synthetic speech with no pauses, no feedback and no instruction, and an eight-month-old has extracted the word boundaries from the transition probabilities. One of the highest-efficiency results anywhere on this map, and unusually broad — the same mechanism shows up for tone and visual sequences. Your second-best counterexample after the honeybee, and this one is a human infant." },
+
+  { id:"perceptual-narrowing", short:"Perceptual narrowing", label:"Phonetic perceptual narrowing", family:"human",
+    age:"6 to 12 months", ageShort:"6–12mo",
+    task:"Losing the ability to hear contrasts the native language does not use",
+    unit:"one month of ordinary native-language exposure", needed:"about six months",
+    to:"Native-language processing, which gets faster and more robust",
+    notTo:"The discarded contrast itself. Japanese-learning infants stop distinguishing English /r/ from /l/, and adults find it very hard to recover",
+    lifetime:{e:8,t:1}, total:{e:5,t:1},
+    source:"Werker & Tees 1984; Kuhl on native-language magnet effects", confidence:"high", keystone:true,
+    note:"**The tradeoff caught in the act.** At six months an infant discriminates phonetic contrasts from every language on earth. By twelve months it has lost the ones its own language does not use. Nothing was added — a general capacity was *spent* to buy efficiency in one language. If you want a single result showing a prior being installed and breadth being paid out for it, inside one individual, over six months, this is it. Nothing else on the map shows the transaction happening." },
+
   { id:"toddler-fast-mapping", short:"Fast mapping", label:"Toddler fast mapping", family:"human",
+    age:"2 to 3 years", ageShort:"2–3y",
     task:"Learning a new colour word ('chromium') from a single incidental exposure",
     unit:"one spoken use of the word in context", needed:"1",
     to:"Any new word; the mechanism is general across vocabulary",
@@ -700,7 +790,28 @@ const POINTS = [
     source:"Carey & Bartlett 1978", confidence:"high",
     note:"Retention is partial, not complete — worth saying so on the card. Under total accounting this shifts less than you might expect, which is itself interesting: the child has had only a few years of experience." },
 
+  { id:"child-second-language", short:"Child L2", label:"Child second-language learning", family:"human",
+    age:"First exposure before about 7", ageShort:"<7y",
+    task:"Reaching native-like fluency in a second language as a child",
+    unit:"one hour of immersion", needed:"a few years of ordinary immersion, with no instruction",
+    to:"Full native competence, grammar and accent included",
+    notTo:"Still one language — the child's advantage is in attainment, not in breadth",
+    lifetime:{e:7,t:4}, total:{e:4,t:4},
+    source:"Johnson & Newport 1989, age of arrival and grammatical attainment", confidence:"high", keystone:true,
+    note:"**Put this directly against adult second-language learning and the map argues with itself in the best way.** Identical task, identical species, and the child reaches native-like competence while the adult almost never does — with no instruction, no strategy, and no apparent effort. Johnson & Newport found near-ceiling attainment for arrivals before about seven and a steady decline after. Whatever the child has, the adult has more general intelligence and still loses." },
+
+  { id:"absolute-pitch", short:"Absolute pitch", label:"Absolute pitch", family:"human",
+    age:"Acquired before about 6, or not at all", ageShort:"<6y",
+    task:"Naming a pitch with no reference tone",
+    unit:"one hour of early musical training", needed:"early training, inside a developmental window",
+    to:"Nothing beyond naming pitches",
+    notTo:"General musical ability; and adults who train deliberately for years rarely acquire it at all",
+    lifetime:{e:6,t:0}, total:{e:2,t:0},
+    source:"Takeuchi & Hulse 1993; Deutsch on prevalence and tone-language effects", confidence:"medium",
+    note:"Either installed in childhood or unavailable for life, regardless of how much adult practice is thrown at it. The cleanest demonstration on the map that the *amount* of experience is not what decides whether something can be learned — when it arrives matters more than how much of it there is." },
+
   { id:"omniglot-human", short:"Human one-shot", label:"Adult one-shot character learning", family:"human",
+    age:"Adult", ageShort:"adult",
     task:"Reproducing and generalising a handwritten character after seeing one example",
     unit:"one character exemplar", needed:"1",
     to:"Unfamiliar alphabets never seen before",
@@ -710,6 +821,7 @@ const POINTS = [
     note:"Pairs directly with the Bayesian Program Learning point — same task, two routes to the same efficiency." },
 
   { id:"riding-a-bike", short:"Riding a bike", label:"Riding a bike", family:"human",
+    age:"Typically learned around 5 to 7", ageShort:"~5y",
     task:"Balancing and steering a two-wheeled bicycle",
     unit:"one practice session", needed:"a few hours, once",
     to:"Almost nothing — other bicycles, and that is close to the whole list",
@@ -719,6 +831,7 @@ const POINTS = [
     note:"The everyday proof of the thesis. Learned in an afternoon, kept for fifty years without practice — and it buys you nothing, not even a bicycle whose handlebars turn the other way. Extraordinary efficiency and retention, purchased with a completely rigid representation." },
 
   { id:"learning-to-drive", short:"Learning to drive", label:"Learning to drive", family:"human",
+    age:"Typically 16 to 18", ageShort:"~17y",
     task:"Operating a car safely on public roads",
     unit:"one hour of supervised practice", needed:"tens of hours",
     to:"Unfamiliar cars, unfamiliar cities, roads never seen before — genuine within-domain generalisation",
@@ -728,6 +841,7 @@ const POINTS = [
     note:"A useful middle of the map, and the one most students have done themselves. Note what the transfer actually covers: a driver handles a rental car in a foreign city on the first try, which is real generalisation over a wide space of novel situations — but the space is still one domain." },
 
   { id:"adult-second-language", short:"Adult L2", label:"Adult second-language learning", family:"human",
+    age:"Adult", ageShort:"adult",
     task:"Reaching fluency in a second language as an adult",
     unit:"one hour of study or immersion", needed:"thousands of hours, and usually without native attainment",
     to:"Reading, travel, related languages in the same family",
@@ -736,7 +850,28 @@ const POINTS = [
     source:"Johnson & Newport 1989, critical-period effects in second-language acquisition", confidence:"high",
     note:"Put this next to toddler fast mapping and the map argues with itself in the best way. Same species, same domain, and the adult — with more general intelligence, more strategies, more motivation — is thousands of times less sample-efficient. Whatever buys the toddler's efficiency is not general intelligence, and it expires." },
 
+  { id:"late-first-language", short:"Late first language", label:"Late first-language acquisition", family:"human",
+    age:"First language encountered after childhood", ageShort:"late",
+    task:"Acquiring a first language after the usual window has closed",
+    unit:"one year of daily use", needed:"decades, and native competence is still not reached",
+    to:"Substantial everyday communicative ability",
+    notTo:"Native-like grammar, which stays out of reach however many years follow",
+    lifetime:{e:0,t:3}, total:{e:0,t:3},
+    source:"Newport 1990; Mayberry & Eichen 1991 on late first-language acquisition in deaf signers", confidence:"high",
+    note:"The far end of the age series, and the strongest critical-period evidence here. Deaf signers who first encounter a language in late childhood or adulthood do not reach native signers' competence even after decades of daily use. The experience budget is not the limiting factor — the window is. Any account of sample efficiency that only counts examples cannot explain this point at all." },
+
+  { id:"older-adult-learning", short:"Older-adult learning", label:"Skill learning in later life", family:"human",
+    age:"65 and older", ageShort:"65+",
+    task:"Acquiring a new procedural skill in later life",
+    unit:"one practice session", needed:"more sessions than a younger adult needs for the same gain",
+    to:"Existing expertise, which older learners integrate new material into more readily",
+    notTo:"The raw acquisition rate, which declines",
+    lifetime:{e:1,t:3}, total:{e:1,t:3},
+    source:"Salthouse on processing speed and age; the fluid/crystallised distinction — find a specific study before citing this", confidence:"low",
+    note:"Closes the lifespan, and complicates the story in a useful way. Acquisition slows, but what is already known does more work: an older learner has far more structure to hang new material on. The direction of the age effect depends on which axis you look at, which is a good reminder that 'learns faster' and 'transfers further' were never the same claim." },
+
   { id:"one-shot-faces", short:"One-shot faces", label:"Recognising a face after one meeting", family:"human",
+    age:"Adult", ageShort:"adult",
     task:"Recognising a person you met once, months later",
     unit:"one encounter", needed:"1",
     to:"Any new face, in new lighting, at new angles, after a haircut",
@@ -746,6 +881,7 @@ const POINTS = [
     note:"A dedicated module with a strong built-in prior, and a documented failure mode that shows exactly where the prior was fitted. One-shot within its range, and measurably worse the moment the input leaves the distribution the system was tuned on — which is the same complaint people make about neural networks." },
 
   { id:"chess-expertise", short:"Chess expertise", label:"Human chess expertise", family:"human",
+    age:"Adult, after a decade of practice", ageShort:"adult",
     task:"Reaching master-level play",
     unit:"hours of deliberate practice; positions studied", needed:"roughly a decade of sustained practice",
     to:"Very little beyond chess",
@@ -979,6 +1115,7 @@ const famOf = k => FAMILIES.find(f => f.key === k);
 const state = {
   mode: "lifetime",
   shift: true,
+  ages: false,
   view: "map",
   hidden: new Set(),
   selected: "bayesian-program-learning"
@@ -1126,7 +1263,6 @@ POINTS.forEach(p => {
   drawGlyph(fam.shape, 14, { fill: "transparent" }, g);
 
   const lab = el("text", { class: "pt-label" }, g);
-  lab.textContent = p.short;
 
   const act = () => select(p.id);
   g.addEventListener("click", act);
@@ -1165,6 +1301,10 @@ function labelBox(x, y, anchor, text, cost = 3) {
 }
 const hits = (a, b) => !(a.x1 < b.x0 || b.x1 < a.x0 || a.y1 < b.y0 || b.y1 < a.y0);
 
+/* the age series is the point of the human family, so ages ride in the label rather
+   than in a second text run that would double the clutter at this density */
+const labelText = p => (state.ages && p.ageShort) ? `${p.short} · ${p.ageShort}` : p.short;
+
 function placeLabels(positions, visible) {
   const taken = [...zoneBoxes];
   /* every visible mark blocks label space, whether or not its own label is placed yet */
@@ -1187,11 +1327,13 @@ function placeLabels(positions, visible) {
   order.forEach(id => {
     const m = marks.get(id);
     const [x, y] = positions.get(id);
+    const text = labelText(m.p);
+    m.lab.textContent = text;
     let best = null, bestScore = Infinity;
 
     for (const [dx, dy, anchor] of CANDIDATES) {
       const bx = x + dx, by = y + dy;
-      const box = labelBox(bx, by, anchor, m.p.short);
+      const box = labelBox(bx, by, anchor, text);
       let score = 0;
       if (box.x0 < 4) score += 6;
       if (box.x1 > W - 4) score += 6;
@@ -1343,6 +1485,7 @@ function renderDossier() {
     </div>
 
     <div class="rows">
+      ${p.age ? `<div class="row"><span class="k">Age</span><span class="v">${esc(p.age)}</span></div>` : ""}
       <div class="row"><span class="k">Examples needed</span><span class="v mono">${esc(p.needed)}</span></div>
       <div class="row"><span class="k">One example is</span><span class="v">${esc(p.unit)}</span></div>
       <div class="row"><span class="k">Transfers to</span><span class="v">${esc(p.to)}</span></div>
@@ -1399,6 +1542,11 @@ document.getElementById("shift-toggle").addEventListener("change", e => {
   render();
 });
 
+document.getElementById("age-toggle").addEventListener("change", e => {
+  state.ages = e.target.checked;
+  render();
+});
+
 ["map", "table"].forEach(v => {
   document.getElementById(`view-${v}`).addEventListener("click", () => {
     state.view = v;
@@ -1423,6 +1571,7 @@ document.querySelector("#data-table tbody").innerHTML = POINTS.map(p => `
   <tr>
     <td class="name"><span class="dot" style="background:var(--fam-${p.family})"></span>${esc(p.label)}</td>
     <td>${famOf(p.family).label}</td>
+    <td>${p.age ? esc(p.age) : "—"}</td>
     <td>${esc(p.needed)}</td>
     <td class="num">${p.lifetime.e}</td>
     <td class="num">${p.lifetime.t}</td>
