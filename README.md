@@ -4,10 +4,9 @@ Coursework for a Neuro AI class.
 
 ## Few Examples, Far Transfer
 
-`few-examples-far-transfer.html` — an interactive argument map plotting
-thirty-six learners (human, animal, classical AI, current AI) on **sample
-efficiency** against **transfer breadth**, with a toggle between two ways of
-counting experience:
+An interactive argument map plotting thirty-six learners (human, animal,
+classical AI, current AI) on **sample efficiency** against **transfer
+breadth**, with a toggle between two ways of counting experience:
 
 - **Lifetime** — only the examples this individual or model met during the
   learning episode in question. Evolution and pretraining are free.
@@ -39,6 +38,18 @@ Positions are arguments, not measurements. The axes are ordinal, the units are
 not commensurable across families, and every point is anchored to a named study
 so the placement can be contested. Low-confidence placements carry a dashed
 ring on the map.
+
+### Which file is which
+
+- **`few-examples-far-transfer.html`** is the source, and it is a page
+  *fragment* — no `<!doctype>`, `<html>` or `<head>`, because the publishing
+  platform wraps it. Opening this one directly gives quirks mode and no
+  declared charset. Edit here.
+- **`dist/index.html`** is the real standalone page, built from the source.
+  This is the one that runs by double-clicking, offline included.
+- **`few-examples-far-transfer.zip`** is the submission: `dist/index.html`
+  plus a short read-me. Rebuild both with `python3 build/make-standalone.py`
+  after any edit to the source.
 
 ### Editing
 
