@@ -593,6 +593,11 @@
       <div class="legend" id="legend" role="group" aria-labelledby="fam-lbl"></div>
     </div>
 
+    <div class="ctl-group">
+      <span class="ctl-label" id="prior-lbl">Prior</span>
+      <div class="legend" id="prior-legend" role="group" aria-labelledby="prior-lbl"></div>
+    </div>
+
     <div class="ctl-group" style="margin-left:auto">
       <span class="ctl-label" id="view-lbl">View</span>
       <div class="segmented" role="group" aria-labelledby="view-lbl">
@@ -631,6 +636,7 @@
           <tr>
             <th scope="col">Learner</th>
             <th scope="col">Family</th>
+            <th scope="col">Prior</th>
             <th scope="col">Age</th>
             <th scope="col">Examples needed</th>
             <th scope="col">Lifetime eff.</th>
@@ -678,9 +684,8 @@
       wasp and birdsong all land on one square, and Deep Blue lands on AlphaZero.
     </p>
     <p>
-      That collision is worth seeing, but it is not proof of anything. The accounting rule forces it —
-      anything whose speed came from a big prior gets pushed into the same corner by definition. The
-      real test is in the next section.
+      That collision is worth seeing, but the accounting rule forces it, so it illustrates the idea
+      rather than testing it. The test is in the next section.
     </p>
   </div>
 
@@ -688,44 +693,59 @@
     <h2>Does the map show what it claims?</h2>
     <p>
       Worth checking rather than assuming. Correlate the two axes across all 36 points and the answer
-      is <strong>no</strong>: r = +0.06 under lifetime accounting, +0.23 under total. A tradeoff would be
-      negative. On that reading there is no tradeoff here at all.
+      is <strong>no</strong>: r = +0.06 under lifetime accounting, +0.23 under total. A tradeoff would
+      be negative. On that reading there is no tradeoff here at all.
     </p>
-    <p>Split the points by where the prior came from, though, and they separate. Under lifetime accounting:</p>
+    <p>
+      Split the points by where the prior came from and they separate. Use the <strong>Prior</strong>
+      filter above to see the two groups on the map. Under lifetime accounting:
+    </p>
     <div class="modes">
       <div class="mode">
-        <h3>Priors built or evolved · 26 points</h3>
+        <h3>Built or evolved · 26 points</h3>
         <p><strong>r = −0.12.</strong> Slightly negative, the predicted direction. The wasp, taste aversion, birdsong and Bayesian Program Learning are all fast and go nowhere.</p>
       </div>
       <div class="mode">
-        <h3>Priors learned from data · 10 points</h3>
-        <p><strong>r = +0.70.</strong> Strongly positive, the opposite direction. Pretraining, fine-tuning and in-context learning get speed and breadth together.</p>
+        <h3>Learned from data · 9 real systems</h3>
+        <p><strong>r = +0.56.</strong> Positive, the opposite direction. Pretraining, fine-tuning and in-context learning get speed and breadth together.</p>
       </div>
     </div>
     <p>
-      <strong>The gap between those two numbers is the finding.</strong> It is a better claim than a universal
-      tradeoff because it could have failed, and for one of the two groups it did. Three things keep it
-      honest. A correlation of −0.12 over 26 points is weak. The positions are one person's judgements,
-      so this describes the map rather than the world. And several biological points ignore the pattern
-      outright: infant segmentation at 9 and 6, the toddler at 8 and 7, the honeybee at 5 and 7 are all
-      high on both axes with priors nobody designed.
+      <strong>The gap between those is the finding.</strong> It is a better claim than a universal
+      tradeoff because it could have failed, and for one of the two groups it did.
     </p>
     <p>
-      Split the humans out of that first group and it separates again. Humans on their own give
-      <strong>r = +0.09</strong> — no tradeoff at all. Animals and hand-built systems give
-      <strong>r = −0.39</strong> — a clear one. The −0.12 above is those two mixed together, and the
-      humans are watering the effect down.
+      <strong>How the split is drawn, since everything rests on it.</strong> The question is where a
+      system's domain knowledge came from. Deep Blue counts as built, because grandmasters wrote its
+      evaluation terms even though the weights were tuned on games. AlphaZero counts as learned,
+      because nothing about chess beyond the rules was supplied. The image models are the arguable
+      ones — a convolutional network carries a designed prior about images, and it is classed as
+      learned only because the content it recognises came from the data. Reasonable people would
+      move those. The filter lets you check what happens if you do.
     </p>
     <p>
-      <strong>That is the Chang result turning up inside this map's own numbers.</strong> Among people, who
-      all share the same equipment, learning fast does not make you narrow. Across systems built on
-      different priors, it does. The map and the objection to the map agree, which is a better outcome
-      than either of them winning.
+      <strong>Three things keep the number honest.</strong> ARC-AGI is excluded from the +0.56: its
+      coordinates are an aspiration rather than a measurement, and including it inflates the figure to
+      +0.70. The result also leans on a few points — drop in-context learning and it falls to +0.24.
+      And the coordinates are one person's rankings, so this describes the map rather than the world.
+      Several biological points ignore the pattern outright: infant segmentation at 9 and 6, the
+      toddler at 8 and 7, the honeybee at 5 and 7 are high on both axes with priors nobody designed.
     </p>
     <p>
-      One thing the split also exposes: under total accounting the built-and-evolved group flips to
-      +0.53, the wrong way. That is not a discovery. Total accounting crushes almost everything into the
-      left margin, where the axis stops telling a wasp apart from a trillion-token training run.
+      Split the humans out of the built group and it separates again. Humans on their own give
+      <strong>r = +0.09</strong> — no tradeoff. Animals and hand-built systems give
+      <strong>r = −0.39</strong> — a clear one. <strong>That reproduces a known result inside this
+      map.</strong> Chang and colleagues trained children for five days and found the faster learners
+      also did better on new problems: faster and broader went together. They changed the learner and
+      held the priors fixed; this map changes the priors. Among people sharing the same equipment,
+      learning fast does not make you narrow. Across systems built on different priors, it does. One
+      caveat travels with it — Chang measured transfer to problems of the same shape, and this map
+      mostly asks about transfer across domains.
+    </p>
+    <p>
+      Under total accounting the built group flips to +0.53, the wrong way. That is not a discovery.
+      Total accounting crushes almost everything into the left margin, where the axis stops telling a
+      wasp apart from a trillion-token training run.
     </p>
   </div>
 
@@ -750,37 +770,17 @@
   </div>
 
   <div class="flag">
-    <h3>Faster learners transfer better — the limit on the claim</h3>
-    <p>
-      Chang and colleagues trained children for five days and found that the faster learners also did
-      better on new problems. Faster and broader went together. That is the opposite of a tradeoff, and
-      it is the first objection a careful reader will raise.
-    </p>
-    <p>
-      It is a limit rather than a refutation. <strong>Chang changed the learner and held the priors fixed.
-      This map changes the priors.</strong> Among children with the same equipment, whatever makes one learn
-      quickly also helps them generalise. Across systems built on different priors, the two come apart.
-      Both can be true.
-    </p>
-    <p>
-      One caveat travels with it: Chang measured transfer to new problems of the same shape. This map
-      mostly asks about transfer across domains. Those are different questions, and the map does not
-      yet separate them.
-    </p>
-  </div>
-
-  <div class="flag">
     <h3>ARC-AGI is drawn as a target, not a result</h3>
     <p>
-      ARC-AGI tests whether a system can pick up a genuinely new task from two or three examples. It
+      ARC-AGI-2 tests whether a system can pick up a genuinely new task from two or three examples. It
       is a dashed ring rather than a dot because it marks where the corner would be if something
       reached it, and it disappears under total accounting, since an aspiration has no experience
       budget.
     </p>
     <p>
       The scores are contested and move fast, so treat any figure as something to re-check. As of
-      late 2026 frontier models report around 90% on the public leaderboard, well above the human
-      panel average of 60% — while the same benchmark under a strict compute cap sits near 24%. That
+      September 2026 frontier models report around 90% on the ARC-AGI-2 public leaderboard, well above that benchmark's
+      human panel average of 60% — while the same benchmark under a strict compute cap sits near 24%. That
       gap is the interesting part. If a system beats the human average only by spending enormous
       computation per puzzle, the cost did not vanish; it moved from training examples to thinking
       time. Whether that belongs here as a third axis is the strongest open question on this map.
@@ -816,10 +816,9 @@
       stronger one transfers just as far, the claim is false.
     </p>
     <p style="margin:0">
-      Third, some animals may be underrated by their own experiments. Bräuer and colleagues argue
-      that species are often tested outside their main sense — dogs through sight when smell is
-      their channel. Six animal points now say on the card whether the test suited the animal, in
-      both directions.
+      Third, some animals may be underrated by their own experiments — tested outside their main
+      sense, or in a lab rather than the setting the behaviour evolved for. Six animal cards now say
+      which, in both directions.
     </p>
   </footer>
 
@@ -838,7 +837,7 @@ const FAMILIES = [
 ];
 
 const POINTS = [
-  { id:"newborn-face-bias", short:"Newborn face bias", label:"Newborn face preference", family:"human",
+  { id:"newborn-face-bias", short:"Newborn face bias", label:"Newborn face preference", family:"human", prior:"built",
     age:"Hours after birth", ageShort:"birth",
     task:"Preferentially tracking a face-like pattern",
     unit:"there is no learning episode — the bias is present before any faces have been seen", needed:"0",
@@ -848,7 +847,7 @@ const POINTS = [
     source:"Goren, Sarty & Wu 1975 (40 newborns, median age 9 minutes); Johnson, Dziurawiec, Ellis & Morton 1991. Mechanism disputed — see Simion and Turati on non-face-specific biases", confidence:"medium",
     note:"Zero examples is not fast learning. It is no learning at all — the prior came pre-installed. That makes this the edge of the efficiency axis rather than a point on it, and every other point here is paying for something this one got free. One caveat: the behaviour is solid, but the explanation is argued over. Some researchers think the preference comes from general biases toward top-heavy patterns rather than from a face template." },
 
-  { id:"infant-segmentation", short:"Infant segmentation", label:"Infant statistical learning", family:"human",
+  { id:"infant-segmentation", short:"Infant segmentation", label:"Infant statistical learning", family:"human", prior:"built",
     age:"8 months", ageShort:"8mo",
     task:"Finding word boundaries in a continuous speech stream that contains no pauses",
     unit:"one minute of exposure", needed:"2 minutes",
@@ -858,7 +857,7 @@ const POINTS = [
     source:"Saffran, Aslin & Newport 1996, Science. Breadth: Saffran et al. 1999 for tone sequences, Kirkham, Slemmer & Johnson 2002 for visual sequences", confidence:"high",
     note:"Two minutes of speech with no pauses, no feedback and no instruction, and an eight-month-old has found the word boundaries. It is one of the fastest results on this map, and an unusually broad one — the same machinery works on tones and on visual sequences. A strong counterexample to the idea that speed always costs breadth." },
 
-  { id:"perceptual-narrowing", short:"Perceptual narrowing", label:"Phonetic perceptual narrowing", family:"human",
+  { id:"perceptual-narrowing", short:"Perceptual narrowing", label:"Phonetic perceptual narrowing", family:"human", prior:"built",
     age:"6 to 12 months", ageShort:"6–12mo",
     task:"Losing the ability to hear contrasts the native language does not use",
     unit:"one month of ordinary native-language exposure", needed:"about six months",
@@ -868,7 +867,7 @@ const POINTS = [
     source:"Werker & Tees 1984 (English-learning infants on Hindi and Salish contrasts); Kuhl et al. 2006 for the Japanese /r/–/l/ decline", confidence:"high", keystone:true,
     note:"**The tradeoff, caught in the act.** At six months an infant can hear contrasts it will have lost by twelve. Nothing was added. A general ability was *spent* to get better at one language. Everywhere else on this map the prior has to be inferred from a finished system; here you can watch it being installed. Narrowing is contrast-specific rather than total, and the original study followed only six infants." },
 
-  { id:"toddler-fast-mapping", short:"Fast mapping", label:"Toddler fast mapping", family:"human",
+  { id:"toddler-fast-mapping", short:"Fast mapping", label:"Toddler fast mapping", family:"human", prior:"built",
     age:"3 to 4 years", ageShort:"3–4y",
     task:"Learning a new colour word ('chromium') from a handful of incidental exposures",
     unit:"one incidental introducing event", needed:"a few events across about five weeks",
@@ -878,7 +877,7 @@ const POINTS = [
     source:"Carey & Bartlett 1978 — 14 children, aged 3 and 4", confidence:"high",
     note:"The popular version of this result is stronger than the paper. Carey and Bartlett tested 3- and 4-year-olds, the word appeared across several moments over about five weeks rather than once, and only about half the children remembered it later. Still remarkable, still not one-shot." },
 
-  { id:"child-second-language", short:"Child L2", label:"Child second-language learning", family:"human",
+  { id:"child-second-language", short:"Child L2", label:"Child second-language learning", family:"human", prior:"built",
     age:"First exposure before about 7", ageShort:"<7y",
     task:"Reaching native-like fluency in a second language as a child",
     unit:"one hour of immersion", needed:"a few years of ordinary immersion, with no instruction",
@@ -888,7 +887,7 @@ const POINTS = [
     source:"Johnson & Newport 1989, age of arrival and grammatical attainment (one study, n=46). Challenged by Vanhove 2013 on the statistics and Hartshorne, Tenenbaum & Pinker 2018, which puts the sharp drop nearer 17–18", confidence:"medium", keystone:true,
     note:"Set this against adult second-language learning and the map argues with itself. Same task, same species, and the child reaches native-like grammar and accent while the adult almost never does — without lessons, effort or strategy. Whatever the child has, it is not general intelligence, because the adult has more of that." },
 
-  { id:"absolute-pitch", short:"Absolute pitch", label:"Absolute pitch", family:"human",
+  { id:"absolute-pitch", short:"Absolute pitch", label:"Absolute pitch", family:"human", prior:"built",
     age:"Acquired before about 6, or not at all", ageShort:"<6y",
     task:"Naming a pitch with no reference tone",
     unit:"one hour of early musical training", needed:"early training, inside a developmental window",
@@ -898,7 +897,7 @@ const POINTS = [
     source:"Takeuchi & Hulse 1993 for the age-6 window; Van Hedger et al. 2019 for adult acquisition; Deutsch on prevalence and tone-language effects", confidence:"medium",
     note:"Close to now-or-never, though the strict version is disputed: a few adults do acquire it with training. What holds is that the *amount* of practice is not what decides it. Adults who train for years usually fail where a child picking up an instrument succeeds. When the experience arrives matters more than how much of it there is." },
 
-  { id:"omniglot-human", short:"Human one-shot", label:"Adult one-shot character learning", family:"human",
+  { id:"omniglot-human", short:"Human one-shot", label:"Adult one-shot character learning", family:"human", prior:"built",
     age:"Adult", ageShort:"adult",
     task:"Reproducing and generalising a handwritten character after seeing one example",
     unit:"one character exemplar", needed:"1",
@@ -908,7 +907,7 @@ const POINTS = [
     source:"Lake, Salakhutdinov & Tenenbaum 2015 (human baseline)", confidence:"high",
     note:"The same task and the same one-shot accuracy as Bayesian Program Learning, reached a completely different way. Comparing the two is the cleanest evidence on the map." },
 
-  { id:"riding-a-bike", short:"Riding a bike", label:"Riding a bike", family:"human",
+  { id:"riding-a-bike", short:"Riding a bike", label:"Riding a bike", family:"human", prior:"built",
     age:"Typically learned around 5 to 7", ageShort:"~5y",
     task:"Balancing and steering a two-wheeled bicycle",
     unit:"one practice session", needed:"a few hours, once",
@@ -918,7 +917,7 @@ const POINTS = [
     source:"Motor retention: Fleishman & Parker 1962 (a tracking task over 24 months, not decades of cycling). Reversed steering: 'Initial development of skill with a reversed bicycle', Scientific Reports 14, 2024", confidence:"medium",
     note:"Learned in an afternoon and kept for years, and it buys almost nothing — not even a bicycle whose handlebars turn the other way. Two details make it sharper. Retention across decades is folklore; the measured study runs to 24 months. And riders *can* learn the reversed bicycle, over about four days, after which it interferes with riding a normal one. Two skills that differ by one sign get in each other's way." },
 
-  { id:"learning-to-drive", short:"Learning to drive", label:"Learning to drive", family:"human",
+  { id:"learning-to-drive", short:"Learning to drive", label:"Learning to drive", family:"human", prior:"built",
     age:"Typically 16 to 18", ageShort:"~17y",
     task:"Operating a car safely on public roads",
     unit:"one hour of supervised practice", needed:"roughly 40 to 120 hours of supervised practice",
@@ -928,7 +927,7 @@ const POINTS = [
     source:"Gregersen et al. 2000 on Sweden's lowered learner age — learners averaged about 118 hours of supervised practice against 41–48 before, with roughly 40% lower crash risk; Bates et al. 2010 on the Australian 120-hour requirement", confidence:"medium",
     note:"The middle of the map, and the point most readers have lived. Look at what the transfer covers: a driver handles an unfamiliar car in a foreign city on the first try. That is real generalisation across a wide range of new situations — but all of it inside one domain." },
 
-  { id:"adult-second-language", short:"Adult L2", label:"Adult second-language learning", family:"human",
+  { id:"adult-second-language", short:"Adult L2", label:"Adult second-language learning", family:"human", prior:"built",
     age:"Adult", ageShort:"adult",
     task:"Reaching fluency in a second language as an adult",
     unit:"one hour of study or immersion", needed:"thousands of hours, and usually without native attainment",
@@ -938,7 +937,7 @@ const POINTS = [
     source:"Johnson & Newport 1989, critical-period effects in second-language acquisition — see Vanhove 2013 and Hartshorne et al. 2018 for challenges to the linear-decline reading", confidence:"medium",
     note:"The adult has strategies, motivation and reasoning the child lacks, and is still thousands of times slower, and still does not arrive. Whatever buys the child's speed is not general intelligence, and it expires." },
 
-  { id:"late-first-language", short:"Late first language", label:"Late first-language acquisition", family:"human",
+  { id:"late-first-language", short:"Late first language", label:"Late first-language acquisition", family:"human", prior:"built",
     age:"First language encountered after childhood", ageShort:"late",
     task:"Acquiring a first language after the usual window has closed",
     unit:"one year of daily use", needed:"decades, and native competence is still not reached",
@@ -948,7 +947,7 @@ const POINTS = [
     source:"Newport 1990; Mayberry & Eichen 1991 on late first-language acquisition in deaf signers", confidence:"high",
     note:"The far end of the age series, and the hardest point for any account that only counts examples. Deaf signers who meet their first language in late childhood do not reach native competence after decades of daily use. They have the experience. The window is what they lack." },
 
-  { id:"one-shot-faces", short:"One-shot faces", label:"Recognising a face after one meeting", family:"human",
+  { id:"one-shot-faces", short:"One-shot faces", label:"Recognising a face after one meeting", family:"human", prior:"built",
     age:"Adult", ageShort:"adult",
     task:"Recognising a person met once, against recognising a familiar face",
     unit:"one encounter", needed:"1 for the familiar-face intuition; far more for it to actually be true",
@@ -958,7 +957,7 @@ const POINTS = [
     source:"Unfamiliar-face failure: Jenkins, White, Van Montfort & Burton 2011; Burton et al. 1999. Other-race effect: Meissner & Brigham 2001", confidence:"medium",
     note:"**Here because the intuition is wrong.** Almost everyone believes they can recognise a face after meeting someone once. The research says otherwise: matching two photographs of a stranger is close to guessing. What is near-perfect is recognising a *familiar* face, and familiarity takes many encounters. So the face system is not a one-shot learner with a strong prior. It is a system whose prior only pays off once it has been fed." },
 
-  { id:"chess-expertise", short:"Chess expertise", label:"Human chess expertise", family:"human",
+  { id:"chess-expertise", short:"Chess expertise", label:"Human chess expertise", family:"human", prior:"built",
     age:"Adult, after a decade of practice", ageShort:"adult",
     task:"Reaching master-level play",
     unit:"hours of deliberate practice; positions studied", needed:"roughly a decade of sustained practice",
@@ -968,7 +967,7 @@ const POINTS = [
     source:"Ten-year rule: Simon & Chase 1973 (Ericsson et al. 1993 studied violinists, not chess). Practice-variance dispute: Macnamara, Hambrick & Oswald 2014. Far-transfer failures: Sala & Gobet 2017", confidence:"medium",
     note:"A useful corrective: the spread on this map exists inside a single species, so it is not a story about humans beating machines. Two details to get right. The ten-year figure is Simon and Chase's rule, not Ericsson's violin study. And the practice account is contested — one meta-analysis puts practice at about a quarter of the variance in games. The part this point rests on, that chess skill goes nowhere else, is the solid part." },
 
-  { id:"digger-wasp", short:"Digger wasp", label:"Digger wasp landmark learning", family:"animal",
+  { id:"digger-wasp", short:"Digger wasp", label:"Digger wasp landmark learning", family:"animal", prior:"built",
     task:"Memorising nest location from a single orientation flight",
     unit:"one orientation flight", needed:"1",
     to:"Nothing — the mechanism is dedicated to nest relocation",
@@ -977,7 +976,7 @@ const POINTS = [
     source:"Single orientation flight: Zeil 1993 on solitary wasp learning flights. Landmark displacement: Tinbergen & Kruyt 1938 (not Tinbergen 1932, which is Part I and shows neither)", confidence:"high",
     note:"The cleanest version of the pattern: one flight is enough, the skill goes nowhere, and under total accounting the efficiency disappears because evolution paid for it." },
 
-  { id:"nutcracker-caching", short:"Nutcracker caching", label:"Clark's nutcracker cache recovery", family:"animal",
+  { id:"nutcracker-caching", short:"Nutcracker caching", label:"Clark's nutcracker cache recovery", family:"animal", prior:"built",
     task:"Recovering thousands of seed caches months later",
     unit:"one caching event per location", needed:"1 per cache; thousands of caches in the field, tens in the lab studies",
     to:"Spatial memory tasks in the lab, to a limited degree",
@@ -987,7 +986,7 @@ const POINTS = [
     source:"Balda & Kamil 1992, long-term spatial memory in Clark's nutcracker", confidence:"medium",
     note:"A memory far better than a human's, in exactly one domain. Two separate figures are often blurred together: the thousands of caches is a field estimate, while the finding that accuracy after 285 days matches accuracy after 10 comes from lab work with a few dozen caches." },
 
-  { id:"honeybee-sameness", short:"Honeybee same/diff", label:"Honeybee same/different concept", family:"animal",
+  { id:"honeybee-sameness", short:"Honeybee same/diff", label:"Honeybee same/different concept", family:"animal", prior:"built",
     task:"Learning an abstract sameness rule in a Y-maze",
     unit:"one training trial", needed:"tens of trials",
     to:"Novel stimuli and across sensory modalities — visual rule transferred to odour",
@@ -997,7 +996,7 @@ const POINTS = [
     source:"Giurfa et al. 2001, Nature", confidence:"medium",
     note:"The strongest counterexample here. A brain of about a million neurons learns an abstract sameness rule and carries it from vision to smell, in the 2001 paper itself, after roughly 60 trials. That breaks any simple story about bigger brains meaning broader minds. Samples are small, and simpler explanations have been proposed since." },
 
-  { id:"taste-aversion", short:"Taste aversion", label:"Conditioned taste aversion", family:"animal",
+  { id:"taste-aversion", short:"Taste aversion", label:"Conditioned taste aversion", family:"animal", prior:"built",
     task:"Avoiding a food after a single pairing with nausea",
     unit:"one taste-illness pairing", needed:"1, even with hours between the meal and the sickness",
     to:"Nothing — and it barely forms between the wrong pair of cues",
@@ -1007,7 +1006,7 @@ const POINTS = [
     source:"Cue-consequence dissociation: Garcia & Koelling 1966. Hours-long delay: Garcia, Ervin & Koelling 1966. 'Preparedness': Seligman 1970", confidence:"high", keystone:true,
     note:"**The most relatable result on the map.** One trial, hours between the meal and the sickness, and a memory that lasts — anyone who has been ill after a restaurant has this. Then the control condition: pair nausea with a flashing light instead of a taste, and the same rat barely learns it. The speed is not a general ability. It is a built-in expectation about which things cause which. Biologists call it preparedness." },
 
-  { id:"pavlov-dogs", short:"Pavlov's dogs", label:"Pavlovian conditioning", family:"animal",
+  { id:"pavlov-dogs", short:"Pavlov's dogs", label:"Pavlovian conditioning", family:"animal", prior:"built",
     task:"Salivating to a tone that predicts food",
     unit:"one tone-food pairing", needed:"tens of pairings",
     to:"Tones close to the trained one, and nothing further",
@@ -1017,7 +1016,7 @@ const POINTS = [
     source:"Pavlov 1927", confidence:"high",
     note:"The most famous learning experiment there is, and worth including because it is ordinary on both axes. Middling speed, almost no breadth. Most of what gets called learning looks like this." },
 
-  { id:"dog-learns-sit", short:"Dog learns sit", label:"Dog learning a command", family:"animal",
+  { id:"dog-learns-sit", short:"Dog learns sit", label:"Dog learning a command", family:"animal", prior:"built",
     task:"Learning to sit on cue",
     unit:"one training trial", needed:"tens of trials",
     to:"New handlers and new rooms, partially",
@@ -1027,7 +1026,7 @@ const POINTS = [
     source:"Dogs' sensitivity to human social cues: Hare et al. 2002. Context-specificity is generalisation decrement — see Bouton on renewal — rather than anything in that paper", confidence:"medium",
     note:"The failure is the interesting part. A command learned in the kitchen often does not survive the move to a park. What looked like learning 'sit' was learning 'sit, here, with these smells'. The context was quietly part of what got stored — the same brittleness people complain about in machine learning." },
 
-  { id:"birdsong-learning", short:"Birdsong learning", label:"Songbird tutor learning", family:"animal",
+  { id:"birdsong-learning", short:"Birdsong learning", label:"Songbird tutor learning", family:"animal", prior:"built",
     task:"Acquiring the species song from a tutor during a critical period",
     unit:"one exposure to tutor song", needed:"tens of exposures, inside a fixed developmental window",
     to:"Nothing — and the window closes permanently",
@@ -1036,7 +1035,7 @@ const POINTS = [
     source:"Marler 1970", confidence:"high",
     note:"An innate template plus a little experience, and only inside a window. The bird is not working out what to sing from scratch; it is picking which of a pre-specified family of songs its neighbours use. The same shape as adult language learning: a prior with an expiry date." },
 
-  { id:"crow-trap-tube", short:"Crow trap-tube", label:"New Caledonian crow, trap-tube", family:"animal",
+  { id:"crow-trap-tube", short:"Crow trap-tube", label:"New Caledonian crow, trap-tube", family:"animal", prior:"built",
     task:"Extracting food without losing it to a trap",
     unit:"one trial", needed:"tens of trials, with individual variation",
     to:"Structurally similar physical problems after transfer testing",
@@ -1045,7 +1044,7 @@ const POINTS = [
     source:"Taylor et al. 2009", confidence:"low",
     note:"Whether crows understand the physics or have learned which pictures predict food is genuinely disputed, which is why this point carries a low-confidence ring rather than a confident placement. On how a small brain manages it at all: corvid and parrot forebrains pack neurons very densely, so brain volume is the wrong thing to measure." },
 
-  { id:"rats-beat-humans", short:"Rats beat humans", label:"Rats outperforming humans at generalisation", family:"animal",
+  { id:"rats-beat-humans", short:"Rats beat humans", label:"Rats outperforming humans at generalisation", family:"animal", prior:"built",
     task:"Sorting things into a category that no simple rule describes",
     unit:"one training trial", needed:"many trials",
     to:"Novel exemplars of the category — and better than the humans tested on the same task",
@@ -1054,7 +1053,7 @@ const POINTS = [
     source:"Vermaercke et al. 2014, reviewed in Bräuer et al. 2020", confidence:"medium",
     note:"**A transfer result where the rat wins, because the human has a prior.** The category here has no verbal rule behind it. Humans kept looking for one, and generalised worse for it. The rats, with no such habit, just integrated the evidence. The prior does not merely fail to help — it gets in the way. It also breaks any neat ordering by family or brain size." },
 
-  { id:"rat-latent-learning", short:"Rat latent learning", label:"Rat latent learning", family:"animal",
+  { id:"rat-latent-learning", short:"Rat latent learning", label:"Rat latent learning", family:"animal", prior:"built",
     task:"Navigating a maze after unrewarded exploration",
     unit:"one maze run", needed:"ten days of unrewarded exploration",
     to:"Novel routes and shortcuts within the environment",
@@ -1064,7 +1063,7 @@ const POINTS = [
     source:"Tolman & Honzik 1930 for latent learning; Tolman, Ritchie & Kalish 1946 and Tolman 1948 for shortcuts and the cognitive map", confidence:"high",
     note:"Historically important: evidence that the rat built a map of the maze rather than a chain of habits. A good anchor for the animal cluster." },
 
-  { id:"alphazero", short:"AlphaZero", label:"AlphaZero (chess)", family:"classic_ai",
+  { id:"alphazero", short:"AlphaZero", label:"AlphaZero (chess)", family:"classic_ai", prior:"learned",
     task:"Superhuman chess from self-play",
     unit:"one self-play game", needed:"tens of millions",
     to:"Nothing — a separately trained instance is needed per game",
@@ -1073,7 +1072,7 @@ const POINTS = [
     source:"Silver et al. 2018", confidence:"high",
     note:"Superhuman skill, and almost no intelligence by Chollet's definition — which is a useful provocation. It also shows something this map's transfer axis cannot. When DQN learned 49 Atari games, the same architecture and settings worked for all of them, while a separate network was trained per game on 50 million frames, roughly 38 days of play each. The architecture transferred completely; the weights transferred not at all. This axis only measures the second." },
 
-  { id:"deep-blue", short:"Deep Blue", label:"Deep Blue", family:"classic_ai",
+  { id:"deep-blue", short:"Deep Blue", label:"Deep Blue", family:"classic_ai", prior:"built",
     task:"Beating the world chess champion with search and a hand-structured evaluation",
     unit:"one grandmaster game in the tuning corpus and opening book", needed:"over 700,000 grandmaster games, plus hand-written evaluation structure",
     to:"Nothing",
@@ -1082,7 +1081,7 @@ const POINTS = [
     source:"Campbell, Hoane & Hsu 2002, Artificial Intelligence 134:57–83", confidence:"high",
     note:"**A correction worth making out loud.** Deep Blue is usually described as needing no training data, because grandmasters wrote its knowledge down by hand. Its own paper says otherwise: the evaluation weights were tuned against a database of master games, and the opening book came from over 700,000 grandmaster games. What was hand-built was the shape of the knowledge, not the numbers. The contrast with AlphaZero survives and is sharper for being true — 700,000 human games plus a designed form, against 44 million self-play games and no form at all." },
 
-  { id:"mnist", short:"MNIST", label:"MNIST digit classifier", family:"classic_ai",
+  { id:"mnist", short:"MNIST", label:"MNIST digit classifier", family:"classic_ai", prior:"learned",
     task:"Recognising handwritten digits 0 to 9",
     unit:"one labelled digit image", needed:"tens of thousands",
     to:"Almost nothing — accuracy falls off on digits written in a different style or collected by a different process",
@@ -1091,7 +1090,7 @@ const POINTS = [
     source:"LeCun et al. 1998", confidence:"high",
     note:"The 'hello world' of machine learning, and a clean contrast with the one-shot character points to its right. Sixty thousand examples for ten categories, against one example per category for a person or for Bayesian Program Learning. Same kind of task, four orders of magnitude apart." },
 
-  { id:"alexnet", short:"AlexNet", label:"AlexNet / ImageNet", family:"classic_ai",
+  { id:"alexnet", short:"AlexNet", label:"AlexNet / ImageNet", family:"classic_ai", prior:"learned",
     task:"Large-scale image classification",
     unit:"one labelled image", needed:"over a million",
     to:"Other vision tasks via feature reuse — the origin of transfer learning as standard practice",
@@ -1100,7 +1099,7 @@ const POINTS = [
     source:"Krizhevsky, Sutskever & Hinton 2012; transfer analysed in Yosinski et al. 2014", confidence:"high",
     note:"Transfer is not all-or-nothing. The early layers move to new vision tasks; the late ones do not." },
 
-  { id:"bayesian-program-learning", short:"Bayesian programs", label:"Bayesian Program Learning", family:"classic_ai",
+  { id:"bayesian-program-learning", short:"Bayesian programs", label:"Bayesian Program Learning", family:"classic_ai", prior:"built",
     task:"One-shot handwritten character learning",
     unit:"one character exemplar", needed:"1",
     to:"New alphabets within the same stroke-based generative framework",
@@ -1109,7 +1108,7 @@ const POINTS = [
     source:"Lake, Salakhutdinov & Tenenbaum 2015, Science", confidence:"high", keystone:true,
     note:"**The clearest case on the map.** One-shot performance at human level — 3.3% error against a human 4.5% — from a hand-designed story about strokes, sub-strokes and how they join. Be precise about what was designed: the structure was, while the stroke primitives were fit to 30 background alphabets, so 'entirely hand-built' overstates it. Even so, this is the one point where you can read the domain assumption straight off the model's definition." },
 
-  { id:"act-r", short:"ACT-R", label:"ACT-R cognitive model", family:"classic_ai",
+  { id:"act-r", short:"ACT-R", label:"ACT-R cognitive model", family:"classic_ai", prior:"built",
     task:"Modelling human performance in a specified domain",
     unit:"one training instance", needed:"few, given hand-built task knowledge",
     to:"Nothing automatically — each domain is modelled by hand",
@@ -1118,7 +1117,7 @@ const POINTS = [
     source:"Anderson, Bothell, Byrne, Douglass, Lebiere & Qin 2004, 'An integrated theory of the mind'", confidence:"medium",
     note:"The same shape as Bayesian Program Learning: the efficiency comes from knowledge the modeller supplied. Under total accounting, the hidden cost is the human effort of building the model." },
 
-  { id:"llm-pretraining", short:"LLM pretraining", label:"LLM pretraining", family:"current_ai",
+  { id:"llm-pretraining", short:"LLM pretraining", label:"LLM pretraining", family:"current_ai", prior:"learned",
     task:"Acquiring general language and world knowledge",
     unit:"one token", needed:"trillions",
     to:"An unusually wide range of downstream tasks",
@@ -1127,7 +1126,7 @@ const POINTS = [
     source:"Brown et al. 2020 and successors", confidence:"high",
     note:"**The point the narrow thesis is built on.** Enormous data bought breadth rather than narrowness, which rules out a universal tradeoff. A prior learned from data does not seem to charge the narrowing tax that a designed or evolved prior charges. Whether that is because the training data covers most of what we think to ask, or because learned priors are a different kind of thing, is the open question. This map can pose it but not settle it." },
 
-  { id:"llm-in-context", short:"LLM in-context", label:"LLM in-context learning", family:"current_ai",
+  { id:"llm-in-context", short:"LLM in-context", label:"LLM in-context learning", family:"current_ai", prior:"learned",
     task:"Performing a new task from a few examples in the prompt",
     unit:"one example in the prompt", needed:"a handful",
     to:"Many task types, immediately",
@@ -1136,7 +1135,7 @@ const POINTS = [
     source:"Brown et al. 2020", confidence:"high", keystone:true,
     note:"**The point that makes the toggle worth having.** Under lifetime accounting it sits alone in the upper-right corner. Under total accounting it slides left onto pretraining. Same system, opposite conclusions, depending only on what you agree to count. Notice what the toggle does not do, though: it moves efficiency and leaves transfer untouched, here and everywhere else. Moving the cost does not take the breadth away." },
 
-  { id:"fine-tuning", short:"Fine-tuning", label:"Fine-tuning a pretrained model", family:"current_ai",
+  { id:"fine-tuning", short:"Fine-tuning", label:"Fine-tuning a pretrained model", family:"current_ai", prior:"learned",
     task:"Adapting a pretrained model to a specific task with a small labelled set",
     unit:"one labelled example", needed:"hundreds to a few thousand",
     to:"Whatever the pretrained base already covered — the breadth is inherited, not learned here",
@@ -1145,7 +1144,7 @@ const POINTS = [
     source:"Howard & Ruder 2018 (ULMFiT); Devlin et al. 2018 (BERT)", confidence:"high",
     note:"The same move as in-context learning, one scale down, and it is how most applied machine learning actually works. A few hundred examples looks miraculous until you count the pretraining run underneath. Three points make this move when the accounting changes, but that is one observation rather than three, because the accounting rule guarantees it." },
 
-  { id:"self-driving", short:"Self-driving", label:"Self-driving cars", family:"current_ai",
+  { id:"self-driving", short:"Self-driving", label:"Self-driving cars", family:"current_ai", prior:"learned",
     task:"Driving autonomously on public roads",
     unit:"one mile of driving", needed:"hundreds of millions of driverless miles, on top of tens of billions simulated",
     to:"New cities, with substantial per-city engineering",
@@ -1154,7 +1153,7 @@ const POINTS = [
     source:"Waymo safety reporting: roughly 220 million rider-only miles through early 2026, plus 20+ billion simulated. Mileage figures date quickly", confidence:"medium",
     note:"Compare it with the human driver a few points to the right: tens of hours of practice against hundreds of millions of miles, for the same task. Do not overclaim the second half, though. The obvious follow-on — that the human still handles the rare cases better — is what the fleet safety data disputes. The efficiency gap is the defensible claim. The competence gap is not." },
 
-  { id:"alphafold", short:"AlphaFold", label:"AlphaFold", family:"current_ai",
+  { id:"alphafold", short:"AlphaFold", label:"AlphaFold", family:"current_ai", prior:"learned",
     task:"Predicting protein structure from sequence",
     unit:"one structure in the training set", needed:"roughly 170,000 experimental structures, plus about 350,000 self-distilled predictions",
     to:"Proteins unlike anything in its training set — real generalisation across a vast space",
@@ -1163,7 +1162,7 @@ const POINTS = [
     source:"Jumper et al. 2021", confidence:"high",
     note:"A useful complication. Narrow by any reading of this axis, and yet it generalises well inside its domain, to proteins unlike anything it trained on. That suggests the transfer axis is hiding a distinction: breadth of domain is not the same as reach within one, and this map currently scores only the first." },
 
-  { id:"recommenders", short:"Recommenders", label:"Recommender systems", family:"current_ai",
+  { id:"recommenders", short:"Recommenders", label:"Recommender systems", family:"current_ai", prior:"learned",
     task:"Predicting what someone will watch, buy or listen to next",
     unit:"one interaction event", needed:"millions",
     to:"Nothing — a model built for one catalogue does not move to another",
@@ -1172,7 +1171,7 @@ const POINTS = [
     source:"Netflix Prize; Bell & Koren 2007", confidence:"medium",
     note:"The AI most people touch every day, sitting in the same corner as AlphaZero. The systems with the biggest real-world footprint are mostly down here — and cold start, the most expensive open problem in the industry, is this map's x-axis asked in production." },
 
-  { id:"arc-agi", short:"ARC-AGI", label:"ARC-AGI", family:"current_ai",
+  { id:"arc-agi", short:"ARC-AGI", label:"ARC-AGI", family:"current_ai", prior:"learned",
     task:"Abstract reasoning puzzles designed to resist memorisation",
     unit:"two or three demonstration pairs per task", needed:"2–3",
     to:"By design, each task is novel — the benchmark tests acquisition itself",
@@ -1218,6 +1217,7 @@ const state = {
   ages: false,
   view: "map",
   hidden: new Set(),
+  hiddenPrior: new Set(),
   selected: "bayesian-program-learning",
   pinned: "bayesian-program-learning",  /* what the reader chose, survives filtering */
   hover: null,
@@ -1478,7 +1478,7 @@ function resolvePositions(lifetime) {
   const byCoord = new Map();
   POINTS.forEach(p => {
     const c = lifetime ? p.lifetime : p.total;
-    if (!c || state.hidden.has(p.family)) return;
+    if (!c || state.hidden.has(p.family) || state.hiddenPrior.has(p.prior)) return;
     const k = `${c.e},${c.t}`;
     if (!byCoord.has(k)) byCoord.set(k, []);
     byCoord.get(k).push(p);
@@ -1618,7 +1618,7 @@ function renderDossier(empty) {
   if (empty) {
     document.getElementById("dossier").innerHTML =
       `<div class="dos-head"><h2 class="dos-title">Nothing shown</h2>` +
-      `<p class="dos-task">Every family is filtered out. Turn one back on to read a point.</p></div>`;
+      `<p class="dos-task">Everything is filtered out. Turn a chip back on to read a point.</p></div>`;
     live.textContent = "No families shown.";
     return;
   }
@@ -1662,6 +1662,7 @@ function renderDossier(empty) {
 
     <div class="rows">
       ${p.age ? `<div class="row"><span class="k">Age</span><span class="v">${esc(p.age)}</span></div>` : ""}
+      <div class="row"><span class="k">Where the prior came from</span><span class="v">${p.prior === "built" ? "Built by a designer, or shaped by evolution" : "Learned from data the system consumed"}</span></div>
       ${p.ecological ? `<div class="row"><span class="k">Did the test suit the animal?</span><span class="v">${esc(p.ecological)}</span></div>` : ""}
       <div class="row"><span class="k">Examples needed</span><span class="v mono">${esc(p.needed)}</span></div>
       <div class="row"><span class="k">One example is</span><span class="v">${esc(p.unit)}</span></div>
@@ -1714,6 +1715,32 @@ FAMILIES.forEach(f => {
   legend.appendChild(b);
 });
 
+/* the built/learned split is what the correlation finding rests on, so the reader
+   has to be able to see it, not take it on trust */
+const PRIORS = [
+  { key: "built",   label: "Built or evolved" },
+  { key: "learned", label: "Learned from data" }
+];
+const priorLegend = document.getElementById("prior-legend");
+PRIORS.forEach(pr => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.setAttribute("aria-pressed", "true");
+  b.textContent = pr.label;
+  b.addEventListener("click", () => {
+    const on = b.getAttribute("aria-pressed") === "true";
+    b.setAttribute("aria-pressed", on ? "false" : "true");
+    if (on) state.hiddenPrior.add(pr.key); else state.hiddenPrior.delete(pr.key);
+    const sel = POINTS.find(x => x.id === state.selected);
+    if (sel && state.hiddenPrior.has(sel.prior)) {
+      const next = POINTS.find(x => !state.hidden.has(x.family) && !state.hiddenPrior.has(x.prior));
+      if (next) state.selected = next.id;
+    }
+    render();
+  });
+  priorLegend.appendChild(b);
+});
+
 ["lifetime", "total"].forEach(m => {
   document.getElementById(`mode-${m}`).addEventListener("click", () => {
     state.mode = m;
@@ -1749,6 +1776,7 @@ document.querySelector("#data-table tbody").innerHTML = POINTS.map(p => `
   <tr>
     <td class="name"><span class="dot" style="background:var(--fam-${p.family})"></span>${esc(p.label)}</td>
     <td>${famOf(p.family).label}</td>
+    <td>${p.prior === "built" ? "built or evolved" : "learned"}</td>
     <td>${p.age ? esc(p.age) : "—"}</td>
     <td>${esc(p.needed)}</td>
     <td class="num">${p.lifetime.e}</td>
