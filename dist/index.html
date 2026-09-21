@@ -168,6 +168,36 @@ img { max-width: 100%; }
   }
   .thesis em { font-style: italic; color: var(--ink); }
 
+  /* the claim, set apart from the setup so a reader can find and repeat it */
+  .claim {
+    font-family: var(--f-ui);
+    font-size: clamp(14.5px, 1.9vw, 16px);
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 4px 0 0;
+    max-width: 66ch;
+    padding-left: 15px;
+    border-left: 3px solid var(--accent);
+  }
+  .claim strong { font-weight: 600; }
+
+  /* how to read the picture, before the picture */
+  .howto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 8px 22px;
+    padding-block: 2px;
+  }
+  .howto p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    padding-left: 13px;
+    border-left: 1px solid var(--axis);
+  }
+  .howto span { color: var(--ink); font-weight: 600; }
+
   /* ---------- controls ---------- */
 
   .controls {
@@ -549,14 +579,20 @@ img { max-width: 100%; }
     <p class="thesis">
       Every learner brings something to a problem before it sees a single example — a shape built in
       by a designer, an instinct shaped by evolution, or structure picked up from earlier data. Call
-      that a <em>prior</em>. Priors buy speed. What this map asks is what they charge for it.
+      that a <em>prior</em>. Priors buy speed. This map asks what they charge for it.
     </p>
-    <p class="thesis">
-      Priors that are built or evolved charge by <em>narrowing</em>: they make a learner fast at one
-      problem and useless at the rest. Priors learned from data appear not to. That difference,
-      rather than one universal tradeoff, is what the map turns out to show.
+    <p class="claim">
+      Priors that are <strong>built or evolved</strong> buy speed by narrowing — they make a learner
+      fast at one problem and useless at the rest. Priors <strong>learned from data</strong> appear
+      not to. That difference, rather than one universal tradeoff, is what the map shows.
     </p>
   </header>
+
+  <div class="howto">
+    <p><span>Each dot is one learner.</span> Colour and shape say which family it belongs to.</p>
+    <p><span>Right</span> means it needs fewer examples. <span>Up</span> means what it learned is useful in more places.</p>
+    <p><span>Click any dot</span> for the full record — what it learned, from how much, and the study behind the placement.</p>
+  </div>
 
   <div class="controls">
     <div class="ctl-group">
@@ -639,10 +675,7 @@ img { max-width: 100%; }
     <h2>What the words mean</h2>
     <dl class="glossary">
       <div><dt>Prior</dt><dd>Anything a learner already has before it starts: a designer's rules, an instinct, or structure carried over from earlier training.</dd></div>
-      <div><dt>Sample efficiency</dt><dd>How few examples it takes to learn the thing. The horizontal axis. Far right means one example is enough.</dd></div>
-      <div><dt>Transfer</dt><dd>Whether what was learned is any use elsewhere. The vertical axis. Top means it works across very different problems.</dd></div>
       <div><dt>Near and far transfer</dt><dd>Near means new problems of the same shape. Far means a different kind of problem altogether. Far is much rarer.</dd></div>
-      <div><dt>One-shot learning</dt><dd>Getting it from a single example.</dd></div>
       <div><dt>Critical period</dt><dd>A window early in life when something can be learned easily, which closes and does not reopen.</dd></div>
       <div><dt>Pretraining</dt><dd>The very large, general training run a model does before anyone asks it to do a specific task.</dd></div>
       <div><dt>Fine-tuning</dt><dd>Adjusting an already-pretrained model with a small set of examples for one job.</dd></div>
@@ -764,53 +797,54 @@ img { max-width: 100%; }
   <div class="flag">
     <h3>ARC-AGI is drawn as a target, not a result</h3>
     <p>
-      ARC-AGI tests whether a system can pick up a genuinely new task from two or three examples. It is
-      drawn here as a dashed ring because it marks where the corner would be if something reached it,
-      and it disappears under total accounting, since an aspiration has no experience budget.
+      ARC-AGI tests whether a system can pick up a genuinely new task from two or three examples. It
+      is a dashed ring rather than a dot because it marks where the corner would be if something
+      reached it, and it disappears under total accounting, since an aspiration has no experience
+      budget.
     </p>
     <p>
-      The scores are contested and move fast, so treat any figure as something to re-check. As of late
-      2026 the frontier models report somewhere around 90% on the public leaderboard, well above the
-      human panel average of 60%, while the same benchmark run under a strict compute cap sits near 24%.
-      That gap is the interesting part. If a system clears the human average only by spending enormous
-      amounts of computation per puzzle, the cost did not vanish — it moved from training examples to
-      thinking time. Whether that belongs on this map as a third axis is the strongest open question here.
+      The scores are contested and move fast, so treat any figure as something to re-check. As of
+      late 2026 frontier models report around 90% on the public leaderboard, well above the human
+      panel average of 60% — while the same benchmark under a strict compute cap sits near 24%. That
+      gap is the interesting part. If a system beats the human average only by spending enormous
+      computation per puzzle, the cost did not vanish; it moved from training examples to thinking
+      time. Whether that belongs here as a third axis is the strongest open question on this map.
     </p>
   </div>
 
   <footer>
     <p style="margin:0 0 9px">
       <strong style="color:var(--ink-2)">Positions are arguments, not measurements.</strong>
-      The numbers are rankings, not measurements, and the units do not really compare across families — nobody can say a crow
-      needed <i>n</i> examples the way a network did. Every point names a study so the placement can be
-      argued with, and shaky ones carry a dashed ring.
+      The numbers are rankings, and the units do not really compare across families — nobody can say
+      a crow needed <i>n</i> examples the way a network did. Every point names a study so the
+      placement can be argued with, and shaky ones carry a dashed ring.
     </p>
     <p style="margin:0 0 9px">
-      <strong>Why a space and not a ranking.</strong> Poirier and colleagues reanalysed 555 correlations
-      between cognitive abilities in animals and found an average of r = 0.185. If abilities do not
-      collapse onto one line, a league table is the wrong object. Chollet makes the same move for
-      machines, and keeps priors and experience as separate terms — which is exactly what the toggle
-      here merges. That merge works as a way of making a point and not as a measurement.
+      <strong>Why a space and not a ranking.</strong> Poirier and colleagues reanalysed 555
+      correlations between cognitive abilities in animals and found an average of r = 0.185. If
+      abilities do not collapse onto one line, a league table is the wrong object. Chollet makes the
+      same move for machines, and keeps priors and experience as separate terms — which is exactly
+      what the toggle here merges. That merge works as a way of making a point, not as a measurement.
     </p>
     <p style="margin:0 0 9px">
-      <strong>Three objections, and the answers.</strong> First, the transfer axis mixes up how many domains
-      a skill covers with how far it reaches inside one. AlphaFold scores 2 for generalising to proteins
-      unlike anything it trained on; the honeybee scores 7 for carrying one rule between two senses. The
-      fix is to define transfer by how far an input can drift before performance drops, which would
-      raise AlphaFold sharply and drop riding a bike to zero.
+      <strong>Three objections, and the answers.</strong> First, the transfer axis mixes up how many
+      domains a skill covers with how far it reaches inside one. AlphaFold scores 2 for generalising
+      to proteins unlike anything it trained on; the honeybee scores 7 for carrying one rule between
+      two senses. The fix is to define transfer by how far an input can drift before performance
+      drops, which would raise AlphaFold sharply and drop riding a bike to zero.
     </p>
     <p style="margin:0 0 9px">
-      Second, what would prove this wrong? The universal version could not be proved wrong, which is why
-      it is gone — any fast learner could be rescued by moving its cost to evolution or pretraining. The
-      narrower version predicts a difference between two kinds of prior, and that difference can fail to
-      appear. The clean test: two systems with the same total experience, one with a stronger built-in
-      bias. If the stronger one transfers just as far, the claim is false.
+      Second, what would prove this wrong? The universal version could not be — any fast learner
+      could be rescued by moving its cost to evolution or pretraining. The narrower version predicts
+      a difference between two kinds of prior, and that difference can fail to appear. The clean
+      test: two systems with the same total experience, one with a stronger built-in bias. If the
+      stronger one transfers just as far, the claim is false.
     </p>
     <p style="margin:0">
-      Third, some animals may be underrated by their own experiments. Bräuer and colleagues argue that
-      species are often tested outside their main sense — dogs through sight when smell is their channel — so a low score can be a fact
-      about the study rather than the animal. Read every animal point as a floor. Rats beating humans is
-      the warning: match the task to the species and the ordering can flip.
+      Third, some animals may be underrated by their own experiments. Bräuer and colleagues argue
+      that species are often tested outside their main sense — dogs through sight when smell is
+      their channel. Six animal points now say on the card whether the test suited the animal, in
+      both directions.
     </p>
   </footer>
 
