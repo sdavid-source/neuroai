@@ -230,7 +230,9 @@
     padding: 14px 14px 8px;
     min-width: 0;
   }
-  .plot-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+  /* the aspect ratio is declared rather than inferred: inference came up ~20 viewBox
+     units short and clipped the x-axis row */
+  .plot-card svg { display: block; width: 100%; height: auto; aspect-ratio: 740 / 672; overflow: visible; }
 
   .plot-foot {
     display: flex;
@@ -238,7 +240,7 @@
     align-items: baseline;
     gap: 14px;
     flex-wrap: wrap;
-    padding: 8px 4px 6px;
+    padding: 16px 4px 6px;
     font-family: var(--f-mono);
     font-size: 10.5px;
     color: var(--ink-muted);
@@ -252,7 +254,7 @@
   .zone-label { font-family: var(--f-ui); font-size: 10.5px; font-weight: 600; fill: var(--ink-muted); letter-spacing: 0.03em; }
   .pt-label {
     font-family: var(--f-ui);
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 500;
     fill: var(--ink);
     paint-order: stroke;
@@ -568,17 +570,64 @@
       </div>
     </div>
     <p>
-      Almost every point moves left when you switch, and the ones that move furthest — the digger wasp,
-      Bayesian Program Learning, in-context learning — are exactly the ones that looked most impressive
-      under lifetime accounting. <strong>LLM in-context learning is the crux:</strong> under lifetime accounting it
-      sits alone in the empty corner; under total accounting it slides left and lands on top of pretraining.
-      Same system, opposite conclusions, depending only on what you agree to count.
+      Almost every point moves left when you switch, and the ones that move furthest — taste aversion, the
+      digger wasp, Bayesian Program Learning, fine-tuning, in-context learning — are exactly the ones that
+      looked most impressive under lifetime accounting. <strong>In-context learning is the crux:</strong> under
+      lifetime accounting it sits alone in the empty corner; under total accounting it slides left and lands
+      on top of pretraining. Same system, opposite conclusions, depending only on what you agree to count.
     </p>
+    <p>
+      Watch what collides in the lower left when you switch. Taste aversion, the digger wasp and birdsong
+      land on the same square — three one-trial specialists whose efficiency was paid for by evolution.
+      Deep Blue lands on AlphaZero, having reached the same game from the opposite end. Fine-tuning lands on
+      in-context learning lands on pretraining. <strong>The pile-up is the argument:</strong> once you count what
+      was paid, systems that looked nothing alike turn out to have bought the same thing at the same price.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Six pairs worth putting on a slide</h2>
+    <p>
+      Single points make weak arguments. Pairs make strong ones, because the second point controls for
+      what the first one leaves ambiguous. These are the comparisons this map exists to support.
+    </p>
+    <div class="zones">
+      <div class="zone">
+        <h3>Toddler fast mapping ↔ Adult second language</h3>
+        <p>Same species, same domain, and the adult — with more intelligence, more strategies, more motivation — is thousands of times less efficient. Whatever buys the toddler's efficiency is not general intelligence, and it expires.</p>
+      </div>
+      <div class="zone">
+        <h3>Taste aversion ↔ Light-and-nausea</h3>
+        <p>One trial, hours of delay, a memory for years. Then swap taste for a flashing light and the same rat cannot learn it at all. The efficiency was never a general capacity; it was a pre-wired expectation.</p>
+      </div>
+      <div class="zone">
+        <h3>Deep Blue ↔ AlphaZero</h3>
+        <p>One needed no examples because grandmasters wrote the knowledge down. The other needed tens of millions because nobody did. Under total accounting they end up in the same corner.</p>
+      </div>
+      <div class="zone">
+        <h3>Human one-shot ↔ Bayesian Program Learning</h3>
+        <p>Identical task, identical one-shot performance, two routes. One route's priors were hand-engineered and can be read off the page, which is why this is the cleanest evidence on the map.</p>
+      </div>
+      <div class="zone">
+        <h3>Learning to drive ↔ Self-driving cars</h3>
+        <p>Tens of hours against billions of miles, for the same task, and the human still handles the long tail better. The most legible version of the sample-efficiency gap for a general audience.</p>
+      </div>
+      <div class="zone">
+        <h3>Riding a bike ↔ A bike with reversed steering</h3>
+        <p>Learned in an afternoon, kept for fifty years, and worth nothing the moment the handlebars turn the other way. Extreme efficiency and retention, bought with a completely rigid representation.</p>
+      </div>
+    </div>
   </div>
 
   <div class="section">
     <h2>Three regions</h2>
     <div class="zones" id="zones"></div>
+    <p>
+      The lower-left region has become the crowded one, and that is worth saying out loud in a
+      presentation: <strong>most of the AI people actually touch every day lives down there</strong> — the
+      recommender choosing what plays next, the classifier reading a digit, the car. Cold start, the
+      recommender industry's most expensive open problem, is this map's x-axis asked in production.
+    </p>
   </div>
 
   <div class="flag">
@@ -611,11 +660,19 @@
       <i>n</i> examples in the same sense a network did. Every point is anchored to a specific study so the
       placement can be contested; low-confidence placements carry a dashed ring on the map and a note in the panel.
     </p>
-    <p style="margin:0">
+    <p style="margin:0 0 9px">
       Before publishing, verify: trial counts and sample sizes in each cited study (these were drafted from
-      memory), the cross-modal claim in the honeybee point, and the ARC-AGI figures above. On the total axis,
-      the low end is heavily compressed — a wasp's evolutionary budget and a trillion-token pretraining run both
-      land near zero, which the ordinal scale cannot separate.
+      memory), the cross-modal claim in the honeybee point, the practice-hour figure for learning to drive,
+      current self-driving fleet mileage, and the ARC-AGI figures above. On the total axis, the low end is
+      heavily compressed — a wasp's evolutionary budget and a trillion-token pretraining run both land near
+      zero, which the ordinal scale cannot separate.
+    </p>
+    <p style="margin:0">
+      Two structural objections to have an answer ready for. <strong>First</strong>, the transfer axis conflates
+      breadth of domain with reach within one: AlphaFold generalises impressively to proteins unlike anything
+      it trained on, and scores low here only because proteins are one domain. <strong>Second</strong>, if every
+      efficient learner turns out to have paid somewhere, ask what observation would falsify the thesis —
+      because a claim that survives every case by relocating the cost is not yet a claim.
     </p>
   </footer>
 
@@ -651,6 +708,42 @@ const POINTS = [
     lifetime:{e:9,t:5}, total:{e:5,t:5},
     source:"Lake, Salakhutdinov & Tenenbaum 2015 (human baseline)", confidence:"high",
     note:"Pairs directly with the Bayesian Program Learning point — same task, two routes to the same efficiency." },
+
+  { id:"riding-a-bike", short:"Riding a bike", label:"Riding a bike", family:"human",
+    task:"Balancing and steering a two-wheeled bicycle",
+    unit:"one practice session", needed:"a few hours, once",
+    to:"Almost nothing — other bicycles, and that is close to the whole list",
+    notTo:"A bicycle with reversed steering, which competent adult cyclists cannot ride at all until they relearn it over months",
+    lifetime:{e:6,t:1}, total:{e:3,t:1},
+    source:"Long-term motor retention: Fleishman & Parker 1962. Reversed-steering failure: Sandlin's 'backwards brain bicycle' demonstration, not a controlled study", confidence:"medium",
+    note:"The everyday proof of the thesis. Learned in an afternoon, kept for fifty years without practice — and it buys you nothing, not even a bicycle whose handlebars turn the other way. Extraordinary efficiency and retention, purchased with a completely rigid representation." },
+
+  { id:"learning-to-drive", short:"Learning to drive", label:"Learning to drive", family:"human",
+    task:"Operating a car safely on public roads",
+    unit:"one hour of supervised practice", needed:"tens of hours",
+    to:"Unfamiliar cars, unfamiliar cities, roads never seen before — genuine within-domain generalisation",
+    notTo:"Anything outside vehicle control; driving skill does not make you a better pilot or cyclist",
+    lifetime:{e:4,t:3}, total:{e:2,t:3},
+    source:"Driver-training and skill-acquisition literature — find a specific citation for the practice-hour figure before using it", confidence:"low",
+    note:"A useful middle of the map, and the one most students have done themselves. Note what the transfer actually covers: a driver handles a rental car in a foreign city on the first try, which is real generalisation over a wide space of novel situations — but the space is still one domain." },
+
+  { id:"adult-second-language", short:"Adult L2", label:"Adult second-language learning", family:"human",
+    task:"Reaching fluency in a second language as an adult",
+    unit:"one hour of study or immersion", needed:"thousands of hours, and usually without native attainment",
+    to:"Reading, travel, related languages in the same family",
+    notTo:"Native-like grammar and accent, which stay out of reach for most adult learners",
+    lifetime:{e:1,t:4}, total:{e:1,t:4},
+    source:"Johnson & Newport 1989, critical-period effects in second-language acquisition", confidence:"high",
+    note:"Put this next to toddler fast mapping and the map argues with itself in the best way. Same species, same domain, and the adult — with more general intelligence, more strategies, more motivation — is thousands of times less sample-efficient. Whatever buys the toddler's efficiency is not general intelligence, and it expires." },
+
+  { id:"one-shot-faces", short:"One-shot faces", label:"Recognising a face after one meeting", family:"human",
+    task:"Recognising a person you met once, months later",
+    unit:"one encounter", needed:"1",
+    to:"Any new face, in new lighting, at new angles, after a haircut",
+    notTo:"Faces of unfamiliar ethnic groups, where accuracy drops sharply — the other-race effect; and nothing outside faces",
+    lifetime:{e:8,t:2}, total:{e:3,t:2},
+    source:"Other-race effect meta-analysis: Meissner & Brigham 2001", confidence:"medium",
+    note:"A dedicated module with a strong built-in prior, and a documented failure mode that shows exactly where the prior was fitted. One-shot within its range, and measurably worse the moment the input leaves the distribution the system was tuned on — which is the same complaint people make about neural networks." },
 
   { id:"chess-expertise", short:"Chess expertise", label:"Human chess expertise", family:"human",
     task:"Reaching master-level play",
@@ -688,6 +781,42 @@ const POINTS = [
     source:"Giurfa et al. 2001, Nature", confidence:"medium",
     note:"Your best counterexample. A tiny brain achieving cross-modal abstract transfer breaks the 'bigger brain, broader mind' story. Read this one directly rather than secondhand — and check whether the visual-to-olfactory transfer is in the 2001 paper itself or a later one." },
 
+  { id:"taste-aversion", short:"Taste aversion", label:"Conditioned taste aversion", family:"animal",
+    task:"Avoiding a food after a single pairing with nausea",
+    unit:"one taste-illness pairing", needed:"1, even with hours between the meal and the sickness",
+    to:"Nothing — and it will not even form between the wrong pair of cues",
+    notTo:"Light or sound paired with nausea, which rats barely learn, while taste paired with electric shock is equally hard. The pairing has to be one evolution expected",
+    lifetime:{e:10,t:0}, total:{e:1,t:0},
+    source:"Garcia & Koelling 1966", confidence:"high", keystone:true,
+    note:"**The best example on this map, and the most relatable.** One trial, a delay of hours between cue and consequence, and a memory that lasts years — everyone who has been sick from a restaurant meal has this. Then the control condition: swap taste for a flashing light and the same animal cannot learn it. The efficiency is not a general capacity at all, it is a pre-wired expectation about which things cause which. Biologists call it *preparedness*. It is your thesis, named and demonstrated in 1966." },
+
+  { id:"pavlov-dogs", short:"Pavlov's dogs", label:"Pavlovian conditioning", family:"animal",
+    task:"Salivating to a tone that predicts food",
+    unit:"one tone-food pairing", needed:"tens of pairings",
+    to:"Tones near the trained frequency, by stimulus generalisation",
+    notTo:"Anything requiring the relationship to be understood rather than registered",
+    lifetime:{e:4,t:2}, total:{e:1,t:2},
+    source:"Pavlov 1927", confidence:"high",
+    note:"The most famous learning experiment there is, and worth including precisely because it is unremarkable on both axes. Moderate efficiency, almost no breadth. Most of what gets called learning looks like this." },
+
+  { id:"dog-learns-sit", short:"Dog learns sit", label:"Dog learning a command", family:"animal",
+    task:"Learning to sit on cue",
+    unit:"one training trial", needed:"tens of trials",
+    to:"New handlers and new rooms, partially",
+    notTo:"Often fails outdoors after being trained indoors — owners rediscover this constantly",
+    lifetime:{e:5,t:2}, total:{e:2,t:2},
+    source:"Operant conditioning; dogs' unusual sensitivity to human social cues in Hare et al. 2002", confidence:"medium",
+    note:"The failure mode is the interesting part: a command learned in the kitchen frequently does not survive the move to a park. What looked like learning 'sit' was learning 'sit, here, with these smells.' Context is silently part of what got encoded — the same brittleness people point to in machine learning." },
+
+  { id:"birdsong-learning", short:"Birdsong learning", label:"Songbird tutor learning", family:"animal",
+    task:"Acquiring the species song from a tutor during a critical period",
+    unit:"one exposure to tutor song", needed:"tens of exposures, inside a fixed developmental window",
+    to:"Nothing — and the window closes permanently",
+    notTo:"Songs of other species, which a bird will not learn even when that is the only song it hears",
+    lifetime:{e:7,t:0}, total:{e:1,t:0},
+    source:"Marler 1970", confidence:"high",
+    note:"An innate template plus a small amount of experience, and only during a window. The bird is not learning what song to sing from scratch; it is learning which of a pre-specified family of songs its neighbours use. Pairs naturally with adult second-language learning — both are critical-period stories about a prior with an expiry date." },
+
   { id:"crow-trap-tube", short:"Crow trap-tube", label:"New Caledonian crow, trap-tube", family:"animal",
     task:"Extracting food without losing it to a trap",
     unit:"one trial", needed:"tens of trials, with individual variation",
@@ -714,6 +843,24 @@ const POINTS = [
     lifetime:{e:0,t:0}, total:{e:0,t:0},
     source:"Silver et al. 2018", confidence:"high",
     note:"The lower-left anchor. Superhuman skill, near-zero intelligence by Chollet's definition — a useful provocation for a card." },
+
+  { id:"deep-blue", short:"Deep Blue", label:"Deep Blue", family:"classic_ai",
+    task:"Beating the world chess champion with search and a hand-tuned evaluation",
+    unit:"no training examples at all — knowledge arrives as hand-written evaluation terms", needed:"0",
+    to:"Nothing",
+    notTo:"Any task outside chess; the evaluation function is chess, written out longhand",
+    lifetime:{e:8,t:0}, total:{e:0,t:0},
+    source:"Campbell, Hoane & Hsu 2002", confidence:"high",
+    note:"Put this beside AlphaZero and you have the same task solved from opposite ends. Deep Blue needed no examples because grandmasters supplied the knowledge by hand; AlphaZero needed tens of millions because nobody did. Under total accounting they land in the same corner, which is the point — the grandmaster-years that went into Deep Blue's evaluation function were a real cost, just one that never appeared in a training log." },
+
+  { id:"mnist", short:"MNIST", label:"MNIST digit classifier", family:"classic_ai",
+    task:"Recognising handwritten digits 0 to 9",
+    unit:"one labelled digit image", needed:"tens of thousands",
+    to:"Almost nothing — accuracy falls off on digits written in a different style or collected by a different process",
+    notTo:"Any other visual category; a model at 99% on MNIST knows nothing about letters",
+    lifetime:{e:2,t:1}, total:{e:2,t:1},
+    source:"LeCun et al. 1998", confidence:"high",
+    note:"The 'hello world' of machine learning, and a clean contrast with the Omniglot points sitting to the right of it. Sixty thousand examples for ten categories, against one example per category for a person or for Bayesian Program Learning. Same kind of task, four orders of magnitude apart." },
 
   { id:"alexnet", short:"AlexNet", label:"AlexNet / ImageNet", family:"classic_ai",
     task:"Large-scale image classification",
@@ -760,6 +907,42 @@ const POINTS = [
     source:"Brown et al. 2020", confidence:"high", keystone:true,
     note:"**The point that makes the toggle worth building.** Under lifetime accounting it sits alone in the empty upper-right corner; under total accounting it slides left to meet pretraining. Same system, opposite conclusions, depending only on what you agree to count." },
 
+  { id:"fine-tuning", short:"Fine-tuning", label:"Fine-tuning a pretrained model", family:"current_ai",
+    task:"Adapting a pretrained model to a specific task with a small labelled set",
+    unit:"one labelled example", needed:"hundreds to a few thousand",
+    to:"Whatever the pretrained base already covered — the breadth is inherited, not learned here",
+    notTo:"Domains the base model never saw; and fine-tuning can erase capabilities the base had",
+    lifetime:{e:6,t:5}, total:{e:0,t:5},
+    source:"Howard & Ruder 2018 (ULMFiT); Devlin et al. 2018 (BERT)", confidence:"high",
+    note:"The same shift as in-context learning, one scale down, and it is how most applied machine learning is actually done. A few hundred examples looks miraculous until you count the pretraining run underneath it. Three points on this map now make the identical move when you switch accounting — fine-tuning, in-context learning, and the toddler — which is either strong support for the thesis or evidence that the thesis is unfalsifiable. Worth deciding which." },
+
+  { id:"self-driving", short:"Self-driving", label:"Self-driving cars", family:"current_ai",
+    task:"Driving autonomously on public roads",
+    unit:"one mile of fleet driving", needed:"billions of miles, simulated and real",
+    to:"New cities, with substantial per-city engineering",
+    notTo:"Genuinely novel road situations — the long tail is the whole problem",
+    lifetime:{e:0,t:2}, total:{e:0,t:2},
+    source:"Waymo and comparable fleet-scale programmes — verify current mileage figures, they date quickly", confidence:"low",
+    note:"The direct comparison with the human driver a few points to the right is the reason to include this. Tens of hours against billions of miles for the same task, and the human still handles the long tail better. If any single pair on this map makes the sample-efficiency gap concrete for a general audience, it is this one." },
+
+  { id:"alphafold", short:"AlphaFold", label:"AlphaFold", family:"current_ai",
+    task:"Predicting protein structure from sequence",
+    unit:"one solved structure in the training database", needed:"roughly 170,000",
+    to:"Proteins unlike anything in its training set — real generalisation across a vast space",
+    notTo:"Anything that is not protein folding",
+    lifetime:{e:1,t:2}, total:{e:1,t:2},
+    source:"Jumper et al. 2021", confidence:"high",
+    note:"A useful complication. Narrow by any reading of the transfer axis, and yet it generalises impressively inside that domain, on inputs genuinely unlike its training data. It suggests the transfer axis is hiding a distinction worth making: breadth of domain, versus reach within one. Those are not the same thing and this map currently collapses them." },
+
+  { id:"recommenders", short:"Recommenders", label:"Recommender systems", family:"current_ai",
+    task:"Predicting what someone will watch, buy or listen to next",
+    unit:"one interaction event", needed:"millions",
+    to:"Nothing — a model built for one catalogue does not move to another",
+    notTo:"New users and new items, the cold-start problem, which is the sample-efficiency problem under a different name",
+    lifetime:{e:0,t:1}, total:{e:0,t:1},
+    source:"Netflix Prize; Bell & Koren 2007", confidence:"medium",
+    note:"The AI most people touch daily, sitting in the same corner as AlphaZero. Worth saying out loud in a presentation: the systems with the largest real-world footprint are mostly down here, and cold-start — the industry's most expensive open problem — is exactly the question this map's x-axis asks." },
+
   { id:"arc-agi", short:"ARC-AGI", label:"ARC-AGI", family:"current_ai",
     task:"Abstract reasoning puzzles designed to resist memorisation",
     unit:"two or three demonstration pairs per task", needed:"2–3",
@@ -784,7 +967,7 @@ const ZONES = [
    ========================================================================= */
 
 const SVGNS = "http://www.w3.org/2000/svg";
-const W = 740, H = 640, M = { l: 66, r: 34, t: 34, b: 62 };
+const W = 740, H = 672, M = { l: 66, r: 34, t: 34, b: 58 };
 const PW = W - M.l - M.r, PH = H - M.t - M.b;
 
 const X = v => M.l + (v / 10) * PW;
@@ -848,8 +1031,8 @@ for (let v = 0; v <= 10; v++) {
    label router below so no point label ever lands on one */
 const ZONE_PLACEMENT = {
   "empty-corner":   { x: X(10),    y: Y(10) + 16, anchor: "end"   },
-  "specialist-edge":{ x: X(10),    y: Y(0) - 16,  anchor: "end"   },
-  "brute-force":    { x: X(0) + 9, y: Y(0) - 16,  anchor: "start" }
+  "specialist-edge":{ x: X(10),    y: Y(0) - 27,  anchor: "end"   },
+  "brute-force":    { x: X(0) + 9, y: Y(0) - 27,  anchor: "start" }
 };
 const zoneBoxes = [];
 ZONES.forEach(z => {
@@ -914,7 +1097,7 @@ POINTS.forEach(p => {
   if (p.total.e === p.lifetime.e && p.total.t === p.lifetime.t) return;
   const ln = el("line", {
     x1: X(p.lifetime.e), y1: Y(p.lifetime.t), x2: X(p.total.e), y2: Y(p.total.t),
-    stroke: famColor(p.family), "stroke-width": 1.5, opacity: 0.2,
+    stroke: famColor(p.family), "stroke-width": 1.4, opacity: 0.14,
     "marker-end": `url(#arw-${p.family})`
   }, gShift);
   shiftLines.set(p.id, ln);
@@ -934,13 +1117,13 @@ POINTS.forEach(p => {
   /* focus / selection halo, sized to the glyph */
   drawGlyph(fam.shape, 12, { class: "halo" }, g);
   /* 2px surface ring so overlapping marks stay separable */
-  drawGlyph(fam.shape, 7.4, { class: "glyph", fill: famColor(p.family), stroke: "var(--surface)", "stroke-width": 2 }, g);
+  drawGlyph(fam.shape, 6.6, { class: "glyph", fill: famColor(p.family), stroke: "var(--surface)", "stroke-width": 2 }, g);
   /* low confidence reads as a dashed ring — no colour spent */
   if (p.confidence === "low") {
-    drawGlyph(fam.shape, 11.5, { class: "glyph", fill: "none", stroke: famColor(p.family), "stroke-width": 1.2, "stroke-dasharray": "2.5 2.5" }, g);
+    drawGlyph(fam.shape, 10.5, { class: "glyph", fill: "none", stroke: famColor(p.family), "stroke-width": 1.2, "stroke-dasharray": "2.5 2.5" }, g);
   }
   /* generous hit target */
-  drawGlyph(fam.shape, 15, { fill: "transparent" }, g);
+  drawGlyph(fam.shape, 14, { fill: "transparent" }, g);
 
   const lab = el("text", { class: "pt-label" }, g);
   lab.textContent = p.short;
@@ -960,22 +1143,25 @@ POINTS.forEach(p => {
 
 function hoverShift(id, on) {
   const ln = shiftLines.get(id);
-  if (ln) ln.setAttribute("opacity", on ? 0.85 : 0.2);
+  if (ln) ln.setAttribute("opacity", on ? 0.85 : 0.14);
 }
 
 /* ---- label placement: 8 candidates, first non-colliding wins ---- */
 
 const CANDIDATES = [
-  [15, 3.5, "start"], [-15, 3.5, "end"],
-  [0, -14, "middle"], [0, 20, "middle"],
-  [12, -9, "start"], [-12, -9, "end"],
-  [12, 16, "start"], [-12, 16, "end"]
+  [13, 3.5, "start"], [-13, 3.5, "end"],
+  [0, -12, "middle"], [0, 18, "middle"],
+  [11, -8, "start"], [-11, -8, "end"],
+  [11, 15, "start"], [-11, 15, "end"]
 ];
 
-function labelBox(x, y, anchor, text) {
-  const w = text.length * 5.45 + 3;
+/* `cost` is what overlapping this box adds to a candidate's score. A label landing on
+   another label is unreadable (3); grazing a mark is survivable (1), because at this
+   density insisting on untouched labels throws nearly all of them away. */
+function labelBox(x, y, anchor, text, cost = 3) {
+  const w = text.length * 5.2 + 3;
   const x0 = anchor === "start" ? x - 2 : anchor === "end" ? x - w + 2 : x - w / 2;
-  return { x0, x1: x0 + w, y0: y - 9, y1: y + 3 };
+  return { x0, x1: x0 + w, y0: y - 8.5, y1: y + 3, cost };
 }
 const hits = (a, b) => !(a.x1 < b.x0 || b.x1 < a.x0 || a.y1 < b.y0 || b.y1 < a.y0);
 
@@ -984,14 +1170,19 @@ function placeLabels(positions, visible) {
   /* every visible mark blocks label space, whether or not its own label is placed yet */
   visible.forEach(id => {
     const [x, y] = positions.get(id);
-    taken.push({ x0: x - 11, x1: x + 11, y0: y - 11, y1: y + 11 });
+    taken.push({ x0: x - 8, x1: x + 8, y0: y - 8, y1: y + 8, cost: 1 });
   });
 
-  /* place the crowded lower-left last so the isolated points claim clean slots first */
+  /* the selected point claims its slot first and never loses its label; after that
+     the crowded lower-left is placed last, so isolated points get the clean slots */
   const order = [...visible].sort((a, b) => {
+    if (a === state.selected) return -1;
+    if (b === state.selected) return 1;
     const [ax, ay] = positions.get(a), [bx, by] = positions.get(b);
     return (bx - by) - (ax - ay);
   });
+
+  let dropped = 0;
 
   order.forEach(id => {
     const m = marks.get(id);
@@ -1006,16 +1197,25 @@ function placeLabels(positions, visible) {
       if (box.x1 > W - 4) score += 6;
       if (box.y0 < 4) score += 6;
       if (box.y1 > Y(0) + 10) score += 6;
-      for (const t of taken) if (hits(box, t)) score += 1;
-      if (score === 0) { best = [dx, dy, anchor, box]; break; }
+      for (const t of taken) if (hits(box, t)) score += t.cost;
+      if (score === 0) { best = [dx, dy, anchor, box]; bestScore = 0; break; }
       if (score < bestScore) { bestScore = score; best = [dx, dy, anchor, box]; }
     }
+
+    /* in a crowded region a label that cannot be placed cleanly is worse than no
+       label: it lands on a neighbour and both become unreadable. Drop it — the mark
+       still hovers, focuses and opens the panel, and the table view carries every row */
+    const keep = id === state.selected || bestScore <= 2;
+    m.lab.setAttribute("visibility", keep ? "visible" : "hidden");
+    if (!keep) { dropped++; return; }
 
     m.lab.setAttribute("x", best[0]);
     m.lab.setAttribute("y", best[1]);
     m.lab.setAttribute("text-anchor", best[2]);
     taken.push(best[3]);
   });
+
+  return dropped;
 }
 
 /* ---- the main render pass ---- */
@@ -1037,13 +1237,19 @@ function render() {
   });
 
   byCoord.forEach(group => {
+    /* coincident points spread onto a ring that grows with the crowd, so a pile-up
+       reads as a pile-up instead of hiding behind the mark drawn last */
+    const r = group.length > 1 ? 7 + group.length * 2.1 : 0;
     group.forEach((p, i) => {
       const c = lifetime ? p.lifetime : p.total;
       let x = X(c.e), y = Y(c.t);
-      if (group.length > 1) {
+      if (r) {
         const a = (i / group.length) * Math.PI * 2 - Math.PI / 2;
-        x += Math.cos(a) * 9.5;
-        y += Math.sin(a) * 9.5;
+        x += Math.cos(a) * r;
+        y += Math.sin(a) * r;
+        /* a spread group at a corner would otherwise throw marks off the plot */
+        x = Math.min(Math.max(x, X(0) - 2), X(10) + 2);
+        y = Math.min(Math.max(y, Y(10) - 2), Y(0) + 2);
       }
       positions.set(p.id, [x, y]);
       visible.push(p.id);
@@ -1062,7 +1268,11 @@ function render() {
     g.classList.toggle("is-sel", id === state.selected && on);
   });
 
-  placeLabels(positions, visible);
+  /* the selected mark draws last so its halo is never covered by a neighbour */
+  const selMark = marks.get(state.selected);
+  if (selMark && positions.has(state.selected)) gMarks.appendChild(selMark.g);
+
+  const dropped = placeLabels(positions, visible);
 
   gShift.setAttribute("opacity", state.shift ? 1 : 0);
   shiftLines.forEach((ln, id) => {
@@ -1075,7 +1285,9 @@ function render() {
   document.getElementById("foot-mode").textContent = lifetime
     ? "Lifetime accounting · evolution and pretraining counted as free"
     : "Total accounting · the whole experience budget counted";
-  document.getElementById("foot-count").textContent = `${visible.length} of ${POINTS.length} shown`;
+  document.getElementById("foot-count").textContent = dropped
+    ? `${visible.length} shown · ${dropped} labels crowded out — click any mark`
+    : `${visible.length} of ${POINTS.length} shown`;
 
   renderDossier();
 }
