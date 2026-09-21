@@ -30,9 +30,9 @@ buy efficiency in one language between 6 and 12 months, and late first-language
 acquisition shows that the window matters more than the experience budget.
 
 Watch what collides in the lower left when you switch. Taste aversion, the
-digger wasp and birdsong land on the same square. Deep Blue lands on AlphaZero,
-having reached the same game from the opposite end. Fine-tuning lands on
-in-context learning lands on pretraining. The pile-up is the argument.
+digger wasp and birdsong land on the same square; Deep Blue lands on AlphaZero,
+having reached the same game from the opposite end. The accounting rule forces
+those collisions, though, so they illustrate the idea rather than testing it.
 
 Positions are arguments, not measurements. The axes are ordinal, the units are
 not commensurable across families, and every point is anchored to a named study
@@ -62,8 +62,8 @@ Open the file and edit the `DATA` block at the top of the `<script>` — the
 rendering and needs no changes to add, remove or move a point. A point with
 `total: null` drops out of the map when you switch to total accounting.
 
-The page is a single self-contained HTML file with no build step; open it in a
-browser directly.
+Everything below the `DATA` block is rendering. After editing, run
+`python3 build/make-standalone.py` to rebuild `dist/` and the zip.
 
 ### Still to verify before this is presentable
 
@@ -102,12 +102,15 @@ Split by where the prior came from, under lifetime accounting:
 | group | n | r(efficiency, transfer) |
 |---|---|---|
 | hand-built or evolved priors | 26 | **−0.12** |
-| priors learned from data | 10 | **+0.70** |
+| priors learned from data | 9 real systems | **+0.56** |
 
 The gap between those is the finding. Caveats, all stated on the page: −0.12
-is weak; the coordinates are one author's ordinal judgements, so this describes
-the placements rather than measuring the world; and several biological points
-resist it outright (infant segmentation 9/6, toddler 8/7, honeybee 5/7).
+is weak; ARC-AGI is excluded from the +0.56 because its coordinates are an
+aspiration rather than a measurement, and including it inflates the figure to
++0.70; dropping in-context learning takes it to +0.24; the coordinates are one
+author's ordinal judgements, so this describes the placements rather than
+measuring the world; and several biological points resist it outright (infant
+segmentation 9/6, toddler 8/7, honeybee 5/7).
 
 Note also that the toggle changes the transfer coordinate for **zero** of the
 36 points, so it can only ever test half the claim, and that under total
@@ -115,9 +118,12 @@ accounting the hand-built group flips to +0.53 — compression, not a discovery.
 
 ## Submitting it
 
-`few-examples-far-transfer.zip` is the standalone build. It unzips to a
-folder containing `index.html` and a short read-me; open the HTML in any
-browser, with or without an internet connection.
+`few-examples-far-transfer.zip` unzips to a folder holding `index.html`,
+`style.css`, `script.js`, a short read-me and `PROCESS-NOTE.md`. Open
+`index.html` in any browser, with or without an internet connection.
+
+**Fill in `PROCESS-NOTE.md` before you submit.** It is a deliberately blank
+template: the assignment marks whether you can explain your own choices.
 
 Rebuild it after editing the map:
 
@@ -126,7 +132,8 @@ Rebuild it after editing the map:
 The source file is a page *fragment* — it has no `<!doctype>`, `<html>` or
 `<head>`, because the publishing platform wraps it in a skeleton. The build
 script supplies a real document: a UTF-8 charset (the citations use accented
-names), a viewport, the same baseline reset, and the three typefaces inlined
-as base64 so nothing is fetched over the network. Verified with all network
-requests blocked: standards mode, 8 faces loaded, 36 points drawn, zero
-requests, zero errors.
+names), a viewport, the same baseline reset, and the three typefaces embedded
+in `style.css` as base64 so nothing is fetched over the network. Verified from
+the unzipped submission with all network requests blocked: standards mode,
+title in `<head>`, 8 faces loaded, 36 points drawn, zero requests, zero
+errors.
