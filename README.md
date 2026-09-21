@@ -80,3 +80,21 @@ negative relationship. The data, as placed, does not show one — and the toggle
 changes the transfer coordinate for **zero** of the 37 points, so it can only
 ever test half of the claim. Either the placements need revisiting or the
 thesis needs narrowing. See the notes in the page footer.
+
+## Submitting it
+
+`few-examples-far-transfer.zip` is the standalone build. It unzips to a
+folder containing `index.html` and a short read-me; open the HTML in any
+browser, with or without an internet connection.
+
+Rebuild it after editing the map:
+
+    python3 build/make-standalone.py
+
+The source file is a page *fragment* — it has no `<!doctype>`, `<html>` or
+`<head>`, because the publishing platform wraps it in a skeleton. The build
+script supplies a real document: a UTF-8 charset (the citations use accented
+names), a viewport, the same baseline reset, and the three typefaces inlined
+as base64 so nothing is fetched over the network. Verified with all network
+requests blocked: standards mode, 8 faces loaded, 37 points drawn, zero
+requests, zero errors.
