@@ -1,139 +1,190 @@
-# neuroai
+# Few Examples, Far Transfer
 
-Coursework for a Neuro AI class.
+An interactive map of 36 learners — human, animal, classical AI and current AI —
+plotted on **sample efficiency** against **transfer breadth**.
 
-## Few Examples, Far Transfer
+> **DRAFT — read every line and make it true before submitting.**
+> The factual spine here is real: it comes from my planning notes and the build
+> history. But some sentences describe reasoning only I can confirm. Everything
+> in `[brackets]` is a question to answer. Delete this blockquote and every
+> bracket before handing in.
 
-An interactive argument map plotting thirty-six learners (human, animal,
-classical AI, current AI) on **sample efficiency** against **transfer
-breadth**, with a toggle between two ways of counting experience:
+## To view it
 
-- **Lifetime** — only the examples this individual or model met during the
-  learning episode in question. Evolution and pretraining are free.
-- **Total** — the whole experience budget: evolutionary shaping for organisms,
-  pretraining for models, hand-engineered priors for symbolic systems.
+Open `index.html` in any browser — double-click it, or drag it onto a browser
+window. Nothing to install, no server, and it works with no internet connection.
 
-The thesis: efficiency is bought with priors, and what matters is what the
-prior charges. **Hand-built and evolved priors buy efficiency by narrowing.
-Priors learned from data appear not to.** That asymmetry, rather than a
-universal tradeoff, is what the map is evidence for.
+- **Lifetime / Total** changes how experience is counted, and moves the points.
+  This is the main argument of the piece.
+- **Show the shift** draws each point's movement between the two.
+- **Ages** labels the human points by age, birth to adulthood.
+- **Families** and **Prior** filter the map.
+- **Click any dot** for its full record — what it learned, from how much, and
+  the study behind the placement.
+- **Map / Table** switches to a table of all 36 points with every field, which
+  is also the accessible equivalent of the chart.
 
-The toggle illustrates it — in-context learning sits alone in the upper-right
-corner under lifetime accounting and collapses onto pretraining under total —
-but the accounting rule guarantees that collision, so it illustrates rather
-than evidences. The evidence is the correlation split below.
+---
 
-The human family is an age series from birth to adulthood. Filter to **Human** and
-switch **Ages** on to read it: the prior arrives pre-installed at birth,
-efficiency peaks in infancy, perceptual narrowing spends general capacity to
-buy efficiency in one language between 6 and 12 months, and late first-language
-acquisition shows that the window matters more than the experience budget.
+## The facet I picked, and what the map argues
 
-Watch what collides in the lower left when you switch. Taste aversion, the
-digger wasp and birdsong land on the same square; Deep Blue lands on AlphaZero,
-having reached the same game from the opposite end. The accounting rule forces
-those collisions, though, so they illustrate the idea rather than testing it.
+### Where the topic came from
 
-Positions are arguments, not measurements. The axes are ordinal, the units are
-not commensurable across families, and every point is anchored to a named study
-so the placement can be contested. Low-confidence placements carry a dashed
-ring on the map.
+I started from a list of things I was curious about rather than one question:
+how intelligence relates to an ecological niche; the mechanisms behind
+correlated abilities (general cognitive capacity, process overlap, mutualism);
+fluid versus crystallised intelligence; whether AGI will look human-like;
+ethics; creativity in AI against humans; and learning rate.
 
-### Which file is which
+I asked Claude to help me sort that list. It grouped them into three clusters —
+the positive-manifold debate, intelligence as niche-fit, and the AI questions —
+and **recommended the positive-manifold cluster**, arguing that its four
+competing theories each have a different structural shape, so the map's form
+could be the content.
 
-- **`few-examples-far-transfer.html`** is the source, and it is a page
-  *fragment* — no `<!doctype>`, `<html>` or `<head>`, because the publishing
-  platform wraps it. Opening this one directly gives quirks mode and no
-  declared charset. Edit here.
-- **`dist/`** holds the built site as the three files the assignment names —
-  `index.html`, `style.css`, `script.js`. This is what runs by double-clicking,
-  offline included.
-- **`few-examples-far-transfer.zip`** is the submission: those three files, a
-  short read-me, and `PROCESS-NOTE.md`. Rebuild with
-  `python3 build/make-standalone.py` after any edit to the source.
-- **`PROCESS-NOTE.md`** is a template you must fill in before submitting. The
-  assignment marks whether you can explain your own choices, and that is not
-  something to leave blank or to have written for you.
+**I did not take that recommendation.** I built this instead, combining two
+items from my own list: learning rate and ecological niche. [Say why, in a
+sentence or two. Was the positive-manifold option too abstract? Were you more
+interested in comparing humans, animals and machines directly? Did you want an
+argument you could test rather than four structures to display? This is the most
+important sentence in the document — it is the clearest evidence that the
+organising idea is yours.]
 
-### Editing
+### What belongs in it
 
-Open the file and edit the `DATA` block at the top of the `<script>` — the
-`POINTS`, `FAMILIES` and `ZONES` arrays. Everything below that block is
-rendering and needs no changes to add, remove or move a point. A point with
-`total: null` drops out of the map when you switch to total accounting.
+36 learners, chosen so each family is carried by cases a reader either already
+knows or can be told in two sentences: taste aversion and the digger wasp rather
+than only lab paradigms; riding a bike and learning to drive alongside Bayesian
+Program Learning and AlphaZero.
 
-Everything below the `DATA` block is rendering. After editing, run
-`python3 build/make-standalone.py` to rebuild `dist/` and the zip.
+I left things out deliberately. Older-adult learning came out late as the
+weakest item on the board — thin citation, and its job was closing the lifespan
+rather than carrying the argument. [Name one or two others you considered and
+cut, if you remember them.]
 
-### Still to verify before this is presentable
+### What distinctions matter
 
-Every citation was fact-checked against the literature in September 2026 and
-the errors found were corrected. What remains open:
+Three, and the map is built on them:
 
-- Current self-driving fleet mileage and the ARC-AGI leaderboard figures, both
-  of which date quickly.
-- Chang et al. is cited qualitatively. Another reviewer reported a specific
-  correlation of r = 0.62 for it; that figure does not appear in the paper as
-  supplied, so it is deliberately not quoted here. Check the figures directly
-  if you want a number.
+1. **Sample efficiency against transfer breadth.** Both are rankings out of ten,
+   not measurements. The map says so, because the units genuinely do not compare
+   across families — nobody can say a crow needed *n* examples the way a network
+   did.
+2. **Lifetime against total accounting.** Lifetime counts only the examples met
+   during the learning episode in question. Total counts the whole budget:
+   evolution for animals, pretraining for models, hand-built knowledge for
+   symbolic systems.
+3. **Where the prior came from** — built or evolved, against learned from data.
+   This distinction came last and turned out to carry the finding.
 
-### Three objections to have an answer ready for
+### How the pieces relate
 
-- The transfer axis conflates *breadth of domain* with *reach within one*.
-  AlphaFold generalises to proteins unlike anything it trained on and still
-  scores low here, only because proteins are one domain.
-- If every efficient learner turns out to have paid somewhere, what
-  observation would falsify the thesis? A claim that survives every case by
-  relocating the cost is not yet a claim. The matched-budget test is the one
-  to name: hold total experience constant, vary the strength of the prior,
-  and see whether transfer actually falls.
-- Several animal points may sit low on transfer because of how the study was
-  run rather than what the animal can do. Bräuer et al. argue species are
-  routinely tested outside their primary modality.
+Position carries the meaning on both axes. Colour and shape give the family.
+The accounting toggle makes position *conditional*, which is the point: the same
+learner sits in two different places depending on what you agree to count.
 
-### Does the map show its own thesis?
+The collisions are content rather than clutter. Under total accounting, taste
+aversion, the digger wasp and birdsong land on one square; Deep Blue lands on
+AlphaZero, having reached the same game from the opposite end.
 
-Across all 36 points the correlation between the axes is **+0.06** (lifetime)
-and **+0.23** (total). A tradeoff would be negative, so on that reading the
-universal thesis is simply not in the data — which is why it was narrowed.
+### The story
 
-Split by where the prior came from, under lifetime accounting:
+Efficiency is bought with priors, and the question worth asking is what the
+prior charges. Priors that are **built or evolved** buy speed by narrowing —
+they make a learner fast at one problem and useless at the rest. Priors
+**learned from data** appear not to. That asymmetry, rather than one universal
+tradeoff, is what the map turns out to show.
 
-| group | n | r(efficiency, transfer) |
-|---|---|---|
-| hand-built or evolved priors | 26 | **−0.12** |
-| priors learned from data | 9 real systems | **+0.56** |
+---
 
-The gap between those is the finding. Caveats, all stated on the page: −0.12
-is weak; ARC-AGI is excluded from the +0.56 because its coordinates are an
-aspiration rather than a measurement, and including it inflates the figure to
-+0.70; dropping in-context learning takes it to +0.24; the coordinates are one
-author's ordinal judgements, so this describes the placements rather than
-measuring the world; and several biological points resist it outright (infant
-segmentation 9/6, toddler 8/7, honeybee 5/7).
+## How I used generative AI
 
-Note also that the toggle changes the transfer coordinate for **zero** of the
-36 points, so it can only ever test half the claim, and that under total
-accounting the hand-built group flips to +0.53 — compression, not a discovery.
+### What I brought before any building started
 
-## Submitting it
+I wrote the content spec myself first: the two axes and what each end means, the
+lifetime-versus-total distinction, the thesis, an initial set of points with
+coordinates, the region annotations, and a list of things I knew I had to verify
+before publishing.
 
-`few-examples-far-transfer.zip` unzips to a folder holding `index.html`,
-`style.css`, `script.js`, a short read-me and `PROCESS-NOTE.md`. Open
-`index.html` in any browser, with or without an internet connection.
+That ordering mattered. The site was built around my content rather than my
+content being fitted into a template. [If you sketched the two-axis layout on
+paper first, say so here.]
 
-**Fill in `PROCESS-NOTE.md` before you submit.** It is a deliberately blank
-template: the assignment marks whether you can explain your own choices.
+### Working in pieces
 
-Rebuild it after editing the map:
+I did not ask for the site in one go. The order was: the map and its toggle
+first; then more everyday examples, once the first version read too much like a
+literature review; then a human age series, so species and task are held
+constant and only age of first exposure varies; then a correlation check on my
+own data; then the Prior filter, once it was clear the finding rested on a
+distinction no viewer could see; then cuts; then styling last.
 
-    python3 build/make-standalone.py
+### Decisions I made
 
-The source file is a page *fragment* — it has no `<!doctype>`, `<html>` or
-`<head>`, because the publishing platform wraps it in a skeleton. The build
-script supplies a real document: a UTF-8 charset (the citations use accented
-names), a viewport, the same baseline reset, and the three typefaces embedded
-in `style.css` as base64 so nothing is fetched over the network. Verified from
-the unzipped submission with all network requests blocked: standards mode,
-title in `<head>`, 8 faces loaded, 36 points drawn, zero requests, zero
-errors.
+- The axes are ordinal rankings, and the map says so rather than implying
+  precision it does not have.
+- The accounting toggle is the central interaction, not decoration.
+- Every coordinate is hand-assigned and anchored to a named study — 36 pairs.
+  This is the part of the project that could not be generated.
+- The prose under the chart was cut roughly in half once it had grown into an
+  essay competing with the map.
+- The map opens on chess expertise, a point any reader already understands,
+  rather than on the keystone.
+
+### What I turned down
+
+- The positive-manifold topic, as above.
+- A per-point visual flag for ecological validity. Two reviewers pushed for it.
+  I put the argument on six animal cards and in the footer instead, because a
+  fourth visual channel on an already dense scatter costs more than it returns.
+- Trimming more human points for family balance. That recommendation rested on a
+  reading of the thesis the map does not have, and the numbers showed dropping
+  four humans could swing the subgroup correlation by as much as 1.5.
+- More vivid data colours. Only three of seventy candidate palettes cleared
+  colour-blindness separation in both themes, and the best scored worse than
+  what was already there.
+
+### What changed because I checked
+
+The strongest thing I did was test the thesis on my own data instead of assuming
+it. Across all 36 points the correlation between the two axes is **+0.06** — no
+tradeoff at all. The universal claim I started with is simply not in the data.
+Splitting the points by where the prior came from is what found the real
+structure: **−0.12** for built and evolved priors against **+0.56** for priors
+learned from data. The map reports the null result before the finding.
+
+Fact-checking the citations moved several points materially:
+
+- **Deep Blue** was described as needing no training data. Its own cited paper
+  says the evaluation weights were tuned on master games and the opening book
+  came from over 700,000 grandmaster games. The point moved from (8,0) to (2,0).
+- **One-shot face recognition** had the finding backwards. Unfamiliar-face
+  matching is close to chance; it is familiarity that buys accuracy.
+- **Toddler fast mapping** is 3- and 4-year-olds across about five weeks, not a
+  single exposure at 2–3.
+- The **/r/–/l/ narrowing** result is Kuhl et al. 2006, not Werker & Tees.
+- A reviewer reported a correlation of **r = 0.62** for Chang et al. That figure
+  does not appear in the paper, so it is not quoted anywhere on the site.
+
+### What I would do next
+
+The clearest weakness is that the transfer axis conflates how many domains a
+skill covers with how far it reaches inside one — AlphaFold scores 2 for
+generalising to proteins unlike anything it trained on, while the honeybee
+scores 7 for carrying one rule between two senses. Defining transfer by how far
+an input can drift before performance drops would reshuffle the rankings.
+
+The falsification test the site names is the other thread worth pulling: two
+systems with the same total experience, one with a stronger built-in bias, and
+see whether the stronger one really transfers less far.
+
+[Pick one and say why it interests you, or replace both with your own.]
+
+---
+
+## Files
+
+`index.html`, `style.css` and `script.js` are the site. The data lives in a
+clearly marked block at the top of `script.js` — 36 points with their
+coordinates, fields and sources. The three typefaces are embedded in the CSS so
+the page looks the same with no network connection.

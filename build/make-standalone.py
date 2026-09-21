@@ -75,11 +75,7 @@ for name, text in files.items():
 with zipfile.ZipFile(ZIP, "w", zipfile.ZIP_DEFLATED) as z:
     for name in files:
         z.write(os.path.join(DIST, name), "few-examples-far-transfer/" + name)
-    z.write(os.path.join(ROOT, "build", "READ-ME-FIRST.txt"),
-            "few-examples-far-transfer/READ-ME-FIRST.txt")
-    note = os.path.join(ROOT, "PROCESS-NOTE.md")
-    if os.path.exists(note):
-        z.write(note, "few-examples-far-transfer/PROCESS-NOTE.md")
+    z.write(os.path.join(ROOT, "README.md"), "few-examples-far-transfer/README.md")
 
 for name in files:
     print("  dist/%-12s %6.0f KB" % (name, os.path.getsize(os.path.join(DIST, name)) / 1024))
