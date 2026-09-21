@@ -14,11 +14,15 @@ counting experience:
 - **Total** — the whole experience budget: evolutionary shaping for organisms,
   pretraining for models, hand-engineered priors for symbolic systems.
 
-The thesis is that sample efficiency is purchased with priors, and priors are
-what limit transfer — so the upper-right corner is empty once you count
-honestly. The toggle is the argument: LLM in-context learning sits alone in
-that corner under lifetime accounting and collapses onto pretraining under
-total accounting.
+The thesis: efficiency is bought with priors, and what matters is what the
+prior charges. **Hand-built and evolved priors buy efficiency by narrowing.
+Priors learned from data appear not to.** That asymmetry, rather than a
+universal tradeoff, is what the map is evidence for.
+
+The toggle illustrates it — in-context learning sits alone in the upper-right
+corner under lifetime accounting and collapses onto pretraining under total —
+but the accounting rule guarantees that collision, so it illustrates rather
+than evidences. The evidence is the correlation split below.
 
 The human family is an age series from birth to 65+. Filter to **Human** and
 switch **Ages** on to read it: the prior arrives pre-installed at birth,
@@ -72,14 +76,27 @@ the errors found were corrected. What remains open:
   run rather than what the animal can do. Bräuer et al. argue species are
   routinely tested outside their primary modality.
 
-### The number that should worry you
+### Does the map show its own thesis?
 
-Across the 37 points, the correlation between the two axes is **+0.06** under
-lifetime accounting and **+0.23** under total accounting. The thesis predicts a
-negative relationship. The data, as placed, does not show one — and the toggle
-changes the transfer coordinate for **zero** of the 37 points, so it can only
-ever test half of the claim. Either the placements need revisiting or the
-thesis needs narrowing. See the notes in the page footer.
+Across all 37 points the correlation between the axes is **+0.06** (lifetime)
+and **+0.23** (total). A tradeoff would be negative, so on that reading the
+universal thesis is simply not in the data — which is why it was narrowed.
+
+Split by where the prior came from, under lifetime accounting:
+
+| group | n | r(efficiency, transfer) |
+|---|---|---|
+| hand-built or evolved priors | 27 | **−0.13** |
+| priors learned from data | 10 | **+0.70** |
+
+The gap between those is the finding. Caveats, all stated on the page: −0.13
+is weak; the coordinates are one author's ordinal judgements, so this describes
+the placements rather than measuring the world; and several biological points
+resist it outright (infant segmentation 9/6, toddler 8/7, honeybee 5/7).
+
+Note also that the toggle changes the transfer coordinate for **zero** of the
+37 points, so it can only ever test half the claim, and that under total
+accounting the hand-built group flips to +0.52 — compression, not a discovery.
 
 ## Submitting it
 

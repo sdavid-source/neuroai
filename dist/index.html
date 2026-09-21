@@ -524,9 +524,10 @@ img { max-width: 100%; }
     <p class="eyebrow">Comparative learning · argument map</p>
     <h1>Few Examples, Far Transfer</h1>
     <p class="thesis">
-      Sample efficiency is usually purchased with priors, and priors are what limit transfer.
-      The upper-right corner — <em>learns from almost nothing, applies it almost anywhere</em> —
-      is empty once you count honestly.
+      Efficiency is bought with priors. The question worth asking is what the prior charges.
+      Hand-built and evolved priors buy it by <em>narrowing</em> — they work on one problem and
+      nowhere else. Priors learned from data appear not to. That asymmetry, rather than a
+      universal tradeoff, is what this map turns out to be evidence for.
     </p>
   </header>
 
@@ -631,8 +632,51 @@ img { max-width: 100%; }
       land on the same square — three one-trial specialists whose efficiency was paid for by evolution.
       Deep Blue lands on AlphaZero, having reached the same game from the opposite end. In-context learning
       lands on pretraining, with fine-tuning arriving at the same efficiency by a different route.
-      <strong>The pile-up is the argument:</strong> once you count what was paid, systems that looked nothing
-      alike turn out to have bought the same thing at the same price.
+      <strong>Be careful what you claim for the pile-up, though.</strong> The accounting rule guarantees it:
+      anything whose efficiency came from a large prior is pushed into the same corner by definition, so the
+      collision illustrates the idea rather than evidencing it. The evidence is the split in the next section,
+      where the same rule applied to two classes of prior gives opposite answers.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Does the map show its own thesis?</h2>
+    <p>
+      Worth checking rather than assuming. Take the 37 placements and correlate the two axes.
+      Across every point at once the answer is <strong>no</strong>: r = +0.06 under lifetime
+      accounting and +0.23 under total. A tradeoff would be negative. On that reading the thesis
+      is simply not in the data.
+    </p>
+    <p>
+      Split the points by where the prior came from, though, and the picture separates cleanly.
+      Under lifetime accounting:
+    </p>
+    <div class="modes">
+      <div class="mode">
+        <h3>Hand-built or evolved priors · n = 27</h3>
+        <p><strong>r = −0.13.</strong> Weakly negative, in the direction the thesis predicts. The wasp, taste aversion, birdsong, absolute pitch and Bayesian Program Learning all sit high on efficiency and at or near zero on transfer.</p>
+      </div>
+      <div class="mode">
+        <h3>Priors learned from data · n = 10</h3>
+        <p><strong>r = +0.70.</strong> Strongly positive, the opposite direction. Pretraining, fine-tuning and in-context learning get breadth and efficiency together, and nothing on this side pays the narrowing tax.</p>
+      </div>
+    </div>
+    <p>
+      <strong>The gap between −0.13 and +0.70 is the finding</strong>, and it is a better one than the
+      universal tradeoff it replaces, because it is a claim that could have come out the other way
+      and for one of the two groups it did. Three caveats keep it honest. A correlation of −0.13
+      across 27 points is weak, not a result. The coordinates are one author's ordinal judgements,
+      so this describes the placements rather than measuring the world — treating it as independent
+      evidence would be circular. And a handful of biological points resist it outright: infant
+      statistical learning at 9 and 6, the toddler at 8 and 7, the honeybee at 5 and 7 are all
+      high on both axes with priors nobody designed.
+    </p>
+    <p>
+      One more thing the split exposes. Under <em>total</em> accounting the hand-built group flips to
+      r = +0.52 — the wrong way. That is not a discovery, it is compression: total accounting pushes
+      almost everything into the left margin, where the efficiency axis stops discriminating between
+      a wasp and a trillion-token training run. The toggle is a good rhetorical device and a blunt
+      measuring instrument, and it should not be asked to be both.
     </p>
   </div>
 
@@ -801,20 +845,42 @@ img { max-width: 100%; }
       space of tradeoffs is the right one. Chollet makes the matching move for machines, defining intelligence
       as skill-acquisition efficiency relative to priors, experience <em>and</em> generalisation difficulty —
       note that he keeps priors and experience as separate terms, which is exactly what the total-accounting
-      toggle here merges into one. That merge is this map's biggest liberty, and worth defending out loud.
+      toggle here merges into one. That merge is this map's biggest liberty. It is defensible as a rhetorical
+      device and not as a measurement, which is why the correlation section above reports the lifetime split
+      rather than the total one.
     </p>
     <p>
-      Three objections to have an answer ready for. <strong>First</strong>, the transfer axis conflates
-      breadth of domain with reach within one: AlphaFold generalises impressively to proteins unlike anything
-      it trained on, and scores low here only because proteins are one domain. <strong>Second</strong>, if every
-      efficient learner turns out to have paid somewhere, ask what observation would falsify the thesis —
-      because a claim that survives every case by relocating the cost is not yet a claim. A matched-budget
-      comparison is the test worth naming: hold total experience constant, vary the strength of the prior, and
-      see whether transfer really falls. <strong>Third</strong>, several animal points may sit low on transfer
-      because of how the study was run rather than what the animal can do — Bräuer et al. argue that species
-      are routinely tested outside their primary modality, dogs through vision when olfaction is their main
-      channel. And which domains count as "far" apart is itself a cultural judgement, as Sternberg's examples
-      of competence outside the classroom make plain.
+      <strong>Three objections, and what this map answers.</strong>
+    </p>
+    <p>
+      <strong>The transfer axis conflates breadth of domain with reach within one.</strong> True, and it is the
+      map's real weakness. AlphaFold generalises to proteins unlike anything in its training set and still
+      scores 2, because proteins are one domain; the honeybee scores 7 for carrying one rule across two
+      modalities inside a single foraging paradigm. The axis is rewarding the <em>kind</em> of generality rather
+      than its extent. The fix is an operational definition — how far can an input move from the training
+      distribution before performance degrades — under which AlphaFold rises sharply, riding a bike falls to
+      zero, and the other-race effect becomes a measurement rather than a caveat. That is the next version of
+      this map, and until it exists the transfer coordinates should be read as claims about kind.
+    </p>
+    <p>
+      <strong>What would falsify it?</strong> The universal version was unfalsifiable, which is why it is gone:
+      any efficient learner could be rescued by relocating its cost to evolution or pretraining, and a claim
+      that survives every case by moving the goalposts is not a claim. The narrowed version pays its way,
+      because it predicts a <em>difference</em> between two classes of prior and that difference could fail to
+      appear. It nearly does — the biological counterexamples are named above. The clean test is matched-budget
+      prior manipulation: two systems with equal total experience, one with a stronger inductive bias, and if
+      the stronger-prior system transfers at least as far, the claim is false. Lake and Baroni's meta-learning
+      result is the most likely place to look for that, since a learned prior there buys systematic
+      generalisation rather than spending it.
+    </p>
+    <p>
+      <strong>Some animals may be underrated by their own experiments.</strong> Bräuer et al. argue species are
+      routinely tested outside their primary modality — dogs studied through vision and hearing when olfaction
+      is their main channel — so a low transfer score can be a fact about the study rather than the animal.
+      This map does not correct for that and cannot. Treat every animal point as a lower bound, and treat the
+      rats-beat-humans point as the warning: put a species in a task matched to its ecology and the ordering
+      can invert. Which domains count as "far" apart is a cultural judgement too, as Sternberg's examples of
+      competence outside the classroom make plain.
     </p>
   </footer>
 
@@ -1124,7 +1190,7 @@ const POINTS = [
     notTo:"Tasks requiring genuinely novel abstraction — see ARC",
     lifetime:{e:0,t:8}, total:{e:0,t:8},
     source:"Brown et al. 2020 and successors", confidence:"high",
-    note:"The empirical challenge to your own thesis: enormous data bought breadth rather than narrowness. Address this directly rather than burying it — the honest version is that priors learned from data behave differently from priors built by hand." },
+    note:"**This point used to be the embarrassment and is now the finding.** Enormous data bought breadth rather than narrowness, which refutes a universal tradeoff and is exactly why the thesis here is the narrower one. A prior learned from data does not appear to charge the narrowing tax that a designed or evolved prior charges. Whether that is because the corpus is broad enough to cover most of what we ask, or because learned priors are a different kind of object, is the interesting open question — and it is a question this map can pose but not settle." },
 
   { id:"llm-in-context", short:"LLM in-context", label:"LLM in-context learning", family:"current_ai",
     task:"Performing a new task from a few examples in the prompt",
@@ -1133,7 +1199,7 @@ const POINTS = [
     notTo:"Tasks unlike anything in pretraining",
     lifetime:{e:8,t:8}, total:{e:0,t:8},
     source:"Brown et al. 2020", confidence:"high", keystone:true,
-    note:"**The point that makes the toggle worth building.** Under lifetime accounting it sits alone in the empty upper-right corner; under total accounting it slides left to meet pretraining. Same system, opposite conclusions, depending only on what you agree to count." },
+    note:"**The point that makes the toggle worth building.** Under lifetime accounting it sits alone in the upper-right corner; under total accounting it slides left to meet pretraining. Same system, opposite conclusions, depending only on what you agree to count. Note what the toggle does *not* do here, though: it moves the efficiency coordinate and leaves transfer untouched, as it does for every point on this map. Whatever in-context learning paid for its breadth, relocating the cost does not take the breadth away — which is the strongest reason to think data-learned priors really do behave differently." },
 
   { id:"fine-tuning", short:"Fine-tuning", label:"Fine-tuning a pretrained model", family:"current_ai",
     task:"Adapting a pretrained model to a specific task with a small labelled set",
@@ -1142,7 +1208,7 @@ const POINTS = [
     notTo:"Domains the base model never saw; and fine-tuning can erase capabilities the base had",
     lifetime:{e:6,t:5}, total:{e:0,t:5},
     source:"Howard & Ruder 2018 (ULMFiT); Devlin et al. 2018 (BERT)", confidence:"high",
-    note:"The same shift as in-context learning, one scale down, and it is how most applied machine learning is actually done. A few hundred examples looks miraculous until you count the pretraining run underneath it. Three points on this map now make the identical move when you switch accounting — fine-tuning, in-context learning, and the toddler — which is either strong support for the thesis or evidence that the thesis is unfalsifiable. Worth deciding which." },
+    note:"The same shift as in-context learning, one scale down, and it is how most applied machine learning is actually done. A few hundred examples looks miraculous until you count the pretraining run underneath it. Three points on this map make the identical move when you switch accounting — fine-tuning, in-context learning, and the toddler — and that is one observation, not three, because the accounting rule guarantees it. It is not support for the thesis. What supports the narrower thesis is the split in the correlations above, where the same rule applied to two classes of prior gives opposite answers." },
 
   { id:"self-driving", short:"Self-driving", label:"Self-driving cars", family:"current_ai",
     task:"Driving autonomously on public roads",
@@ -1183,7 +1249,7 @@ const POINTS = [
 
 const ZONES = [
   { id:"empty-corner", at:{e:9,t:9}, label:"The empty corner",
-    text:"Under total accounting, nothing sits here. Whether that reflects a structural tradeoff or merely the current state of engineering is the open question the map leaves the viewer with." },
+    text:"Nothing built on a hand-designed or evolved prior reaches this corner, in either accounting. The only candidates that get near it — in-context learning, and ARC as an aspiration — did it on priors learned from data. That is the asymmetry the map is about, and it is a narrower claim than 'the corner is empty'." },
   { id:"specialist-edge", at:{e:9,t:1}, label:"Adaptive specialisation",
     text:"One-shot learning is common in nature, but almost always dedicated to a single problem. Shettleworth's adaptive specialisation of learning is the biological version of the priors-versus-breadth tradeoff." },
   { id:"brute-force", at:{e:1,t:1}, label:"Skill without acquisition",
