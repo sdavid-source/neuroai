@@ -657,10 +657,12 @@ function placeLabels(positions, visible) {
     let best = null, bestScore = Infinity;
     for (const [dx, dy, anchor] of CANDIDATES) {
       const box = labelBox(x + dx, y + dy, anchor, text, 3, bold);
+      /* outside the plot box is illegal, not merely expensive. The svg does not clip,
+         so such a label paints over the edge of the card; pricing it at 6 let a
+         keystone or the selected point buy its way out of bounds. Skip it instead,
+         and let the point go unlabelled if every candidate is out. */
+      if (box.x0 < 4 || box.x1 > W - 4 || box.y0 < 4 || box.y1 > H - 4) continue;
       let score = 0;
-      if (box.x0 < 4) score += 6;
-      if (box.x1 > W - 4) score += 6;
-      if (box.y0 < 4) score += 6;
       for (const t of taken) if (hits(box, t)) score += t.cost;
       if (score === 0) { best = [dx, dy, anchor, box]; bestScore = 0; break; }
       if (score < bestScore) { bestScore = score; best = [dx, dy, anchor, box]; }
@@ -669,7 +671,7 @@ function placeLabels(positions, visible) {
     /* a label that cannot be placed cleanly is worse than no label: it lands on a
        neighbour and both become unreadable. Drop it — the mark still hovers, focuses
        and opens the panel, and the table view carries every row */
-    const keep = rank(id) < 2 || bestScore === 0;
+    const keep = best !== null && (rank(id) < 2 || bestScore === 0);
     m.lab.setAttribute("visibility", keep ? "visible" : "hidden");
     if (!keep) { dropped++; return; }
 
