@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Build the standalone, offline submission from the artifact source.
+"""Build the standalone submission from the artifact source.
 
-The source file (few-examples-far-transfer.html) is a page *fragment*: the
-publishing platform wraps it in a document skeleton, so it carries no
-<!doctype>, <html>, <head> or <body> of its own, and it pulls its typefaces
-from Google Fonts.
+The source (few-examples-far-transfer.html) is a page *fragment*: the publishing
+platform wraps it in a document skeleton, so it carries no <!doctype>, <html>,
+<head> or <body>, and it pulls its typefaces from Google Fonts over the network.
 
-A file opened from disk gets neither. This script produces dist/index.html:
-the same page, wrapped in a real document with a charset (the citations use
-accented names), a viewport, the skeleton's reset, and the three typefaces
-inlined as base64 so the page needs no network at all.
+This produces dist/, holding the three files the assignment names:
+
+    index.html   a real document — doctype, UTF-8 (the citations use accented
+                 names), viewport, and a <head> that owns the title
+    style.css    the page's CSS, with the three typefaces embedded as base64 so
+                 nothing is fetched at run time
+    script.js    the data block and all the rendering
+
+and zips them. Run it after any edit to the source:
 
     python3 build/make-standalone.py
 """
@@ -23,47 +27,60 @@ ZIP  = os.path.join(ROOT, "few-examples-far-transfer.zip")
 src = io.open(SRC, encoding="utf-8").read()
 
 title = re.search(r"<title>(.*?)</title>", src, re.S).group(1).strip()
-body  = re.sub(r"<title>.*?</title>\s*", "", src, count=1, flags=re.S)
-# the webfonts are inlined below, so drop the network requests for them
-body  = re.sub(r'\s*<link rel="(?:preconnect|stylesheet)"[^>]*>\s*', "\n", body).lstrip()
+rest  = re.sub(r"<title>.*?</title>\s*", "", src, count=1, flags=re.S)
+# the webfonts are embedded in style.css, so drop the network requests
+rest  = re.sub(r'\s*<link rel="(?:preconnect|stylesheet)"[^>]*>\s*', "\n", rest).lstrip()
+
+style  = re.search(r"<style>(.*?)</style>", rest, re.S).group(1)
+script = re.search(r"<script>(.*?)</script>", rest, re.S).group(1)
+body   = re.sub(r"<style>.*?</style>\s*", "", rest, count=1, flags=re.S)
+body   = re.sub(r"<script>.*?</script>\s*", "", body, count=1, flags=re.S).strip()
 
 fonts = io.open(os.path.join(ROOT, "build", "fonts-inline.css"), encoding="utf-8").read()
 
-doc = """<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>%s</title>
-<style>
-/* Typefaces inlined as base64 so the page renders identically with no network. */
+css = """/* Typefaces embedded as base64 so the page renders identically with no network. */
 %s
-</style>
-<style>
+
 /* Baseline reset, matching the skeleton the published version is wrapped in. */
 :root {
   color-scheme: light;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px; background: #fcfcfb; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px; background: #e9ece9; }
 img { max-width: 100%%; }
 [hidden] { display: none !important; }
-</style>
+%s""" % (fonts, style)
+
+html = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>%s</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 %s
+<script src="script.js"></script>
 </body>
 </html>
-""" % (title, fonts, body)
+""" % (title, body)
 
 os.makedirs(DIST, exist_ok=True)
-out = os.path.join(DIST, "index.html")
-io.open(out, "w", encoding="utf-8").write(doc)
+files = {"index.html": html, "style.css": css, "script.js": script.strip() + "\n"}
+for name, text in files.items():
+    io.open(os.path.join(DIST, name), "w", encoding="utf-8").write(text)
 
 with zipfile.ZipFile(ZIP, "w", zipfile.ZIP_DEFLATED) as z:
-    z.write(out, "few-examples-far-transfer/index.html")
-    z.write(os.path.join(ROOT, "build", "READ-ME-FIRST.txt"), "few-examples-far-transfer/READ-ME-FIRST.txt")
+    for name in files:
+        z.write(os.path.join(DIST, name), "few-examples-far-transfer/" + name)
+    z.write(os.path.join(ROOT, "build", "READ-ME-FIRST.txt"),
+            "few-examples-far-transfer/READ-ME-FIRST.txt")
+    note = os.path.join(ROOT, "PROCESS-NOTE.md")
+    if os.path.exists(note):
+        z.write(note, "few-examples-far-transfer/PROCESS-NOTE.md")
 
-print("dist/index.html  %.0f KB" % (os.path.getsize(out) / 1024))
-print("%s  %.0f KB" % (os.path.basename(ZIP), os.path.getsize(ZIP) / 1024))
+for name in files:
+    print("  dist/%-12s %6.0f KB" % (name, os.path.getsize(os.path.join(DIST, name)) / 1024))
+print("  %s  %.0f KB" % (os.path.basename(ZIP), os.path.getsize(ZIP) / 1024))

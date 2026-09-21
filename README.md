@@ -45,11 +45,15 @@ ring on the map.
   *fragment* — no `<!doctype>`, `<html>` or `<head>`, because the publishing
   platform wraps it. Opening this one directly gives quirks mode and no
   declared charset. Edit here.
-- **`dist/index.html`** is the real standalone page, built from the source.
-  This is the one that runs by double-clicking, offline included.
-- **`few-examples-far-transfer.zip`** is the submission: `dist/index.html`
-  plus a short read-me. Rebuild both with `python3 build/make-standalone.py`
-  after any edit to the source.
+- **`dist/`** holds the built site as the three files the assignment names —
+  `index.html`, `style.css`, `script.js`. This is what runs by double-clicking,
+  offline included.
+- **`few-examples-far-transfer.zip`** is the submission: those three files, a
+  short read-me, and `PROCESS-NOTE.md`. Rebuild with
+  `python3 build/make-standalone.py` after any edit to the source.
+- **`PROCESS-NOTE.md`** is a template you must fill in before submitting. The
+  assignment marks whether you can explain your own choices, and that is not
+  something to leave blank or to have written for you.
 
 ### Editing
 
