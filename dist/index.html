@@ -443,6 +443,29 @@ img { max-width: 100%; }
   .zone p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
 
   .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+
+  /* individually bordered cards rather than a bled-through grid, so an
+     incomplete last row does not leave empty cells behind */
+  .glossary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 10px;
+    margin: 0;
+  }
+  .glossary > div {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 12px 15px;
+  }
+  .glossary dt {
+    font-family: var(--f-ui);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .glossary dd { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-2); }
   .mode {
     background: var(--surface);
     border: 1px solid var(--hairline);
@@ -524,10 +547,14 @@ img { max-width: 100%; }
     <p class="eyebrow">Comparative learning · argument map</p>
     <h1>Few Examples, Far Transfer</h1>
     <p class="thesis">
-      Efficiency is bought with priors. The question worth asking is what the prior charges.
-      Hand-built and evolved priors buy it by <em>narrowing</em> — they work on one problem and
-      nowhere else. Priors learned from data appear not to. That asymmetry, rather than a
-      universal tradeoff, is what this map turns out to be evidence for.
+      Every learner brings something to a problem before it sees a single example — a shape built in
+      by a designer, an instinct shaped by evolution, or structure picked up from earlier data. Call
+      that a <em>prior</em>. Priors buy speed. What this map asks is what they charge for it.
+    </p>
+    <p class="thesis">
+      Priors that are built or evolved charge by <em>narrowing</em>: they make a learner fast at one
+      problem and useless at the rest. Priors learned from data appear not to. That difference,
+      rather than one universal tradeoff, is what the map turns out to show.
     </p>
   </header>
 
@@ -609,6 +636,22 @@ img { max-width: 100%; }
   </div>
 
   <div class="section">
+    <h2>What the words mean</h2>
+    <dl class="glossary">
+      <div><dt>Prior</dt><dd>Anything a learner already has before it starts: a designer's rules, an instinct, or structure carried over from earlier training.</dd></div>
+      <div><dt>Sample efficiency</dt><dd>How few examples it takes to learn the thing. The horizontal axis. Far right means one example is enough.</dd></div>
+      <div><dt>Transfer</dt><dd>Whether what was learned is any use elsewhere. The vertical axis. Top means it works across very different problems.</dd></div>
+      <div><dt>Near and far transfer</dt><dd>Near means new problems of the same shape. Far means a different kind of problem altogether. Far is much rarer.</dd></div>
+      <div><dt>One-shot learning</dt><dd>Getting it from a single example.</dd></div>
+      <div><dt>Critical period</dt><dd>A window early in life when something can be learned easily, which closes and does not reopen.</dd></div>
+      <div><dt>Pretraining</dt><dd>The very large, general training run a model does before anyone asks it to do a specific task.</dd></div>
+      <div><dt>Fine-tuning</dt><dd>Adjusting an already-pretrained model with a small set of examples for one job.</dd></div>
+      <div><dt>In-context learning</dt><dd>A model picking up a new task from a few examples written into the prompt, with no training at all.</dd></div>
+      <div><dt>Correlation (r)</dt><dd>How strongly two things move together, from −1 to +1. Zero means no relationship. Negative means one goes up as the other goes down.</dd></div>
+    </dl>
+  </div>
+
+  <div class="section">
     <h2>What the toggle does</h2>
     <div class="modes">
       <div class="mode">
@@ -660,7 +703,19 @@ img { max-width: 100%; }
       high on both axes with priors nobody designed.
     </p>
     <p>
-      The split also shows up the toggle. Under total accounting the built-and-evolved group flips to
+      Split the humans out of that first group and it separates again. Humans on their own give
+      <strong>r = +0.08</strong> — no tradeoff at all. Animals and hand-built systems give
+      <strong>r = −0.39</strong> — a clear one. The −0.13 above is those two mixed together, and the
+      humans are watering the effect down.
+    </p>
+    <p>
+      <strong>That is the Chang result turning up inside this map's own numbers.</strong> Among people, who
+      all share the same equipment, learning fast does not make you narrow. Across systems built on
+      different priors, it does. The map and the objection to the map agree, which is a better outcome
+      than either of them winning.
+    </p>
+    <p>
+      One thing the split also exposes: under total accounting the built-and-evolved group flips to
       +0.52, the wrong way. That is not a discovery. Total accounting crushes almost everything into the
       left margin, where the axis stops telling a wasp apart from a trillion-token training run.
     </p>
@@ -726,7 +781,7 @@ img { max-width: 100%; }
   <footer>
     <p style="margin:0 0 9px">
       <strong style="color:var(--ink-2)">Positions are arguments, not measurements.</strong>
-      The axes are ordinal and the units do not really compare across families — nobody can say a crow
+      The numbers are rankings, not measurements, and the units do not really compare across families — nobody can say a crow
       needed <i>n</i> examples the way a network did. Every point names a study so the placement can be
       argued with, and shaky ones carry a dashed ring.
     </p>
@@ -953,7 +1008,7 @@ const POINTS = [
   { id:"pavlov-dogs", short:"Pavlov's dogs", label:"Pavlovian conditioning", family:"animal",
     task:"Salivating to a tone that predicts food",
     unit:"one tone-food pairing", needed:"tens of pairings",
-    to:"Tones near the trained frequency, by stimulus generalisation",
+    to:"Tones close to the trained one, and nothing further",
     notTo:"Anything requiring the relationship to be understood rather than registered",
     lifetime:{e:4,t:2}, total:{e:1,t:2},
     source:"Pavlov 1927", confidence:"high",
@@ -987,7 +1042,7 @@ const POINTS = [
     note:"Whether crows understand the physics or have learned which pictures predict food is genuinely disputed, which is why this point carries a low-confidence ring rather than a confident placement. On how a small brain manages it at all: corvid and parrot forebrains pack neurons very densely, so brain volume is the wrong thing to measure." },
 
   { id:"rats-beat-humans", short:"Rats beat humans", label:"Rats outperforming humans at generalisation", family:"animal",
-    task:"Generalising a category learned by integrating information, rather than by a rule",
+    task:"Sorting things into a category that no simple rule describes",
     unit:"one training trial", needed:"many trials",
     to:"Novel exemplars of the category — and better than the humans tested on the same task",
     notTo:"Rule-based categories, where humans win easily",
