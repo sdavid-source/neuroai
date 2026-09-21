@@ -639,7 +639,7 @@
       </div>
     </div>
     <p>
-      Switch between them and 23 of the 36 points slide left. The ones that move furthest are the ones
+      Switch between them and 25 of the 36 points slide left. The ones that move furthest are the ones
       that looked most impressive before — the newborn face bias, taste aversion, the digger wasp,
       in-context learning. Things that looked unrelated end up in the same place: taste aversion, the
       wasp and birdsong all land on one square, and Deep Blue lands on AlphaZero.
@@ -949,6 +949,7 @@ const POINTS = [
     to:"Spatial memory tasks in the lab, to a limited degree",
     notTo:"Non-spatial problems",
     lifetime:{e:7,t:1}, total:{e:1,t:1},
+    ecological:"Mixed. The long-retention finding comes from a lab room with tens of caches, not the forest floor with thousands.",
     source:"Balda & Kamil 1992, long-term spatial memory in Clark's nutcracker", confidence:"medium",
     note:"A memory far better than a human's, in exactly one domain. Two separate figures are often blurred together: the thousands of caches is a field estimate, while the finding that accuracy after 285 days matches accuracy after 10 comes from lab work with a few dozen caches." },
 
@@ -958,6 +959,7 @@ const POINTS = [
     to:"Novel stimuli and across sensory modalities — visual rule transferred to odour",
     notTo:"Open question; the tested range is narrow",
     lifetime:{e:5,t:7}, total:{e:1,t:7},
+    ecological:"Very well, and deliberately: the rule was tested in vision and then in smell, so the transfer claim does not rest on one sense.",
     source:"Giurfa et al. 2001, Nature", confidence:"medium",
     note:"The strongest counterexample here. A brain of about a million neurons learns an abstract sameness rule and carries it from vision to smell, in the 2001 paper itself, after roughly 60 trials. That breaks any simple story about bigger brains meaning broader minds. Samples are small, and simpler explanations have been proposed since." },
 
@@ -967,6 +969,7 @@ const POINTS = [
     to:"Nothing — and it barely forms between the wrong pair of cues",
     notTo:"Light or sound paired with nausea, which rats learn only poorly, while taste paired with electric shock is equally hard. The pairing has to be one evolution expected",
     lifetime:{e:10,t:0}, total:{e:1,t:0},
+    ecological:"Very well. Taste paired with illness is exactly the contingency this animal evolved to detect, which is why one trial is enough.",
     source:"Cue-consequence dissociation: Garcia & Koelling 1966. Hours-long delay: Garcia, Ervin & Koelling 1966. 'Preparedness': Seligman 1970", confidence:"high", keystone:true,
     note:"**The most relatable result on the map.** One trial, hours between the meal and the sickness, and a memory that lasts — anyone who has been ill after a restaurant has this. Then the control condition: pair nausea with a flashing light instead of a taste, and the same rat barely learns it. The speed is not a general ability. It is a built-in expectation about which things cause which. Biologists call it preparedness." },
 
@@ -976,6 +979,7 @@ const POINTS = [
     to:"Tones close to the trained one, and nothing further",
     notTo:"Anything requiring the relationship to be understood rather than registered",
     lifetime:{e:4,t:2}, total:{e:1,t:2},
+    ecological:"Poorly. The dog is tested through hearing, when smell is its main channel. A scent-based version might well show more.",
     source:"Pavlov 1927", confidence:"high",
     note:"The most famous learning experiment there is, and worth including because it is ordinary on both axes. Middling speed, almost no breadth. Most of what gets called learning looks like this." },
 
@@ -985,6 +989,7 @@ const POINTS = [
     to:"New handlers and new rooms, partially",
     notTo:"Often fails outdoors after being trained indoors — owners rediscover this constantly",
     lifetime:{e:5,t:2}, total:{e:2,t:2},
+    ecological:"Poorly. Sight and sound again, for an animal that reads the world by nose. The low transfer score may be partly the study's.",
     source:"Dogs' sensitivity to human social cues: Hare et al. 2002. Context-specificity is generalisation decrement — see Bouton on renewal — rather than anything in that paper", confidence:"medium",
     note:"The failure is the interesting part. A command learned in the kitchen often does not survive the move to a park. What looked like learning 'sit' was learning 'sit, here, with these smells'. The context was quietly part of what got stored — the same brittleness people complain about in machine learning." },
 
@@ -1021,6 +1026,7 @@ const POINTS = [
     to:"Novel routes and shortcuts within the environment",
     notTo:"Other environments or problem types",
     lifetime:{e:5,t:4}, total:{e:2,t:4},
+    ecological:"Mixed. A maze suits a rat, but the task is scored visually for an animal that navigates largely by whisker and smell.",
     source:"Tolman & Honzik 1930 for latent learning; Tolman, Ritchie & Kalish 1946 and Tolman 1948 for shortcuts and the cognitive map", confidence:"high",
     note:"Historically important: evidence that the rat built a map of the maze rather than a chain of habits. A good anchor for the animal cluster." },
 
@@ -1144,7 +1150,7 @@ const POINTS = [
 
 /* the three region captions drawn on the chart itself */
 const ZONES = [
-  { id:"empty-corner", at:{e:9,t:9}, label:"The empty corner",
+  { id:"fast-and-broad", at:{e:9,t:9}, label:"Fast and broad",
     text:"Nothing built on a hand-designed or evolved prior reaches this corner, in either accounting. The only candidates that get near it — in-context learning, and ARC as an aspiration — did it on priors learned from data. That is the asymmetry the map is about, and it is a narrower claim than 'the corner is empty'." },
   { id:"specialist-edge", at:{e:9,t:1}, label:"Adaptive specialisation",
     text:"One-shot learning is common in nature, but almost always dedicated to a single problem. Shettleworth's adaptive specialisation of learning is the biological version of the priors-versus-breadth tradeoff." },
@@ -1257,7 +1263,7 @@ for (let v = 0; v <= 10; v++) {
 /* zone captions sit in the corner each region occupies, and are seeded into the
    label router below so no point label ever lands on one */
 const ZONE_PLACEMENT = {
-  "empty-corner":   { x: X(10),   y: Y(10) + 14, anchor: "end"   },
+  "fast-and-broad": { x: X(10),   y: Y(10) + 14, anchor: "end"   },
   "specialist-edge":{ x: X(10),   y: Y(0) + 16,  anchor: "end"   },
   "brute-force":    { x: X(0) - 6, y: Y(0) + 16, anchor: "start" }
 };
@@ -1622,6 +1628,7 @@ function renderDossier(empty) {
 
     <div class="rows">
       ${p.age ? `<div class="row"><span class="k">Age</span><span class="v">${esc(p.age)}</span></div>` : ""}
+      ${p.ecological ? `<div class="row"><span class="k">Did the test suit the animal?</span><span class="v">${esc(p.ecological)}</span></div>` : ""}
       <div class="row"><span class="k">Examples needed</span><span class="v mono">${esc(p.needed)}</span></div>
       <div class="row"><span class="k">One example is</span><span class="v">${esc(p.unit)}</span></div>
       <div class="row"><span class="k">Transfers to</span><span class="v">${esc(p.to)}</span></div>

@@ -1,6 +1,6 @@
 Few Examples, Far Transfer
 An interactive map of sample efficiency against transfer breadth,
-across 37 human, animal and machine learners.
+across 36 human, animal and machine learners.
 
 TO VIEW
   Open index.html in any web browser (double-click it, or drag it
@@ -21,5 +21,5 @@ HOW TO USE IT
   - Ages labels the human points by age, from birth to 65+.
   - The four family chips filter the map.
   - Click any point to read its full record on the right.
-  - Map / Table switches to a sortable-by-eye table of all 37 points
+  - Map / Table switches to a sortable-by-eye table of all 36 points
     with every field, which is also the accessible equivalent.
