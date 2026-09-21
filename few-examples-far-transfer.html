@@ -334,21 +334,23 @@
 
   .dos-task { font-size: 14px; color: var(--ink-2); margin: 0; }
 
-  .coords {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--hairline);
-    border: 1px solid var(--hairline);
-    border-radius: 7px;
-    overflow: hidden;
+  .coords { border: 1px solid var(--hairline); border-radius: 7px; overflow: hidden; }
+  .coords table { width: 100%; border-collapse: collapse; }
+  .coords th, .coords td { padding: 8px 12px; text-align: right; }
+  .coords th:first-child, .coords td:first-child { text-align: left; }
+  .coords thead th {
+    font-family: var(--f-mono); font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-muted);
+    border-bottom: 1px solid var(--hairline);
   }
-  .coord { background: var(--surface); padding: 9px 11px; display: flex; flex-direction: column; gap: 2px; }
-  .coord.is-active { background: var(--surface-sunk); }
-  .coord .k { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
-  .coord .v { font-family: var(--f-mono); font-size: 16px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .coord .v .sep { color: var(--ink-muted); padding-inline: 2px; }
-  .coord .n { font-size: 11px; color: var(--ink-muted); line-height: 1.35; }
+  .coords tbody th { font-size: 13px; font-weight: 500; color: var(--ink-2); }
+  .coords tbody td {
+    font-family: var(--f-mono); font-size: 17px; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .coords .is-active { background: var(--surface-sunk); }
+  .coords td.none { font-family: var(--f-ui); font-size: 13px; color: var(--ink-muted); }
+  .coords-note { margin: 7px 2px 0; font-size: 11.5px; line-height: 1.45; color: var(--ink-muted); }
 
   .rows { display: flex; flex-direction: column; gap: 11px; }
   .row { display: flex; flex-direction: column; gap: 2px; }
@@ -448,8 +450,10 @@
   /* ---------- table ---------- */
 
   .table-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 9px; background: var(--surface); }
-  table { border-collapse: collapse; width: 100%; min-width: 900px; font-size: 13px; }
-  thead th {
+  /* scoped to the data table: unscoped `table`/`thead th` rules leaked into the
+     dossier's little coordinate table and its min-width collapsed the columns */
+  #data-table { border-collapse: collapse; width: 100%; min-width: 900px; font-size: 13px; }
+  #data-table thead th {
     text-align: left;
     font-family: var(--f-mono);
     font-size: 9.5px;
@@ -462,11 +466,11 @@
     white-space: nowrap;
     background: var(--surface);
   }
-  tbody td { padding: 10px 13px; border-bottom: 1px solid var(--grid); color: var(--ink-2); vertical-align: top; line-height: 1.45; }
-  tbody tr:last-child td { border-bottom: 0; }
-  td.name { color: var(--ink); font-weight: 500; white-space: nowrap; }
-  td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  td .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
+  #data-table tbody td { padding: 10px 13px; border-bottom: 1px solid var(--grid); color: var(--ink-2); vertical-align: top; line-height: 1.45; }
+  #data-table tbody tr:last-child td { border-bottom: 0; }
+  #data-table td.name { color: var(--ink); font-weight: 500; white-space: nowrap; }
+  #data-table td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  #data-table td .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
 
   footer {
     border-top: 1px solid var(--hairline);
@@ -1595,10 +1599,6 @@ function renderDossier(empty) {
   const fam = famOf(p.family);
   const lifetime = state.mode === "lifetime";
 
-  const totalCell = p.total
-    ? `<span class="v">${p.total.e}<span class="sep">/</span>${p.total.t}</span>`
-    : `<span class="v" style="font-size:13px;color:var(--ink-muted)">no honest position</span>`;
-
   document.getElementById("dossier").innerHTML = `
     <div class="dos-head">
       <span class="dos-fam">${famMark(p.family, 12)} ${fam.label}${p.target ? " · target zone" : ""}</span>
@@ -1606,17 +1606,31 @@ function renderDossier(empty) {
       <p class="dos-task">${esc(p.task)}</p>
     </div>
 
-    <div class="coords">
-      <div class="coord ${lifetime ? "is-active" : ""}">
-        <span class="k">Lifetime · eff / trans</span>
-        <span class="v">${p.lifetime.e}<span class="sep">/</span>${p.lifetime.t}</span>
-        <span class="n">this episode only</span>
+    <div>
+      <div class="coords">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th class="${lifetime ? "is-active" : ""}">Lifetime</th>
+              <th class="${!lifetime ? "is-active" : ""}">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Efficiency</th>
+              <td class="${lifetime ? "is-active" : ""}">${p.lifetime.e}</td>
+              <td class="${!lifetime ? "is-active" : ""}${p.total ? "" : " none"}">${p.total ? p.total.e : "—"}</td>
+            </tr>
+            <tr>
+              <th scope="row">Transfer</th>
+              <td class="${lifetime ? "is-active" : ""}">${p.lifetime.t}</td>
+              <td class="${!lifetime ? "is-active" : ""}${p.total ? "" : " none"}">${p.total ? p.total.t : "—"}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="coord ${!lifetime ? "is-active" : ""}">
-        <span class="k">Total · eff / trans</span>
-        ${totalCell}
-        <span class="n">whole experience budget</span>
-      </div>
+      <p class="coords-note">Each out of 10. Lifetime counts this learning episode only; total counts the whole experience budget.${p.total ? "" : " This point has no honest total position."}</p>
     </div>
 
     <div class="rows">
