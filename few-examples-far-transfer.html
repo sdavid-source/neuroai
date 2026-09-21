@@ -7,75 +7,81 @@
   :root {
     color-scheme: light;
 
-    /* surfaces + ink (validated against these surfaces) */
-    --plane:        #f4f4f1;
-    --surface:      #fcfcfb;
-    --surface-sunk: #f0efec;
-    --ink:          #0b0b0b;
-    --ink-2:        #52514e;
-    --ink-muted:    #767469;
-    --grid:         #e1e0d9;
-    --axis:         #c3c2b7;
-    --hairline:     rgba(11,11,11,0.10);
-    --hairline-2:   rgba(11,11,11,0.18);
+    /* surfaces + ink — a cool sage-tinted ground rather than near-white, so the page
+       has a colour of its own and the cards lift off it */
+    --plane:        #e9ece9;
+    --surface:      #fcfdfc;
+    --surface-sunk: #e2e7e3;
+    --band-a:       #f6f8f6;
+    --band-b:       #e5eae6;
+    --ink:          #0e1411;
+    --ink-2:        #44504a;
+    --ink-muted:    #5c6861;
+    --grid:         #dbe1dd;
+    --axis:         #b9c2bc;
+    --hairline:     rgba(14,20,17,0.10);
+    --hairline-2:   rgba(14,20,17,0.18);
 
-    /* categorical: blue / green / yellow / magenta — all-pairs validated, light */
+    /* categorical: blue / amber / pink / green — the only 4-hue set found that clears
+       all-pairs CVD and normal-vision separation in both themes. Do not swap these
+       without re-running scripts/validate_palette.js. */
     --fam-human:      #2a78d6;
     --fam-animal:     #008300;
     --fam-classic_ai: #eda100;
     --fam-current_ai: #e87ba4;
 
-    --accent: #2a78d6;
-    --focus:  #2a78d6;
-
-    --f-display: Spectral, Georgia, "Times New Roman", serif;
-    --f-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    /* accent is deliberately none of the four series hues */
+    --accent: #5a3fd6;
+    --focus:  #0e1411;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --plane:        #0d0d0d;
-      --surface:      #1a1a19;
-      --surface-sunk: #222220;
-      --ink:          #ffffff;
-      --ink-2:        #c3c2b7;
-      --ink-muted:    #898781;
-      --grid:         #2c2c2a;
-      --axis:         #383835;
-      --hairline:     rgba(255,255,255,0.10);
-      --hairline-2:   rgba(255,255,255,0.20);
+      --plane:        #0a0c0b;
+      --surface:      #171a18;
+      --surface-sunk: #20241f;
+      --band-a:       #0e100f;
+      --band-b:       #181b19;
+      --ink:          #f1f4f2;
+      --ink-2:        #b7c0ba;
+      --ink-muted:    #8a948d;
+      --grid:         #252a27;
+      --axis:         #353b38;
+      --hairline:     rgba(241,244,242,0.10);
+      --hairline-2:   rgba(241,244,242,0.20);
 
       --fam-human:      #3987e5;
       --fam-animal:     #008300;
       --fam-classic_ai: #c98500;
       --fam-current_ai: #d55181;
 
-      --accent: #3987e5;
-      --focus:  #3987e5;
+      --accent: #a394f7;
+      --focus:  #f1f4f2;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --plane:        #0d0d0d;
-    --surface:      #1a1a19;
-    --surface-sunk: #222220;
-    --ink:          #ffffff;
-    --ink-2:        #c3c2b7;
-    --ink-muted:    #898781;
-    --grid:         #2c2c2a;
-    --axis:         #383835;
-    --hairline:     rgba(255,255,255,0.10);
-    --hairline-2:   rgba(255,255,255,0.20);
+    --plane:        #0a0c0b;
+    --surface:      #171a18;
+    --surface-sunk: #20241f;
+    --band-a:       #0e100f;
+    --band-b:       #181b19;
+    --ink:          #f1f4f2;
+    --ink-2:        #b7c0ba;
+    --ink-muted:    #8a948d;
+    --grid:         #252a27;
+    --axis:         #353b38;
+    --hairline:     rgba(241,244,242,0.10);
+    --hairline-2:   rgba(241,244,242,0.20);
 
     --fam-human:      #3987e5;
     --fam-animal:     #008300;
     --fam-classic_ai: #c98500;
     --fam-current_ai: #d55181;
 
-    --accent: #3987e5;
-    --focus:  #3987e5;
+    --accent: #a394f7;
+    --focus:  #f1f4f2;
   }
 
   * { box-sizing: border-box; }
@@ -445,6 +451,16 @@
 
   .section { display: flex; flex-direction: column; gap: 14px; }
 
+  /* alternating tints so consecutive sections read as separate panels */
+  .band-a, .band-b {
+    padding: 26px 30px 30px;
+    border-radius: 14px;
+    border: 1px solid var(--hairline);
+  }
+  .band-a { background: var(--band-a); }
+  .band-b { background: var(--band-b); }
+  footer.band-a { padding-top: 26px; border-top: 1px solid var(--hairline); }
+
   /* Wide screens put the heading in a left rail and the content beside it, so the
      lower half of the page is not one narrow column against a field of white. */
   @media (min-width: 1040px) {
@@ -457,7 +473,7 @@
     }
     .section > h2 { grid-column: 1; grid-row: 1; margin-top: 2px; }
     .section > :not(h2) { grid-column: 2; }
-    .section > p { max-width: 88ch; font-size: 15px; }
+    .section > p { max-width: 96ch; font-size: 15px; }
   }
 
 
@@ -707,7 +723,7 @@
     </div>
   </div>
 
-  <div class="section">
+  <div class="section band-a">
     <h2>What the words mean</h2>
     <dl class="glossary">
       <div><dt>Prior</dt><dd>Anything a learner already has before it starts: a designer's rules, an instinct, or structure carried over from earlier training.</dd></div>
@@ -720,7 +736,7 @@
     </dl>
   </div>
 
-  <div class="section">
+  <div class="section band-b">
     <h2>What the toggle does</h2>
     <div class="modes">
       <div class="mode">
@@ -744,7 +760,7 @@
     </p>
   </div>
 
-  <div class="section">
+  <div class="section band-a">
     <h2>Does the map show what it claims?</h2>
     <p>
       Worth checking rather than assuming. Correlate the two axes across all 36 points and the answer
@@ -804,7 +820,7 @@
     </p>
   </div>
 
-  <div class="section">
+  <div class="section band-b">
     <h2>The human points are an age series</h2>
     <p>
       Filter to <strong>Human</strong> and turn on <strong>Ages</strong>. Species is held constant, and in the two
@@ -842,7 +858,7 @@
     </p>
   </div>
 
-  <footer>
+  <footer class="band-a">
     <p style="margin:0 0 9px">
       <strong style="color:var(--ink-2)">Positions are arguments, not measurements.</strong>
       The numbers are rankings, and the units do not really compare across families — nobody can say
