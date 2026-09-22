@@ -624,6 +624,12 @@ const CANDIDATES = [
 ];
 
 
+/* 285 degrees, not 180: the turn that frees the third label is a plateau 45 degrees
+   wide rather than a lucky angle. Half a turn also works but sits on an exact tie —
+   Math.PI drops a label where Math.PI * 1.001 keeps it — and a tie tuned to one
+   browser's text metrics is not a fix. */
+const EDGE_TURN = 285 * Math.PI / 180;
+
 /* the age series is the point of the human family, so ages ride in the label rather
    than in a second text run that would double the clutter at this density */
 const labelText = p => (state.ages && p.ageShort) ? `${p.short} · ${p.ageShort}` : p.short;
@@ -699,12 +705,18 @@ function resolvePositions(lifetime) {
   const pos = new Map(), piles = [];
   byCoord.forEach((group, k) => {
     const [ce, ct] = k.split(",").map(Number);
-    const r = group.length > 1 ? 7 + group.length * 2.1 : 0;
+    /* a pile hard against the right edge leaves one member with nowhere to put its
+       name: labels there can only run leftwards, into the other two. Widen that pile
+       slightly and turn it half a turn, so the members sit left-above, right-above and
+       below instead of one of them pinned to the edge. Worth 3.7px of extra
+       displacement — the anchor lines below still show the true coordinate. */
+    const edge = group.length > 1 && X(ce) > PR - 100;
+    const r = group.length > 1 ? (edge ? 20 : 7 + group.length * 2.1) : 0;
     if (r) piles.push([X(ce), Y(ct), group.map(p => p.id)]);
     group.forEach((p, i) => {
       let x = X(ce), y = Y(ct);
       if (r) {
-        const a = (i / group.length) * Math.PI * 2 - Math.PI / 2;
+        const a = (i / group.length) * Math.PI * 2 - Math.PI / 2 + (edge ? EDGE_TURN : 0);
         x += Math.cos(a) * r;
         y += Math.sin(a) * r;
       }
