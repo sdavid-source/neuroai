@@ -51,6 +51,8 @@
   .stat small { color: var(--muted); font-size: 11px; }
   #chart { width: 100%; height: 90px; display: block; margin-top: 8px; }
   .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+  .stat.cheese b { color: #d4a017; }
+  .stat.coin b { color: var(--accent); }
   label.check { display: flex; gap: 6px; align-items: center; cursor: pointer; margin-top: 4px; }
 </style>
 </head>
@@ -91,9 +93,18 @@
         <div class="row">
           <button id="toolWall" class="on">🧱 Walls</button>
           <button id="toolCheese">🧀 Move cheese</button>
+          <button id="toolCoin">🪙 Move coin</button>
           <button id="clearWalls">Clear walls</button>
         </div>
         <label class="check"><input type="checkbox" id="arrows" checked> Show learned direction arrows</label>
+      </div>
+
+      <div class="section">
+        <div class="label">Coin</div>
+        <label class="check" style="margin:0 0 8px"><input type="checkbox" id="coinOn" checked> Coin on</label>
+        <div class="slider"><div>Coin worth (cheese = 1)</div><span id="coinValVal"></span>
+          <input type="range" id="coinVal" min="0.1" max="10" step="0.1" value="0.3"></div>
+        <div class="hint" style="margin-top:0">Respawns 3 seconds after it's picked up (counted in mouse time: 75 steps, which is 3 real seconds at the default speed).</div>
       </div>
 
       <div class="section">
@@ -109,6 +120,8 @@
       <div class="section">
         <div class="label">Progress</div>
         <div class="stats">
+          <div class="stat cheese"><b id="sCheese">0</b><small>🧀 cheese found</small></div>
+          <div class="stat coin"><b id="sCoins">0</b><small>🪙 coins collected</small></div>
           <div class="stat"><b id="sEp">0</b><small>episodes</small></div>
           <div class="stat"><b id="sSteps">–</b><small>steps last episode</small></div>
           <div class="stat"><b id="sAvg">–</b><small>avg of last 20</small></div>
@@ -132,7 +145,17 @@
   let walls = new Uint8Array(N);
   let cheese = idx(10, 6);
   let mouse = 0;
-  let Q = new Float64Array(N * 4);
+  // Coin: the mouse can see whether the coin is there, so the state is
+  // (square, coin visible?). That doubles the Q-table: states 0..N-1 are
+  // "no coin", states N..2N-1 are "coin is out".
+  const COIN_RESPAWN_STEPS = 75;   // 3 s of mouse time at 25 steps/s
+  let coinPos = idx(1, 1);
+  let coinOn = true, coinVisible = true, coinTimer = 0, coinValue = 0.3;
+  let cheeseCount = 0, coinCount = 0;
+  let coinFx = [];                 // little sparkle bursts when a coin is grabbed
+  let Q = new Float64Array(2 * N * 4);
+  const coinOut = () => coinOn && coinVisible;
+  const stateOf = cell => cell + (coinOut() ? N : 0);
   let episode = 0, epSteps = 0, totalSteps = 0;
   let history = [];          // {steps, optimal}
   let epStartOptimal = 0;
@@ -149,7 +172,7 @@
 
   function randomEmpty() {
     const free = [];
-    for (let i = 0; i < N; i++) if (!walls[i] && i !== cheese) free.push(i);
+    for (let i = 0; i < N; i++) if (!walls[i] && i !== cheese && i !== coinPos) free.push(i);
     return free.length ? free[(Math.random() * free.length) | 0] : cheese;
   }
 
@@ -203,17 +226,50 @@
     startEpisode();
   }
 
-  // One Q-learning step
-  function step() {
-    const s = mouse;
-    const a = Math.random() < params.eps ? (Math.random() * 4) | 0 : greedy(s);
-    const s2 = move(s, a);
-    const done = s2 === cheese;
-    const r = done ? 1 : (s2 === s ? -0.02 : 0); // small penalty for bumping into walls
+  function learn(s, a, r, s2, done) {
     const target = done ? r : r + params.gamma * maxQ(s2);
     Q[s * 4 + a] += params.alpha * (target - Q[s * 4 + a]);
+  }
 
-    mouse = s2;
+  // One Q-learning step
+  function step() {
+    const s = stateOf(mouse);
+    const a = Math.random() < params.eps ? (Math.random() * 4) | 0 : greedy(s);
+    const next = move(mouse, a);
+    const done = next === cheese;
+    const base = done ? 1 : (next === mouse ? -0.02 : 0); // small penalty for bumping into walls
+    let r = base;
+
+    // Coin pickup
+    let picked = false;
+    if (coinOut() && next === coinPos) {
+      r += coinValue; coinCount++; picked = true;
+      coinVisible = false; coinTimer = COIN_RESPAWN_STEPS;
+      coinFx.push({ cell: coinPos, t: performance.now() });
+    }
+
+    // Learn from what actually happened...
+    const s2 = stateOf(next);
+    learn(s, a, r, s2, done);
+
+    // ...and from what would have happened in the other coin situation.
+    // The mouse knows how coins work, so one step teaches both halves of its
+    // memory. Without this it only ever experiences "no coin" right next to
+    // the coin and never learns the way to the cheese from there.
+    if (coinOn) {
+      if (s >= N) learn(mouse, a, base, next, done);                 // pretend no coin was out
+      else if (next === coinPos) learn(mouse + N, a, base + coinValue, next, done); // pretend it was, and got grabbed
+      else learn(mouse + N, a, base, next + N, done);               // pretend it was, still out
+    }
+    if (done) cheeseCount++;
+
+    // Respawn clock. This runs after learning on purpose: the mouse can't see
+    // the countdown, so it plans as if a taken coin stays gone and simply
+    // reacts when one reappears. (Learning from surprise respawns teaches it
+    // to loiter by the coin waiting for one.)
+    if (!coinVisible && !picked && --coinTimer <= 0 && next !== coinPos) coinVisible = true;
+
+    mouse = next;
     epSteps++; totalSteps++;
     trail.push(mouse); if (trail.length > 14) trail.shift();
     if (done || epSteps >= MAX_EP_STEPS) endEpisode();
@@ -255,8 +311,11 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W * cell, H * cell);
 
+    // Show values for the situation the mouse is in right now (coin out or not)
+    const off = coinOut() ? N : 0;
+    const V = c => maxQ(c + off);
     let vmax = 1e-9;
-    for (let s = 0; s < N; s++) if (!walls[s]) vmax = Math.max(vmax, maxQ(s));
+    for (let s = 0; s < N; s++) if (!walls[s]) vmax = Math.max(vmax, V(s));
 
     const gap = Math.max(1, cell * 0.04);
     for (let s = 0; s < N; s++) {
@@ -267,7 +326,7 @@
       } else if (s === cheese) {
         ctx.fillStyle = ramp(1);
       } else {
-        const v = maxQ(s);
+        const v = V(s);
         ctx.fillStyle = v <= 0 ? emptyC : ramp(v / vmax);
       }
       roundRect(px, py, sz, sz, cell * 0.12);
@@ -279,11 +338,11 @@
       ctx.lineWidth = Math.max(1.2, cell * 0.045);
       ctx.lineCap = 'round';
       for (let s = 0; s < N; s++) {
-        if (walls[s] || s === cheese || maxQ(s) <= 0) continue;
-        const b = s * 4; let a = 0;
+        if (walls[s] || s === cheese || V(s) <= 0) continue;
+        const b = (s + off) * 4; let a = 0;
         for (let k = 1; k < 4; k++) if (Q[b + k] > Q[b + a]) a = k;
         const [x, y] = xy(s);
-        ctx.strokeStyle = maxQ(s) / vmax > 0.6 ? 'rgba(20,20,30,0.6)' : 'rgba(255,255,255,0.75)';
+        ctx.strokeStyle = V(s) / vmax > 0.6 ? 'rgba(20,20,30,0.6)' : 'rgba(255,255,255,0.75)';
         const cx = (x + .5) * cell, cy = (y + .5) * cell, L = cell * 0.22;
         const dx = ACTIONS[a][0], dy = ACTIONS[a][1];
         ctx.beginPath();
@@ -312,6 +371,7 @@
     ctx.font = `${cell * 0.62}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
     let [x, y] = xy(cheese);
     ctx.fillText('🧀', (x + .5) * cell, (y + .54) * cell);
+    drawCoin();
     [x, y] = xy(mouse);
     ctx.fillStyle = panel;
     ctx.globalAlpha = 0.85;
@@ -321,6 +381,52 @@
 
     drawChart();
     updateStats();
+  }
+
+  function drawCoin() {
+    if (!coinOn) return;
+    const [x, y] = xy(coinPos);
+    const cx = (x + .5) * cell, cy = (y + .5) * cell, R = cell * 0.27;
+    const now = performance.now();
+    if (coinVisible) {
+      const bob = Math.sin(now / 300) * cell * 0.03;
+      const g = ctx.createRadialGradient(cx - R * .35, cy - R * .4 + bob, R * .1, cx, cy + bob, R);
+      g.addColorStop(0, '#fff7c2'); g.addColorStop(0.45, '#ffd23f'); g.addColorStop(1, '#c98a00');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy + bob, R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#8a5a00'; ctx.lineWidth = Math.max(1, cell * 0.03); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy + bob, R * 0.68, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(138,90,0,0.55)'; ctx.stroke();
+      const tw = (Math.sin(now / 180) + 1) / 2;
+      sparkle(cx + R * 0.75, cy - R * 0.8 + bob, cell * 0.1 * (0.4 + tw * 0.8), 0.5 + tw * 0.5);
+    } else {
+      // faint outline + countdown ring while it respawns
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(255,210,63,0.6)'; ctx.lineWidth = Math.max(1, cell * 0.03);
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+      const frac = 1 - Math.max(0, coinTimer) / COIN_RESPAWN_STEPS;
+      ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = Math.max(1.5, cell * 0.05);
+      ctx.beginPath(); ctx.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2); ctx.stroke();
+    }
+    // pickup bursts
+    coinFx = coinFx.filter(f => now - f.t < 500);
+    if (speedIdx <= 6) for (const f of coinFx) {
+      const k = (now - f.t) / 500, [fx, fy] = xy(f.cell);
+      for (let i = 0; i < 6; i++) {
+        const ang = i / 6 * Math.PI * 2;
+        sparkle((fx + .5) * cell + Math.cos(ang) * k * cell * .5, (fy + .5) * cell + Math.sin(ang) * k * cell * .5,
+                cell * 0.09 * (1 - k), 1 - k);
+      }
+    }
+  }
+
+  function sparkle(x, y, r, alpha) {
+    ctx.fillStyle = `rgba(255,250,220,${alpha})`;
+    ctx.beginPath();
+    ctx.moveTo(x, y - r); ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y);
+    ctx.quadraticCurveTo(x, y, x, y - r); ctx.fill();
   }
 
   function roundRect(x, y, w, h, r) {
@@ -365,6 +471,8 @@
   const $ = id => document.getElementById(id);
   function updateStats() {
     $('sEp').textContent = episode.toLocaleString();
+    $('sCheese').textContent = cheeseCount.toLocaleString();
+    $('sCoins').textContent = coinCount.toLocaleString();
     $('sTotal').textContent = totalSteps.toLocaleString();
     const last = history[history.length - 1];
     $('sSteps').textContent = last ? last.steps : '–';
@@ -405,7 +513,9 @@
   });
   $('step').addEventListener('click', () => { step(); });
   $('reset').addEventListener('click', () => {
-    Q.fill(0); episode = 0; totalSteps = 0; history = []; startEpisode();
+    Q.fill(0); episode = 0; totalSteps = 0; history = [];
+    cheeseCount = 0; coinCount = 0; coinVisible = true; coinTimer = 0;
+    startEpisode();
   });
   $('clearWalls').addEventListener('click', () => { walls.fill(0); worldChanged(); });
   $('arrows').addEventListener('change', e => showArrows = e.target.checked);
@@ -416,17 +526,26 @@
     el.addEventListener('input', upd); upd();
   });
 
+  $('coinOn').addEventListener('change', e => { coinOn = e.target.checked; coinVisible = true; coinTimer = 0; });
+  const coinSlider = $('coinVal');
+  const updCoin = () => { coinValue = +coinSlider.value; $('coinValVal').textContent = coinValue.toFixed(1); };
+  coinSlider.addEventListener('input', updCoin); updCoin();
+
   let tool = 'wall';
   function setTool(t) {
     tool = t;
     $('toolWall').classList.toggle('on', t === 'wall');
     $('toolCheese').classList.toggle('on', t === 'cheese');
-    $('hint').textContent = t === 'wall'
-      ? 'Click or drag on squares to add/remove walls.'
-      : 'Click a square to move the cheese there. The mouse keeps its old memories — watch it unlearn them.';
+    $('toolCoin').classList.toggle('on', t === 'coin');
+    $('hint').textContent = {
+      wall: 'Click or drag on squares to add/remove walls.',
+      cheese: 'Click a square to move the cheese there. The mouse keeps its old memories — watch it unlearn them.',
+      coin: 'Click a square to move the coin there.',
+    }[t];
   }
   $('toolWall').addEventListener('click', () => setTool('wall'));
   $('toolCheese').addEventListener('click', () => setTool('cheese'));
+  $('toolCoin').addEventListener('click', () => setTool('coin'));
 
   function worldChanged() {
     dist = bfsDist();
@@ -447,11 +566,18 @@
   board.addEventListener('pointerdown', e => {
     const s = cellAt(e); if (s < 0) return;
     if (tool === 'cheese') {
+      if (s === coinPos) return;
       if (walls[s]) walls[s] = 0;
       cheese = s; worldChanged();
       return;
     }
-    if (s === cheese) return;
+    if (tool === 'coin') {
+      if (s === cheese) return;
+      if (walls[s]) walls[s] = 0;
+      coinPos = s; coinVisible = true; coinTimer = 0; worldChanged();
+      return;
+    }
+    if (s === cheese || s === coinPos) return;
     painting = walls[s] ? 0 : 1;
     walls[s] = painting; lastPainted = s;
     board.setPointerCapture(e.pointerId);
@@ -460,7 +586,7 @@
   board.addEventListener('pointermove', e => {
     if (painting === null) return;
     const s = cellAt(e);
-    if (s < 0 || s === lastPainted || s === cheese) return;
+    if (s < 0 || s === lastPainted || s === cheese || s === coinPos) return;
     walls[s] = painting; lastPainted = s;
     worldChanged();
   });
