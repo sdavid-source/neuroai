@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Human Burger Q-Learning</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d1d1f; --muted: #6b6b70;
+    --line: #e2e0da; --accent: #c2410c; --wall: #3a3a40; --empty: #ecebe6;
+    --btn: #f0eee9; --btn-on: #1d1d1f; --btn-on-ink: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141416; --panel: #1d1d21; --ink: #ececef; --muted: #9a9aa2;
+      --line: #2e2e34; --accent: #fb923c; --wall: #8a8a93; --empty: #26262b;
+      --btn: #2a2a30; --btn-on: #ececef; --btn-on-ink: #141416;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 18px; max-width: 70ch; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+  @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  #board { width: 100%; display: block; border-radius: 8px; cursor: crosshair; touch-action: none; }
+  .legend { display: flex; align-items: center; gap: 8px; margin-top: 10px; color: var(--muted); font-size: 12px; }
+  .ramp { flex: 1; height: 10px; border-radius: 5px; }
+  .section { margin-bottom: 16px; }
+  .section:last-child { margin-bottom: 0; }
+  .label { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; }
+  button {
+    font: inherit; border: 1px solid var(--line); background: var(--btn); color: var(--ink);
+    padding: 7px 11px; border-radius: 8px; cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+  button.on { background: var(--btn-on); color: var(--btn-on-ink); border-color: var(--btn-on); }
+  button.danger { color: var(--accent); }
+  .slider { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; margin-bottom: 8px; }
+  .slider span { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; }
+  .slider input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat { background: var(--bg); border-radius: 8px; padding: 8px 10px; }
+  .stat b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .stat small { color: var(--muted); font-size: 11px; }
+  #chart { width: 100%; height: 90px; display: block; margin-top: 8px; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+  .stat.burger b { color: #d4a017; }
+  .stat.coin b { color: var(--accent); }
+  label.check { display: flex; gap: 6px; align-items: center; cursor: pointer; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🧑 Human learns to find a burger</h1>
+  <p class="sub">The human uses Q-learning: they keep a score for every (square, direction) pair and nudge it toward
+    “reward now + discounted best score of where I end up.” The heatmap shows how valuable they think each square is
+    (its best score there). Each episode starts the human on a random square.</p>
+
+  <div class="layout">
+    <div class="card">
+      <canvas id="board"></canvas>
+      <div class="legend"><span>low value</span><div class="ramp" id="ramp"></div><span>high value</span></div>
+      <div class="hint" id="hint">Click or drag on squares to add/remove walls.</div>
+    </div>
+
+    <div class="card">
+      <div class="section">
+        <div class="label">Run</div>
+        <div class="row">
+          <button id="play" class="on">⏸ Pause</button>
+          <button id="step">Step</button>
+          <button id="reset" class="danger">Reset learning</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="label">Speed</div>
+        <div class="slider">
+          <div></div><span id="speedVal"></span>
+          <input type="range" id="speed" min="0" max="11" value="4">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="label">Click tool</div>
+        <div class="row">
+          <button id="toolWall" class="on">🧱 Walls</button>
+          <button id="toolBurger">🍔 Move burger</button>
+          <button id="toolCoin">🪙 Move coin</button>
+          <button id="clearWalls">Clear walls</button>
+        </div>
+        <label class="check"><input type="checkbox" id="arrows" checked> Show learned direction arrows</label>
+      </div>
+
+      <div class="section">
+        <div class="label">Coin</div>
+        <label class="check" style="margin:0 0 8px"><input type="checkbox" id="coinOn" checked> Coin on</label>
+        <div class="slider"><div>Coin worth (burger = 1)</div><span id="coinValVal"></span>
+          <input type="range" id="coinVal" min="0.1" max="10" step="0.1" value="0.3"></div>
+        <div class="hint" style="margin-top:0">Respawns 3 seconds after it's picked up (counted in human time: 75 steps, which is 3 real seconds at the default speed).</div>
+      </div>
+
+      <div class="section">
+        <div class="label">Learning settings</div>
+        <div class="slider"><div>Learning rate α</div><span id="alphaVal"></span>
+          <input type="range" id="alpha" min="0.01" max="1" step="0.01" value="0.5"></div>
+        <div class="slider"><div>Discount γ</div><span id="gammaVal"></span>
+          <input type="range" id="gamma" min="0.5" max="0.99" step="0.01" value="0.92"></div>
+        <div class="slider"><div>Exploration ε</div><span id="epsVal"></span>
+          <input type="range" id="eps" min="0" max="1" step="0.01" value="0.15"></div>
+      </div>
+
+      <div class="section">
+        <div class="label">Progress</div>
+        <div class="stats">
+          <div class="stat burger"><b id="sBurger">0</b><small>🍔 burgers eaten</small></div>
+          <div class="stat coin"><b id="sCoins">0</b><small>🪙 coins collected</small></div>
+          <div class="stat"><b id="sEp">0</b><small>episodes</small></div>
+          <div class="stat"><b id="sSteps">–</b><small>steps last episode</small></div>
+          <div class="stat"><b id="sAvg">–</b><small>avg of last 20</small></div>
+          <div class="stat"><b id="sTotal">0</b><small>total steps</small></div>
+        </div>
+        <canvas id="chart"></canvas>
+        <div class="hint">Steps per episode vs. shortest path (dashed). Lower is better.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------- World ----------
+  const W = 12, H = 9;
+  const N = W * H;
+  const ACTIONS = [[0, -1], [1, 0], [0, 1], [-1, 0]]; // up, right, down, left
+  const MAX_EP_STEPS = 400;
+
+  let walls = new Uint8Array(N);
+  let burger = idx(10, 6);
+  let human = 0;
+  // Coin: the human can see whether the coin is there, so the state is
+  // (square, coin visible?). That doubles the Q-table: states 0..N-1 are
+  // "no coin", states N..2N-1 are "coin is out".
+  const COIN_RESPAWN_STEPS = 75;   // 3 s of human time at 25 steps/s
+  let coinPos = idx(1, 1);
+  let coinOn = true, coinVisible = true, coinTimer = 0, coinValue = 0.3;
+  let burgerCount = 0, coinCount = 0;
+  let coinFx = [];                 // little sparkle bursts when a coin is grabbed
+  let Q = new Float64Array(2 * N * 4);
+  const coinOut = () => coinOn && coinVisible;
+  const stateOf = cell => cell + (coinOut() ? N : 0);
+  let episode = 0, epSteps = 0, totalSteps = 0;
+  let history = [];          // {steps, optimal}
+  let epStartOptimal = 0;
+  let trail = [];            // recent positions for a fading trail
+
+  function idx(x, y) { return y * W + x; }
+  function xy(i) { return [i % W, (i / W) | 0]; }
+
+  // A small default maze
+  [[3,1],[3,2],[3,3],[3,4],[3,5],[7,3],[7,4],[7,5],[7,6],[7,7],[8,3],[9,3],[5,7],[4,7],[1,6],[2,6],[10,1],[10,2]]
+    .forEach(([x, y]) => walls[idx(x, y)] = 1);
+
+  const params = { alpha: 0.5, gamma: 0.92, eps: 0.15 };
+
+  function randomEmpty() {
+    const free = [];
+    for (let i = 0; i < N; i++) if (!walls[i] && i !== burger && i !== coinPos) free.push(i);
+    return free.length ? free[(Math.random() * free.length) | 0] : burger;
+  }
+
+  function move(s, a) {
+    const [x, y] = xy(s);
+    const nx = x + ACTIONS[a][0], ny = y + ACTIONS[a][1];
+    if (nx < 0 || ny < 0 || nx >= W || ny >= H) return s;
+    const n = idx(nx, ny);
+    return walls[n] ? s : n;
+  }
+
+  function maxQ(s) {
+    const b = s * 4;
+    return Math.max(Q[b], Q[b + 1], Q[b + 2], Q[b + 3]);
+  }
+
+  function greedy(s) {
+    const b = s * 4, m = maxQ(s);
+    const best = [];
+    for (let a = 0; a < 4; a++) if (Q[b + a] >= m - 1e-12) best.push(a);
+    return best[(Math.random() * best.length) | 0];
+  }
+
+  // BFS distance to burger, for the "shortest path" reference line
+  function bfsDist() {
+    const d = new Int32Array(N).fill(-1);
+    d[burger] = 0;
+    const q = [burger];
+    for (let h = 0; h < q.length; h++) {
+      const s = q[h];
+      for (let a = 0; a < 4; a++) {
+        const n = move(s, a);
+        if (n !== s && d[n] < 0) { d[n] = d[s] + 1; q.push(n); }
+      }
+    }
+    return d;
+  }
+  let dist = bfsDist();
+
+  function startEpisode() {
+    human = randomEmpty();
+    epSteps = 0;
+    epStartOptimal = Math.max(dist[human], 0);
+    trail = [human];
+  }
+
+  function endEpisode() {
+    episode++;
+    history.push({ steps: epSteps, optimal: epStartOptimal });
+    if (history.length > 300) history.shift();
+    startEpisode();
+  }
+
+  function learn(s, a, r, s2, done) {
+    const target = done ? r : r + params.gamma * maxQ(s2);
+    Q[s * 4 + a] += params.alpha * (target - Q[s * 4 + a]);
+  }
+
+  // One Q-learning step
+  function step() {
+    const s = stateOf(human);
+    const a = Math.random() < params.eps ? (Math.random() * 4) | 0 : greedy(s);
+    const next = move(human, a);
+    const done = next === burger;
+    const base = done ? 1 : (next === human ? -0.02 : 0); // small penalty for bumping into walls
+    let r = base;
+
+    // Coin pickup
+    let picked = false;
+    if (coinOut() && next === coinPos) {
+      r += coinValue; coinCount++; picked = true;
+      coinVisible = false; coinTimer = COIN_RESPAWN_STEPS;
+      coinFx.push({ cell: coinPos, t: performance.now() });
+    }
+
+    // Learn from what actually happened...
+    const s2 = stateOf(next);
+    learn(s, a, r, s2, done);
+
+    // ...and from what would have happened in the other coin situation.
+    // The human knows how coins work, so one step teaches both halves of its
+    // memory. Without this it only ever experiences "no coin" right next to
+    // the coin and never learns the way to the burger from there.
+    if (coinOn) {
+      if (s >= N) learn(human, a, base, next, done);                 // pretend no coin was out
+      else if (next === coinPos) learn(human + N, a, base + coinValue, next, done); // pretend it was, and got grabbed
+      else learn(human + N, a, base, next + N, done);               // pretend it was, still out
+    }
+    if (done) burgerCount++;
+
+    // Respawn clock. This runs after learning on purpose: the human can't see
+    // the countdown, so it plans as if a taken coin stays gone and simply
+    // reacts when one reappears. (Learning from surprise respawns teaches it
+    // to loiter by the coin waiting for one.)
+    if (!coinVisible && !picked && --coinTimer <= 0 && next !== coinPos) coinVisible = true;
+
+    human = next;
+    epSteps++; totalSteps++;
+    trail.push(human); if (trail.length > 14) trail.shift();
+    if (done || epSteps >= MAX_EP_STEPS) endEpisode();
+  }
+
+  // ---------- Rendering ----------
+  const board = document.getElementById('board');
+  const ctx = board.getContext('2d');
+  const chart = document.getElementById('chart');
+  const cctx = chart.getContext('2d');
+  let cell = 40, dpr = 1;
+
+  // Sequential ramp (dark blue → teal → yellow), readable in both themes
+  const STOPS = [[30, 33, 77], [37, 90, 140], [33, 145, 140], [94, 201, 98], [253, 231, 37]];
+  function ramp(t) {
+    t = Math.min(1, Math.max(0, t)) * (STOPS.length - 1);
+    const i = Math.min(STOPS.length - 2, Math.floor(t)), f = t - i;
+    const a = STOPS[i], b = STOPS[i + 1];
+    return `rgb(${a.map((v, k) => Math.round(v + (b[k] - v) * f)).join(',')})`;
+  }
+  document.getElementById('ramp').style.background =
+    `linear-gradient(90deg, ${[0, .25, .5, .75, 1].map(ramp).join(',')})`;
+
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const w = board.clientWidth;
+    cell = w / W;
+    board.style.height = (cell * H) + 'px';
+    board.width = Math.round(w * dpr);
+    board.height = Math.round(cell * H * dpr);
+    chart.width = Math.round(chart.clientWidth * dpr);
+    chart.height = Math.round(chart.clientHeight * dpr);
+  }
+
+  function draw() {
+    const wallC = css('--wall'), emptyC = css('--empty'), panel = css('--panel');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W * cell, H * cell);
+
+    // Show values for the situation the human is in right now (coin out or not)
+    const off = coinOut() ? N : 0;
+    const V = c => maxQ(c + off);
+    let vmax = 1e-9;
+    for (let s = 0; s < N; s++) if (!walls[s]) vmax = Math.max(vmax, V(s));
+
+    const gap = Math.max(1, cell * 0.04);
+    for (let s = 0; s < N; s++) {
+      const [x, y] = xy(s);
+      const px = x * cell + gap / 2, py = y * cell + gap / 2, sz = cell - gap;
+      if (walls[s]) {
+        ctx.fillStyle = wallC;
+      } else if (s === burger) {
+        ctx.fillStyle = ramp(1);
+      } else {
+        const v = V(s);
+        ctx.fillStyle = v <= 0 ? emptyC : ramp(v / vmax);
+      }
+      roundRect(px, py, sz, sz, cell * 0.12);
+      ctx.fill();
+    }
+
+    // Policy arrows
+    if (showArrows) {
+      ctx.lineWidth = Math.max(1.2, cell * 0.045);
+      ctx.lineCap = 'round';
+      for (let s = 0; s < N; s++) {
+        if (walls[s] || s === burger || V(s) <= 0) continue;
+        const b = (s + off) * 4; let a = 0;
+        for (let k = 1; k < 4; k++) if (Q[b + k] > Q[b + a]) a = k;
+        const [x, y] = xy(s);
+        ctx.strokeStyle = V(s) / vmax > 0.6 ? 'rgba(20,20,30,0.6)' : 'rgba(255,255,255,0.75)';
+        const cx = (x + .5) * cell, cy = (y + .5) * cell, L = cell * 0.22;
+        const dx = ACTIONS[a][0], dy = ACTIONS[a][1];
+        ctx.beginPath();
+        ctx.moveTo(cx - dx * L, cy - dy * L);
+        ctx.lineTo(cx + dx * L, cy + dy * L);
+        ctx.lineTo(cx + dx * L - (dx * 0.5 - dy * 0.45) * L, cy + dy * L - (dy * 0.5 + dx * 0.45) * L);
+        ctx.moveTo(cx + dx * L, cy + dy * L);
+        ctx.lineTo(cx + dx * L - (dx * 0.5 + dy * 0.45) * L, cy + dy * L - (dy * 0.5 - dx * 0.45) * L);
+        ctx.stroke();
+      }
+    }
+
+    // Trail
+    if (speedIdx <= 6) {
+      for (let i = 0; i < trail.length - 1; i++) {
+        const [x, y] = xy(trail[i]);
+        ctx.fillStyle = `rgba(255,255,255,${0.08 + 0.35 * i / trail.length})`;
+        ctx.beginPath();
+        ctx.arc((x + .5) * cell, (y + .5) * cell, cell * 0.09, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Burger & human
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `${cell * 0.62}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+    let [x, y] = xy(burger);
+    ctx.fillText('🍔', (x + .5) * cell, (y + .54) * cell);
+    drawCoin();
+    [x, y] = xy(human);
+    ctx.fillStyle = panel;
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath(); ctx.arc((x + .5) * cell, (y + .5) * cell, cell * 0.38, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillText('🧑', (x + .5) * cell, (y + .54) * cell);
+
+    drawChart();
+    updateStats();
+  }
+
+  function drawCoin() {
+    if (!coinOn) return;
+    const [x, y] = xy(coinPos);
+    const cx = (x + .5) * cell, cy = (y + .5) * cell, R = cell * 0.27;
+    const now = performance.now();
+    if (coinVisible) {
+      const bob = Math.sin(now / 300) * cell * 0.03;
+      const g = ctx.createRadialGradient(cx - R * .35, cy - R * .4 + bob, R * .1, cx, cy + bob, R);
+      g.addColorStop(0, '#fff7c2'); g.addColorStop(0.45, '#ffd23f'); g.addColorStop(1, '#c98a00');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy + bob, R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#8a5a00'; ctx.lineWidth = Math.max(1, cell * 0.03); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy + bob, R * 0.68, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(138,90,0,0.55)'; ctx.stroke();
+      const tw = (Math.sin(now / 180) + 1) / 2;
+      sparkle(cx + R * 0.75, cy - R * 0.8 + bob, cell * 0.1 * (0.4 + tw * 0.8), 0.5 + tw * 0.5);
+    } else {
+      // faint outline + countdown ring while it respawns
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(255,210,63,0.6)'; ctx.lineWidth = Math.max(1, cell * 0.03);
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+      const frac = 1 - Math.max(0, coinTimer) / COIN_RESPAWN_STEPS;
+      ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = Math.max(1.5, cell * 0.05);
+      ctx.beginPath(); ctx.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2); ctx.stroke();
+    }
+    // pickup bursts
+    coinFx = coinFx.filter(f => now - f.t < 500);
+    if (speedIdx <= 6) for (const f of coinFx) {
+      const k = (now - f.t) / 500, [fx, fy] = xy(f.cell);
+      for (let i = 0; i < 6; i++) {
+        const ang = i / 6 * Math.PI * 2;
+        sparkle((fx + .5) * cell + Math.cos(ang) * k * cell * .5, (fy + .5) * cell + Math.sin(ang) * k * cell * .5,
+                cell * 0.09 * (1 - k), 1 - k);
+      }
+    }
+  }
+
+  function sparkle(x, y, r, alpha) {
+    ctx.fillStyle = `rgba(255,250,220,${alpha})`;
+    ctx.beginPath();
+    ctx.moveTo(x, y - r); ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y);
+    ctx.quadraticCurveTo(x, y, x, y - r); ctx.fill();
+  }
+
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawChart() {
+    const w = chart.width / dpr, h = chart.height / dpr;
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cctx.clearRect(0, 0, w, h);
+    cctx.fillStyle = css('--bg');
+    cctx.fillRect(0, 0, w, h);
+    if (history.length < 2) return;
+    const data = history.slice(-150);
+    // smooth a bit so the trend is readable
+    const sm = data.map((_, i) => {
+      const win = data.slice(Math.max(0, i - 4), i + 1);
+      return {
+        steps: win.reduce((a, d) => a + d.steps, 0) / win.length,
+        optimal: win.reduce((a, d) => a + d.optimal, 0) / win.length,
+      };
+    });
+    const ymax = Math.max(10, ...sm.map(d => d.steps));
+    const X = i => 4 + (i / (sm.length - 1)) * (w - 8);
+    const Y = v => h - 4 - (v / ymax) * (h - 10);
+    cctx.lineWidth = 1.5;
+    cctx.setLineDash([4, 3]);
+    cctx.strokeStyle = css('--muted');
+    cctx.beginPath(); sm.forEach((d, i) => i ? cctx.lineTo(X(i), Y(d.optimal)) : cctx.moveTo(X(i), Y(d.optimal))); cctx.stroke();
+    cctx.setLineDash([]);
+    cctx.lineWidth = 2;
+    cctx.strokeStyle = css('--accent');
+    cctx.beginPath(); sm.forEach((d, i) => i ? cctx.lineTo(X(i), Y(d.steps)) : cctx.moveTo(X(i), Y(d.steps))); cctx.stroke();
+  }
+
+  const $ = id => document.getElementById(id);
+  function updateStats() {
+    $('sEp').textContent = episode.toLocaleString();
+    $('sBurger').textContent = burgerCount.toLocaleString();
+    $('sCoins').textContent = coinCount.toLocaleString();
+    $('sTotal').textContent = totalSteps.toLocaleString();
+    const last = history[history.length - 1];
+    $('sSteps').textContent = last ? last.steps : '–';
+    const recent = history.slice(-20);
+    $('sAvg').textContent = recent.length ? (recent.reduce((a, d) => a + d.steps, 0) / recent.length).toFixed(1) : '–';
+  }
+
+  // ---------- Speed / loop ----------
+  // Below index 6: steps per second. From 6 up: steps per animation frame.
+  const SPEEDS = [
+    { label: '1 step/s', sps: 1 }, { label: '3 steps/s', sps: 3 }, { label: '6 steps/s', sps: 6 },
+    { label: '12 steps/s', sps: 12 }, { label: '25 steps/s', sps: 25 }, { label: '60 steps/s', sps: 60 },
+    { label: '3 steps/frame', spf: 3 }, { label: '10 steps/frame', spf: 10 }, { label: '50 steps/frame', spf: 50 },
+    { label: '250 steps/frame', spf: 250 }, { label: '1,000 steps/frame', spf: 1000 }, { label: '5,000 steps/frame', spf: 5000 },
+  ];
+  let speedIdx = 4, running = true, acc = 0, lastT = performance.now(), showArrows = true;
+
+  function loop(t) {
+    const dt = Math.min(0.25, (t - lastT) / 1000); lastT = t;
+    if (running) {
+      const sp = SPEEDS[speedIdx];
+      if (sp.spf) for (let i = 0; i < sp.spf; i++) step();
+      else { acc += dt * sp.sps; while (acc >= 1) { step(); acc -= 1; } }
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // ---------- Controls ----------
+  function setSpeed(i) { speedIdx = +i; $('speedVal').textContent = SPEEDS[speedIdx].label; }
+  $('speed').addEventListener('input', e => setSpeed(e.target.value));
+  setSpeed($('speed').value);
+
+  $('play').addEventListener('click', () => {
+    running = !running;
+    $('play').textContent = running ? '⏸ Pause' : '▶ Play';
+    $('play').classList.toggle('on', running);
+  });
+  $('step').addEventListener('click', () => { step(); });
+  $('reset').addEventListener('click', () => {
+    Q.fill(0); episode = 0; totalSteps = 0; history = [];
+    burgerCount = 0; coinCount = 0; coinVisible = true; coinTimer = 0;
+    startEpisode();
+  });
+  $('clearWalls').addEventListener('click', () => { walls.fill(0); worldChanged(); });
+  $('arrows').addEventListener('change', e => showArrows = e.target.checked);
+
+  [['alpha', 'alphaVal'], ['gamma', 'gammaVal'], ['eps', 'epsVal']].forEach(([id, out]) => {
+    const el = $(id);
+    const upd = () => { params[id] = +el.value; $(out).textContent = (+el.value).toFixed(2); };
+    el.addEventListener('input', upd); upd();
+  });
+
+  $('coinOn').addEventListener('change', e => { coinOn = e.target.checked; coinVisible = true; coinTimer = 0; });
+  const coinSlider = $('coinVal');
+  const updCoin = () => { coinValue = +coinSlider.value; $('coinValVal').textContent = coinValue.toFixed(1); };
+  coinSlider.addEventListener('input', updCoin); updCoin();
+
+  let tool = 'wall';
+  function setTool(t) {
+    tool = t;
+    $('toolWall').classList.toggle('on', t === 'wall');
+    $('toolBurger').classList.toggle('on', t === 'burger');
+    $('toolCoin').classList.toggle('on', t === 'coin');
+    $('hint').textContent = {
+      wall: 'Click or drag on squares to add/remove walls.',
+      burger: 'Click a square to move the burger there. The human keeps their old memories — watch them unlearn it.',
+      coin: 'Click a square to move the coin there.',
+    }[t];
+  }
+  $('toolWall').addEventListener('click', () => setTool('wall'));
+  $('toolBurger').addEventListener('click', () => setTool('burger'));
+  $('toolCoin').addEventListener('click', () => setTool('coin'));
+
+  function worldChanged() {
+    dist = bfsDist();
+    if (walls[human] || human === burger) startEpisode();
+    trail = trail.filter(s => !walls[s]);
+    if (!trail.length) trail = [human];
+  }
+
+  function cellAt(e) {
+    const r = board.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) / (r.width / W));
+    const y = Math.floor((e.clientY - r.top) / (r.height / H));
+    if (x < 0 || y < 0 || x >= W || y >= H) return -1;
+    return idx(x, y);
+  }
+
+  let painting = null, lastPainted = -1;
+  board.addEventListener('pointerdown', e => {
+    const s = cellAt(e); if (s < 0) return;
+    if (tool === 'burger') {
+      if (s === coinPos) return;
+      if (walls[s]) walls[s] = 0;
+      burger = s; worldChanged();
+      return;
+    }
+    if (tool === 'coin') {
+      if (s === burger) return;
+      if (walls[s]) walls[s] = 0;
+      coinPos = s; coinVisible = true; coinTimer = 0; worldChanged();
+      return;
+    }
+    if (s === burger || s === coinPos) return;
+    painting = walls[s] ? 0 : 1;
+    walls[s] = painting; lastPainted = s;
+    board.setPointerCapture(e.pointerId);
+    worldChanged();
+  });
+  board.addEventListener('pointermove', e => {
+    if (painting === null) return;
+    const s = cellAt(e);
+    if (s < 0 || s === lastPainted || s === burger || s === coinPos) return;
+    walls[s] = painting; lastPainted = s;
+    worldChanged();
+  });
+  const stopPaint = () => { painting = null; lastPainted = -1; };
+  board.addEventListener('pointerup', stopPaint);
+  board.addEventListener('pointercancel', stopPaint);
+
+  window.addEventListener('resize', resize);
+  resize();
+  startEpisode();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
